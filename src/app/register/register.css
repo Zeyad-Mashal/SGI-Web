@@ -163,7 +163,7 @@
 }
 @media screen and (max-width: 789px) {
   .register {
-    height: 90vh;
+    height: 98vh;
   }
   .register-img {
     display: none;
