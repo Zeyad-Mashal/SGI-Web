@@ -162,6 +162,9 @@
   left: 0;
 }
 @media screen and (max-width: 789px) {
+  .register {
+    height: 90vh;
+  }
   .register-img {
     display: none;
   }
