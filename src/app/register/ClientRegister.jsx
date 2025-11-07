@@ -1,0 +1,104 @@
+"use client";
+import React from "react";
+import "./register.css";
+import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faXTwitter,
+  faLinkedin,
+  faInstagram,
+} from "@fortawesome/free-brands-svg-icons";
+
+const ClientRegister = () => {
+  return (
+    <div className="register">
+      <div className="register-container">
+        <div className="register-img">
+          <Image
+            src={"/images/logo.png"}
+            alt="register-img"
+            loading="lazy"
+            width={300}
+            height={300}
+          />
+          <div className="register-img-content">
+            <div className="imgs">
+              <Image
+                src={"/images/contact-us-reg.png"}
+                alt="contact us link"
+                loading="lazy"
+                width={250}
+                height={250}
+              />
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+                <FontAwesomeIcon icon={faXTwitter} className="icon" />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faLinkedin} className="icon" />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faInstagram} className="icon" />
+              </a>
+            </div>
+            <h3>high-quality cleaning and hygiene solutions</h3>
+          </div>
+        </div>
+        <div className="register-form">
+          <h1>Create an account</h1>
+          <p>
+            Already have an account? <a href="/login">Sign In</a>
+          </p>
+          <div className="form-content">
+            <label>
+              <h3>
+                Company Name<span>*</span>
+              </h3>
+              <input type="text" />
+            </label>
+            <label>
+              <h3>
+                Email<span>*</span>
+              </h3>
+              <input type="text" />
+            </label>
+            <label>
+              <h3>
+                Phone Number<span>*</span>
+              </h3>
+              <input type="text" />
+            </label>
+            <div className="form-optional">
+              <label>
+                <h3>
+                  Business license <span>( optional )</span>
+                </h3>
+                <input type="text" />
+              </label>
+              <label>
+                <h3>
+                  Tax Card <span>( optional )</span>
+                </h3>
+                <input type="text" />
+              </label>
+            </div>
+            <div className="register-terms">
+              <input type="checkbox" />
+              <h4>Agree to the Terms & Condition</h4>
+            </div>
+            <button>Create an account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ClientRegister;
