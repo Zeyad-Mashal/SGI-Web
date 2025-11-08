@@ -161,6 +161,82 @@
   top: -20%;
   left: 0;
 }
+@media screen and (min-width: 1401px) {
+  .register-container {
+    height: 100vh;
+    padding: 2rem 0;
+  }
+  .register-img {
+    max-width: 1000px;
+    width: 1000px;
+    height: 1000px;
+  }
+  .register-img > img {
+    width: 300px;
+  }
+  .imgs > img {
+    width: 200px;
+  }
+  .imgs > a {
+    background-color: white;
+    width: 70px;
+    height: 70px;
+    padding: 20px;
+  }
+  .imgs > a > svg {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+  }
+  .register-img-content > h3 {
+    font-size: 4rem;
+    width: 70%;
+  }
+  .register-form {
+    max-width: 1000px;
+  }
+  .register-form h1 {
+    font-size: 3.5rem;
+  }
+  .register-form p {
+    font-size: 1.8rem;
+  }
+  .form-content label h3 {
+    font-size: 2rem;
+  }
+  .form-optional {
+    margin: 2rem 0;
+  }
+  .form-content > label > input,
+  .form-optional > label > input {
+    padding: 1rem;
+    font-size: 1.8rem;
+  }
+  .register-terms {
+    margin: 1rem 0;
+  }
+  .register-terms h4 {
+    font-size: 1.7rem;
+  }
+  .register-terms input {
+    width: 30px;
+    height: 30px;
+  }
+  .register-form button {
+    width: 100%;
+    padding: 1.5rem;
+    font-size: 1.8rem;
+  }
+  .form-optional::before {
+    content: "";
+    height: 1px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: -15%;
+    left: 0;
+  }
+}
 @media screen and (max-width: 789px) {
   .register {
     height: 98vh;
