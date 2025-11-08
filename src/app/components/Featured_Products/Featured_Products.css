@@ -1,0 +1,126 @@
+.Featured_Products {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+}
+
+.Featured_Products .Featured_Products_header_title > span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  position: relative;
+  margin-left: 30px;
+}
+
+.Featured_Products .Featured_Products_header_title > span::before {
+  content: "";
+  height: 40px;
+  width: 20px;
+  background-color: rgba(215, 223, 43, 1);
+  position: absolute;
+  left: -30px;
+  top: -8px;
+  border-radius: 8px;
+}
+
+.Featured_Products .Featured_Products_header_title > h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.Featured_Products_swiper {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.brand_card {
+  width: 100%;
+  max-width: 200px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: rgba(7, 101, 133, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.brand_card img {
+  width: 160px;
+  height: auto;
+}
+
+.brand_card > span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+}
+
+/* أزرار السلايدر */
+.Featured_Products_swiper .swiper-button-next,
+.Featured_Products_swiper .swiper-button-prev {
+  color: rgba(7, 101, 133, 1);
+  transition: color 0.3s ease;
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: rgba(215, 223, 43, 1);
+}
+.Featured_Products_header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Featured_Products_nav_buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 2rem;
+}
+
+.nav_btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav_btn:hover {
+  background-color: rgba(215, 223, 43, 1);
+  color: #000;
+}
+
+@media screen and (max-width: 789px) {
+  .brand_card {
+    max-width: 100%;
+  }
+  .Featured_Products .Featured_Products_header_title > h1 {
+    font-size: 1.3rem;
+  }
+  .nav_btn {
+    width: 30px;
+    height: 30px;
+    margin-top: 1rem;
+  }
+}
