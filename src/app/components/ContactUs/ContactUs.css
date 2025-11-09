@@ -1,0 +1,65 @@
+.ContactUs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 1rem 2rem;
+}
+.ContactUs > h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.ContactUs > p {
+  color: rgba(0, 0, 0, 0.5);
+}
+.ContactUs_list {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+.ContactUs_item {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2rem;
+  border: 1px solid rgba(215, 223, 43, 1);
+  border-radius: 16px;
+  width: 350px;
+}
+.ContactUs_item > svg {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+.ContactUs_item > p,
+.ContactUs_item_btn > p {
+  color: rgba(0, 0, 0, 0.5);
+}
+.ContactUs_item_btn {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ContactUs_item_btn > button {
+  padding: 5px 15px;
+  border: 1px solid rgba(215, 223, 43, 1);
+  border-radius: 16px;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+.ContactUs_item_btn > button:hover {
+  background-color: rgba(215, 223, 43, 1);
+  color: white;
+}
