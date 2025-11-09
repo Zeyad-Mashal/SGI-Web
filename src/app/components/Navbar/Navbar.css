@@ -256,20 +256,21 @@
 
 @media screen and (min-width: 1401px) {
   .top_navbar {
-    height: 70px;
+    height: 50px;
   }
   .top_navbar > p {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
   .middle_navbar .logo img {
-    width: 250px;
+    width: 200px;
   }
-  .middle_navbar .search input {
-    padding: 1rem;
-    font-size: 1.5rem;
+  .search > input {
+    width: 850px;
+    padding: 1.3rem;
+    font-size: 1.1rem;
   }
   .search > span {
-    padding: 1.1rem 2.5rem;
+    padding: 0.5rem 2.5rem;
   }
   .search > span > svg {
     width: 30px;
@@ -277,8 +278,9 @@
   }
   .phone_number {
     padding: 1rem;
-    width: auto;
     justify-content: space-between;
+    width: 220px;
+    height: 55px;
   }
   .phone_number > svg {
     width: 40px;
@@ -286,49 +288,57 @@
     padding: 10px;
   }
   .phone_number > div > p {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
   .phone_number > div > span {
-    font-size: 1.5rem;
+    font-size: 0.9rem;
   }
   .navbar_links {
     gap: 2rem;
+    width: 150px;
   }
   .navbar_links > svg {
     width: 40px;
     height: 40px;
   }
   .mega_menu_btn > svg {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
   }
   .mega_menu_btn > span {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
   }
   .main_links li a {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
   .login_links > a {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
   .login_links span {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     padding: 1rem;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .our_shop {
-    width: auto;
+    width: 250px;
   }
   .our_shop > a {
-    gap: 1rem;
     padding: 1rem;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .our_shop > a > svg {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     background-color: black;
     border-radius: 50%;
-    padding: 10px;
+    padding: 5px;
   }
   .mega_menu_dropdown {
     top: 320px;
