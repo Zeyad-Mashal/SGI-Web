@@ -1,11 +1,12 @@
 .Featured_Products {
   width: 100%;
-  padding: 20px;
+  padding: 1rem 3rem;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   position: relative;
+  margin-top: 50px;
 }
 
 .Featured_Products .Featured_Products_header_title > span {
@@ -41,6 +42,7 @@
 .Featured_card {
   width: 100%;
   max-width: 250px;
+  height: 475px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,17 +52,17 @@
   overflow: hidden;
   cursor: pointer;
 }
-.Featured_img {
+.Featured_card .Featured_img {
   background-image: url("/images/p1.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
-  height: 250px;
+  height: 340px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 10px;
+  padding: 1.5rem;
   border-radius: 16px;
 }
 .Featured_img > svg {
@@ -170,6 +172,9 @@
 }
 
 @media screen and (max-width: 789px) {
+  .Featured_Products {
+    padding: 20px;
+  }
   .Featured_card {
     max-width: 100%;
   }

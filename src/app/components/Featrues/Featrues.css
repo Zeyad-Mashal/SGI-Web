@@ -5,7 +5,7 @@
   align-items: center;
   padding: 10px;
   background-color: rgba(247, 247, 247, 1);
-  margin: 1rem 0;
+  margin-top: 25px;
 }
 .featrues_item {
   display: flex;
@@ -51,5 +51,11 @@
   .featrues_item > svg {
     width: 30px;
     height: 30px;
+  }
+  .featrues_item .featrues_item_1 h2 {
+    font-size: 0.9rem;
+  }
+  .featrues_item .featrues_item_1 p {
+    font-size: 0.8rem;
   }
 }

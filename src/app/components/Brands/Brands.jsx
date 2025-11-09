@@ -70,8 +70,8 @@ const Brands = () => {
                 src={brand.img}
                 alt="brand image"
                 loading="lazy"
-                width={160}
-                height={160}
+                width={224}
+                height={60}
               />
               <span>{brand.products} products</span>
             </div>

@@ -3,13 +3,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1rem 3rem;
   background-image: url("/images/sgi-home-banner.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   height: 500px;
   position: relative;
+  margin-top: 50px;
 }
 .overlay {
   position: absolute;
@@ -17,7 +18,7 @@
   left: 0;
   width: 100%;
   height: 500px;
-  background: rgba(0, 0, 0, 0.3); /* طبقة داكنة فوق الخلفية */
+  background: rgba(0, 0, 0, 0.5); /* طبقة داكنة فوق الخلفية */
   z-index: 1;
 }
 .banner_right {
@@ -265,6 +266,7 @@
   .sgi-home-banner {
     height: 900px;
     flex-direction: column;
+    padding: 1rem;
   }
   .overlay {
     height: 900px;
@@ -274,21 +276,22 @@
     gap: 0.5rem;
   }
   .banner_right > span {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   .banner_right > h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     width: 100%;
   }
   .banner_right > p {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     width: 100%;
   }
   .banner_right_imgs {
     gap: 0.2rem;
+    width: 100%;
   }
   .banner_right_imgs > img {
-    width: 150px;
+    width: 48%;
   }
   .banner_btns {
     gap: 0.5rem;
@@ -297,9 +300,13 @@
   .banner_btns .banner_btn2 {
     padding: 5px 10px;
     width: 120px;
+    font-size: 0.9rem;
   }
   .banner_left {
     width: 100%;
+  }
+  .banner_left_main > span {
+    text-align: center;
   }
   .banner_left_save {
     right: -10px;

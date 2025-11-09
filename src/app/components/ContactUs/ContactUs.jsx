@@ -1,11 +1,9 @@
 import React from "react";
 import "./ContactUs.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEnvelope,
-  faPhone,
-  faLocationDot,
-} from "@fortawesome/free-solid-svg-icons";
+import { FiPhone } from "react-icons/fi";
+import { SlLocationPin } from "react-icons/sl";
+import { AiOutlineMail } from "react-icons/ai";
+
 const ContactUs = () => {
   return (
     <div className="ContactUs">
@@ -13,7 +11,8 @@ const ContactUs = () => {
       <p>Contact us to start your journey today</p>
       <div className="ContactUs_list">
         <div className="ContactUs_item">
-          <FontAwesomeIcon icon={faEnvelope} />
+          <AiOutlineMail />
+
           <h3>Email</h3>
           <p>Office : hello@skyline.co</p>
           <div className="ContactUs_item_btn">
@@ -22,7 +21,7 @@ const ContactUs = () => {
           </div>
         </div>
         <div className="ContactUs_item">
-          <FontAwesomeIcon icon={faPhone} />
+          <FiPhone />
           <h3>Phone</h3>
           <p>Office : +91 8932-1151-22</p>
           <div className="ContactUs_item_btn">
@@ -31,7 +30,8 @@ const ContactUs = () => {
           </div>
         </div>
         <div className="ContactUs_item">
-          <FontAwesomeIcon icon={faLocationDot} />
+          <SlLocationPin />
+
           <h3>Location</h3>
           <p>Office : 123 Maple Street, Springfield</p>
           <div className="ContactUs_item_btn">

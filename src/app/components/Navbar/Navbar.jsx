@@ -14,6 +14,10 @@ import {
   faXmark,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
+import { CiSearch } from "react-icons/ci";
+import { FiPhone } from "react-icons/fi";
+import { FaRegHeart, FaRegUser } from "react-icons/fa";
+import { RiShoppingBag3Line } from "react-icons/ri";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -54,9 +58,11 @@ const Navbar = () => {
       <div className="middle_navbar">
         <div className="mobile_menu_icon" onClick={() => setMenuOpen(true)}>
           <FontAwesomeIcon icon={faBarsStaggered} />
-          <FontAwesomeIcon icon={faHeart} />
-          <FontAwesomeIcon icon={faUser} />
-          <FontAwesomeIcon icon={faCartShopping} />
+          <FaRegHeart />
+
+          <FaRegUser />
+
+          <RiShoppingBag3Line />
         </div>
 
         <div className="logo">
@@ -71,12 +77,13 @@ const Navbar = () => {
         <div className="search">
           <input type="text" placeholder="search" />
           <span>
-            <FontAwesomeIcon icon={faSearch} />
+            <CiSearch />
           </span>
         </div>
 
         <div className="phone_number">
-          <FontAwesomeIcon icon={faPhone} />
+          <FiPhone />
+
           <div>
             <p>Call Us</p>
             <span>1-800-555-1234</span>
@@ -84,9 +91,11 @@ const Navbar = () => {
         </div>
 
         <div className="navbar_links">
-          <FontAwesomeIcon icon={faHeart} />
-          <FontAwesomeIcon icon={faUser} />
-          <FontAwesomeIcon icon={faCartShopping} />
+          <FaRegHeart />
+
+          <FaRegUser />
+
+          <RiShoppingBag3Line />
         </div>
       </div>
 

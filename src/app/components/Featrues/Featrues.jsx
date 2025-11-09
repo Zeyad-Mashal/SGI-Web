@@ -2,17 +2,21 @@ import React from "react";
 import "./Featrues.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faMobileScreen,
   faLock,
   faTruckFast,
   faRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
+import { RiCustomerService2Line } from "react-icons/ri";
+import { LiaShippingFastSolid } from "react-icons/lia";
+import { TfiLoop } from "react-icons/tfi";
+import { GrSecure } from "react-icons/gr";
 
 const Featrues = () => {
   return (
     <div className="featrues">
       <div className="featrues_item">
-        <FontAwesomeIcon icon={faMobileScreen} className="featrues_icon" />
+        <RiCustomerService2Line />
+
         <div className="featrues_item_1">
           <h2>Responsive</h2>
           <p>Customer service available 24/7</p>
@@ -20,7 +24,8 @@ const Featrues = () => {
       </div>
 
       <div className="featrues_item">
-        <FontAwesomeIcon icon={faLock} className="featrues_icon" />
+        <GrSecure />
+
         <div className="featrues_item_1">
           <h2>Secure</h2>
           <p>Certified marketplace since 2020</p>
@@ -28,7 +33,8 @@ const Featrues = () => {
       </div>
 
       <div className="featrues_item">
-        <FontAwesomeIcon icon={faTruckFast} className="featrues_icon" />
+        <LiaShippingFastSolid />
+
         <div className="featrues_item_1">
           <h2>Shipping</h2>
           <p>Free, fast and reliable worldwide</p>
@@ -36,7 +42,8 @@ const Featrues = () => {
       </div>
 
       <div className="featrues_item">
-        <FontAwesomeIcon icon={faRotateLeft} className="featrues_icon" />
+        <TfiLoop />
+
         <div className="featrues_item_1">
           <h2>Transparent</h2>
           <p>Hassle-free return policy</p>

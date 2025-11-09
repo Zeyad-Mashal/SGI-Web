@@ -1,11 +1,12 @@
 .Brands {
   width: 100%;
-  padding: 20px;
+  padding: 1rem 3rem;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   position: relative;
+  margin-top: 50px;
 }
 
 .Brands .brands_header_title > span {
@@ -40,7 +41,7 @@
 
 .brand_card {
   width: 100%;
-  max-width: 200px;
+  max-width: 240px;
   height: 150px;
   display: flex;
   justify-content: center;
@@ -112,6 +113,9 @@
 }
 
 @media screen and (max-width: 789px) {
+  .Brands {
+    padding: 20px;
+  }
   .brand_card {
     max-width: 100%;
   }
