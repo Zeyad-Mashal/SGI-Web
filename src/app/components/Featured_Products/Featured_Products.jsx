@@ -7,8 +7,12 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-
+import {
+  faArrowLeft,
+  faArrowRight,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
 const Featured_Products = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -58,22 +62,31 @@ const Featured_Products = () => {
           320: { slidesPerView: 1 },
           480: { slidesPerView: 2 },
           768: { slidesPerView: 3 },
-          1024: { slidesPerView: 6 },
-          1401: { slidesPerView: 8 },
+          1024: { slidesPerView: 5 },
+          1401: { slidesPerView: 7 },
         }}
         className="Featured_Products_swiper"
       >
         {Featured_Products.map((brand, index) => (
           <SwiperSlide key={index}>
-            <div className="brand_card">
-              <Image
-                src={brand.img}
-                alt="brand image"
-                loading="lazy"
-                width={160}
-                height={160}
-              />
-              <span>{brand.products} products</span>
+            <div className="Featured_card">
+              <div className="Featured_img">
+                <FontAwesomeIcon icon={faHeart} />
+                <p>Featured</p>
+              </div>
+              <h2>White Spot Concentrated Lemon</h2>
+              <div className="Featured_stars">
+                <FontAwesomeIcon icon={faStar} />
+                <FontAwesomeIcon icon={faStar} />
+                <FontAwesomeIcon icon={faStar} />
+                <FontAwesomeIcon icon={faStar} />
+                <FontAwesomeIcon icon={faStar} />
+                <p>(230 reviews)</p>
+              </div>
+              <div className="Featured_price">
+                <h3>$25.00</h3>
+                <button>Add to Cart</button>
+              </div>
             </div>
           </SwiperSlide>
         ))}

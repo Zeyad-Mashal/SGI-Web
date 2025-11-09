@@ -38,32 +38,90 @@
   margin-top: 1rem;
 }
 
-.brand_card {
+.Featured_card {
   width: 100%;
-  max-width: 200px;
-  height: 150px;
+  max-width: 250px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   border-radius: 8px;
-  background-color: rgba(7, 101, 133, 0.1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 15px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
 }
-
-.brand_card img {
-  width: 160px;
-  height: auto;
+.Featured_img {
+  background-image: url("/images/p1.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px;
+  border-radius: 16px;
 }
-
-.brand_card > span {
+.Featured_img > svg {
+  background-color: white;
+  width: 15px;
+  height: 15px;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.Featured_img > svg:hover {
+  color: red;
+}
+.Featured_img > p {
+  background-color: white;
+  padding: 5px 15px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+}
+.Featured_card h2 {
   font-size: 1rem;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.6);
-  margin-top: 8px;
+  font-weight: bold;
+  margin: 10px 0;
+  text-align: left;
+  padding: 0px 10px;
 }
-
+.Featured_stars,
+.Featured_price {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+}
+.Featured_stars > svg {
+  color: rgba(255, 169, 13, 1);
+  margin-right: 5px;
+}
+.Featured_stars > p {
+  margin-left: 10px;
+  font-size: 0.9rem;
+  color: rgba(139, 138, 138, 1);
+}
+.Featured_price {
+  margin-top: 5px;
+  justify-content: space-between;
+}
+.Featured_price > h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.Featured_price > button {
+  padding: 5px 15px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 /* أزرار السلايدر */
 .Featured_Products_swiper .swiper-button-next,
 .Featured_Products_swiper .swiper-button-prev {
@@ -112,7 +170,7 @@
 }
 
 @media screen and (max-width: 789px) {
-  .brand_card {
+  .Featured_card {
     max-width: 100%;
   }
   .Featured_Products .Featured_Products_header_title > h1 {
