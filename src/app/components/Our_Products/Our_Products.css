@@ -30,7 +30,10 @@
 .Our_Products_header > a {
   font-weight: bold;
   margin-top: 1rem;
-  text-decoration: underline;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
 }
 
 .Our_Products .Our_Products_header_title > h1 {

@@ -13,6 +13,8 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { MdKeyboardArrowRight } from "react-icons/md";
+
 const Our_Products = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -35,7 +37,9 @@ const Our_Products = () => {
           <span>Our Products</span>
           <h1>Explore Our Products</h1>
         </div>
-        <a href="#">View All &gt;</a>
+        <a href="#">
+          View All <MdKeyboardArrowRight />
+        </a>
         {/* 
         <div className="Our_Products_nav_buttons">
           <button ref={prevRef} className="nav_btn">
