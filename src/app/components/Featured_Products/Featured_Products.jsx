@@ -63,7 +63,7 @@ const Featured_Products = () => {
           480: { slidesPerView: 2 },
           768: { slidesPerView: 3 },
           1024: { slidesPerView: 4 },
-          1401: { slidesPerView: 6 },
+          1400: { slidesPerView: 5 },
         }}
         className="Featured_Products_swiper"
       >

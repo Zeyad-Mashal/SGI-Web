@@ -262,6 +262,15 @@
     bottom: -10px;
   }
 }
+
+@media screen and (min-width: 1401px) {
+  .banner_left_free {
+    left: 120px;
+  }
+  .banner_left_save {
+    right: 140px;
+  }
+}
 @media screen and (max-width: 789px) {
   .sgi-home-banner {
     height: 900px;

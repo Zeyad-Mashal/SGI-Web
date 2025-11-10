@@ -111,7 +111,17 @@
   background-color: rgba(215, 223, 43, 1);
   color: #000;
 }
-
+@media screen and (min-width: 1401px) {
+  .brand_card {
+    width: 100%;
+    max-width: 350px;
+    height: 160px;
+  }
+  .brand_card img {
+    width: 180px;
+    height: auto;
+  }
+}
 @media screen and (max-width: 789px) {
   .Brands {
     padding: 20px;

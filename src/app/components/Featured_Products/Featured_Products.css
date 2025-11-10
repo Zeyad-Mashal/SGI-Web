@@ -170,7 +170,12 @@
   background-color: rgba(215, 223, 43, 1);
   color: #000;
 }
-
+@media screen and (min-width: 1401px) {
+  .Featured_card {
+    width: 100%;
+    max-width: 350px;
+  }
+}
 @media screen and (max-width: 789px) {
   .Featured_Products {
     padding: 20px;

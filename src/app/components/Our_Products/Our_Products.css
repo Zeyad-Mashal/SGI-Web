@@ -185,6 +185,11 @@
   color: #000;
 }
 
+@media screen and (min-width: 1401px) {
+  .Featured_card {
+    max-width: 350px;
+  }
+}
 @media screen and (max-width: 789px) {
   .Our_Products {
     padding: 20px;

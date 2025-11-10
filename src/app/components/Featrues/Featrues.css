@@ -28,14 +28,14 @@
 }
 @media screen and (min-width: 1401px) {
   .featrues_item > svg {
-    width: 65px;
-    height: 65px;
+    width: 40px;
+    height: 40px;
   }
   .featrues_item .featrues_item_1 h2 {
-    font-size: 2rem;
+    font-size: 1.1rem;
   }
   .featrues_item .featrues_item_1 p {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 }
 @media screen and (max-width: 991px) {
