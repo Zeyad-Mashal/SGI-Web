@@ -64,7 +64,7 @@
 }
 @media screen and (min-width: 1401px) {
   .ContactUs_item {
-    width: 500px;
+    width: 420px;
     height: 250px;
     gap: 1rem;
   }
