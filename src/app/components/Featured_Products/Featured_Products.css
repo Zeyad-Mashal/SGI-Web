@@ -52,6 +52,9 @@
   overflow: hidden;
   cursor: pointer;
 }
+.Featured_card > a {
+  width: 100%;
+}
 .Featured_card .Featured_img {
   background-image: url("/images/p1.png");
   background-size: cover;

@@ -70,19 +70,22 @@ const Featured_Products = () => {
         {Featured_Products.map((brand, index) => (
           <SwiperSlide key={index}>
             <div className="Featured_card">
-              <div className="Featured_img">
-                <FontAwesomeIcon icon={faHeart} />
-                <p>Featured</p>
-              </div>
-              <h2>White Spot Concentrated Lemon</h2>
-              <div className="Featured_stars">
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <p>(230 reviews)</p>
-              </div>
+              <a href="/product">
+                <div className="Featured_img">
+                  <FontAwesomeIcon icon={faHeart} />
+                  <p>Featured</p>
+                </div>
+                <h2>White Spot Concentrated Lemon</h2>
+                <div className="Featured_stars">
+                  <FontAwesomeIcon icon={faStar} />
+                  <FontAwesomeIcon icon={faStar} />
+                  <FontAwesomeIcon icon={faStar} />
+                  <FontAwesomeIcon icon={faStar} />
+                  <FontAwesomeIcon icon={faStar} />
+                  <p>(230 reviews)</p>
+                </div>
+              </a>
+
               <div className="Featured_price">
                 <h3>$25.00</h3>
                 <button>Add to Cart</button>

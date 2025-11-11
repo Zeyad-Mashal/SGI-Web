@@ -12,7 +12,6 @@ import Footer from "../components/Footer/Footer";
 const Home = () => {
   return (
     <div>
-      <Navbar />
       <Hero />
       <Featrues />
       <Brands />
@@ -20,7 +19,6 @@ const Home = () => {
       <Banner />
       <Our_Products />
       <ContactUs />
-      <Footer />
     </div>
   );
 };

@@ -11,7 +11,7 @@ const ClientProduct = () => {
   const [qty, setQty] = useState(1);
 
   // ✅ الصور كلها هنا
-  const images = ["/images/p1.png", "/images/brand1.png", "/images/brand2.png"];
+  const images = ["/images/p1.png", "/images/p2.png", "/images/p3.png"];
 
   // ✅ صورة العرض الرئيسية
   const [activeImg, setActiveImg] = useState(images[0]);

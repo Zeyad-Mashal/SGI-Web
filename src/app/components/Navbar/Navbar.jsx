@@ -66,12 +66,14 @@ const Navbar = () => {
         </div>
 
         <div className="logo">
-          <Image
-            src="/images/logo-black.png"
-            alt="logo"
-            width={120}
-            height={120}
-          />
+          <a href="/">
+            <Image
+              src="/images/logo-black.png"
+              alt="logo"
+              width={120}
+              height={120}
+            />
+          </a>
         </div>
 
         <div className="search">
@@ -111,7 +113,7 @@ const Navbar = () => {
 
         <ul className="main_links">
           <li>
-            <a href="#">Home</a>
+            <a href="/">Home</a>
           </li>
           <li>
             <a href="#">About</a>
@@ -182,7 +184,7 @@ const Navbar = () => {
         </div>
 
         <div className="mobile_menu_links">
-          <a href="#">Home</a>
+          <a href="/">Home</a>
           <a href="#">About</a>
           <a href="#">Shop</a>
           <a href="#">Contact Us</a>
