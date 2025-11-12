@@ -62,7 +62,9 @@ const Navbar = () => {
 
           <FaRegUser />
 
-          <RiShoppingBag3Line />
+          <a href="/cart">
+            <RiShoppingBag3Line />
+          </a>
         </div>
 
         <div className="logo">
@@ -93,11 +95,17 @@ const Navbar = () => {
         </div>
 
         <div className="navbar_links">
-          <FaRegHeart />
+          <a href="/">
+            <FaRegHeart />
+          </a>
 
-          <FaRegUser />
+          <a href="/">
+            <FaRegUser />
+          </a>
 
-          <RiShoppingBag3Line />
+          <a href="/cart">
+            <RiShoppingBag3Line />
+          </a>
         </div>
       </div>
 
