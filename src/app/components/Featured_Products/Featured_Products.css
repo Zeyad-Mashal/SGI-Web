@@ -41,13 +41,12 @@
 
 .Featured_card {
   width: 100%;
-  max-width: 250px;
+  max-width: 400px;
   height: 475px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border-radius: 8px;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -106,8 +105,9 @@
 }
 .Featured_stars > p {
   margin-left: 10px;
-  font-size: 0.9rem;
+  font-size: 14px;
   color: rgba(139, 138, 138, 1);
+  width: 100%;
 }
 .Featured_price {
   margin-top: 5px;

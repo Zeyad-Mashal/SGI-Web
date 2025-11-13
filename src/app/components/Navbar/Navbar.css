@@ -70,10 +70,10 @@
   height: 40px;
 }
 .phone_number > svg {
-  width: 40px;
+  width: 35px;
   height: auto;
   background-color: rgba(215, 223, 43, 1);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 5px;
 }
 .phone_number > div {

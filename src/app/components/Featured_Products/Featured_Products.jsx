@@ -82,7 +82,7 @@ const Featured_Products = () => {
                   <FontAwesomeIcon icon={faStar} />
                   <FontAwesomeIcon icon={faStar} />
                   <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews)</p>
+                  <p>(230 reviews) (m.order 30 units)</p>
                 </div>
               </a>
 
