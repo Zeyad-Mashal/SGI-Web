@@ -375,22 +375,22 @@
 }
 @media screen and (min-width: 1401px) {
   .cart_container {
-    padding: 1rem 5rem;
+    padding: 1rem 2rem;
   }
   .cart_count {
-    width: 950px;
+    width: 850px;
   }
   .cart_right {
-    width: 450px;
+    width: 400px;
   }
   .cart_right_promo {
-    width: 450px;
+    width: 400px;
   }
   .cart_right_summry {
     width: 450px;
   }
   .cart_list {
-    width: 950px;
+    width: 850px;
   }
 }
 @media screen and (max-width: 991px) {
