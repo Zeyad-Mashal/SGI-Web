@@ -197,13 +197,13 @@
     max-width: 600px;
   }
   .register-form h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   .register-form p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   .form-content label h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   .form-optional {
     margin: 2rem 0;
@@ -211,13 +211,13 @@
   .form-content > label > input,
   .form-optional > label > input {
     padding: 10px;
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   .register-terms {
-    margin: 1rem 0;
+    margin: 0;
   }
   .register-terms h4 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   .register-terms input {
     width: 20px;
@@ -225,7 +225,7 @@
   }
   .register-form button {
     width: 100%;
-    padding: 1rem;
+    padding: 0.8rem 1rem;
     font-size: 1.2rem;
   }
   .form-optional::before {
@@ -234,7 +234,7 @@
     width: 100%;
     background-color: rgba(0, 0, 0, 0.3);
     position: absolute;
-    top: 140%;
+    top: -25%;
     left: 0;
   }
 }
