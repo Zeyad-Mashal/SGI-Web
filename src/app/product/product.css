@@ -249,13 +249,13 @@
 
 @media screen and (min-width: 1401px) {
   .product_imgs {
-    width: 630px;
+    width: 600px;
   }
   .product_subimgs {
     width: 600px;
   }
   .product_subimgs img {
-    width: 180px;
+    width: 160px;
   }
   .product_content {
     height: 900px;
