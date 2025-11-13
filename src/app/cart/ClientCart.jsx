@@ -25,7 +25,13 @@ const ClientCart = () => {
     <div className="cart">
       {emptyContent === true ? (
         <div className="empty_cart">
-          <IoCartSharp />
+          <Image
+            src={"/images/empty_cart.png"}
+            alt="empty cart"
+            loading="lazy"
+            width={90}
+            height={90}
+          />
 
           <h1>Your Cart Is Empty</h1>
           <p>
@@ -35,15 +41,15 @@ const ClientCart = () => {
           <div className="empty_content">
             <p>
               <BsBox2 />
-              Bulk packaging available
+              Bulk Pricing
             </p>
             <p>
               <LiaShippingFastSolid />
-              Fast delivery (2-3 business days)
+              Free Shipping $500+
             </p>
             <p>
               <BsPatchCheck />
-              Secure Checkout Process
+              Quality Assured
             </p>
           </div>
           <button>Browse Products</button>
