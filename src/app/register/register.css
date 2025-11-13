@@ -167,21 +167,21 @@
     padding: 2rem 0;
   }
   .register-img {
-    max-width: 1000px;
-    width: 1000px;
-    height: 1000px;
+    max-width: 700px;
+    width: 700px;
+    height: 700px;
   }
   .register-img > img {
-    width: 300px;
+    width: 180px;
   }
   .imgs > img {
-    width: 200px;
+    width: 150px;
   }
   .imgs > a {
     background-color: white;
-    width: 70px;
-    height: 70px;
-    padding: 20px;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
   }
   .imgs > a > svg {
     background-color: white;
@@ -189,43 +189,44 @@
     height: 100%;
   }
   .register-img-content > h3 {
-    font-size: 4rem;
+    font-size: 2rem;
     width: 70%;
   }
   .register-form {
-    max-width: 1000px;
+    width: 90%;
+    max-width: 600px;
   }
   .register-form h1 {
-    font-size: 3.5rem;
+    font-size: 2rem;
   }
   .register-form p {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
   }
   .form-content label h3 {
-    font-size: 2rem;
+    font-size: 1.2rem;
   }
   .form-optional {
     margin: 2rem 0;
   }
   .form-content > label > input,
   .form-optional > label > input {
-    padding: 1rem;
-    font-size: 1.8rem;
+    padding: 10px;
+    font-size: 1.1rem;
   }
   .register-terms {
     margin: 1rem 0;
   }
   .register-terms h4 {
-    font-size: 1.7rem;
+    font-size: 1.2rem;
   }
   .register-terms input {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
   }
   .register-form button {
     width: 100%;
-    padding: 1.5rem;
-    font-size: 1.8rem;
+    padding: 1rem;
+    font-size: 1.2rem;
   }
   .form-optional::before {
     content: "";
@@ -233,7 +234,7 @@
     width: 100%;
     background-color: rgba(0, 0, 0, 0.3);
     position: absolute;
-    top: -15%;
+    top: 140%;
     left: 0;
   }
 }
