@@ -16,14 +16,14 @@ const Hero = () => {
       </div>
       <div className="hero_right">
         <Image
-          src={"/images/hero2.jpg"}
+          src={"/images/Banner-1.jpg"}
           alt="hero section navbar"
           loading="lazy"
           width={500}
           height={500}
         />
         <Image
-          src={"/images/hero3.png"}
+          src={"/images/Banner-2.jpg"}
           alt="hero section navbar"
           loading="lazy"
           width={500}
