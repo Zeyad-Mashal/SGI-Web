@@ -28,7 +28,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
 }
 .cart_left {
   display: flex;
@@ -49,6 +48,7 @@
 .cart_right {
   border: none;
   width: 350px;
+  padding-top: 2rem;
 }
 .cart_right_promo {
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -256,7 +256,7 @@
   font-size: 14px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: column;
   color: rgba(0, 0, 0, 0.7);
 }
