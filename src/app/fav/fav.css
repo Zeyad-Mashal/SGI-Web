@@ -1,0 +1,234 @@
+.fav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1rem 3rem;
+}
+.fav_title {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.fav_title_info > h1 {
+  font-size: 30px;
+}
+.fav_title_info > p {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+.fav_title_bnts button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: rgba(237, 76, 92, 1);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.fav_list {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.fav_item {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 16px;
+  position: relative;
+}
+.fav_item > img {
+  border-radius: 16px;
+}
+.fav_item_content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.fav_content_left {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+.fav_content_left > span {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 5px;
+  width: 100px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+}
+.fav_content_left > h2 {
+  font-size: 20px;
+}
+.left_price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+.left_price > p {
+  font-size: 20px;
+  color: rgba(0, 125, 78, 1);
+}
+.left_price > p > span {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.5);
+}
+.left_price > h4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 5px;
+  background-color: rgba(254, 255, 235, 1);
+  color: rgba(165, 106, 0, 1);
+  border-radius: 16px;
+}
+.fav_item_right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.fav_item_right > svg {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: rgba(237, 76, 92, 1);
+  font-size: 20px;
+  cursor: pointer;
+}
+.fav_right_btns {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 20px;
+  position: absolute;
+  bottom: 20px;
+}
+.fav_right_btns button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.fav_right_btns button:first-child {
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 100px;
+}
+.fav_right_btns button:last-child {
+  background-color: rgba(215, 223, 43, 1);
+  width: 150px;
+}
+/* empty */
+.empty-fav {
+  text-align: center;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-fav-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.empty-fav-icon svg {
+  width: 55px;
+  height: 55px;
+  stroke: #a3a3a3;
+}
+
+.empty-fav-title {
+  font-size: 24px;
+  color: #222;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.empty-fav-subtitle {
+  font-size: 14px;
+  color: #6a6a6a;
+  max-width: 320px;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.empty-fav-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #000;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  transition: 0.2s ease;
+}
+
+.empty-fav-btn:hover {
+  background: #333;
+}
+
+@media screen and (max-width: 991px) {
+  .fav {
+    padding: 10px;
+  }
+  .fav_title {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .fav_item {
+    flex-direction: column;
+  }
+  .fav_content_left > span {
+    font-size: 0.7rem;
+    width: 80px;
+  }
+  .fav_content_left > h2 {
+    font-size: 16px;
+  }
+  .left_price {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .fav_right_btns {
+    position: relative;
+    margin-top: 2rem;
+    gap: 10px;
+  }
+  .fav_item_content {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}

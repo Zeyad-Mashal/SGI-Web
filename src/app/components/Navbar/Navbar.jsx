@@ -56,9 +56,14 @@ const Navbar = () => {
 
       {/* 🔸 Middle Navbar */}
       <div className="middle_navbar">
-        <div className="mobile_menu_icon" onClick={() => setMenuOpen(true)}>
-          <FontAwesomeIcon icon={faBarsStaggered} />
-          <FaRegHeart />
+        <div className="mobile_menu_icon">
+          <FontAwesomeIcon
+            icon={faBarsStaggered}
+            onClick={() => setMenuOpen(true)}
+          />
+          <a href="/fav">
+            <FaRegHeart />
+          </a>
 
           <FaRegUser />
 
@@ -95,7 +100,7 @@ const Navbar = () => {
         </div>
 
         <div className="navbar_links">
-          <a href="/">
+          <a href="/fav">
             <FaRegHeart />
           </a>
 
