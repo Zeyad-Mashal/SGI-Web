@@ -262,48 +262,57 @@
     height: 50px;
   }
   .top_navbar > p {
-    font-size: 1rem;
+    font-size: 1.1rem;
+  }
+  .middle_navbar {
+    max-width: 1800px;
   }
   .middle_navbar .logo img {
     width: 200px;
   }
+  .search {
+    width: 900px;
+  }
   .search > input {
-    width: 850px;
-    padding: 1.3rem;
+    width: 100%;
+    padding: 1.5rem;
     font-size: 1.1rem;
   }
   .search > span {
     padding: 0.5rem 2.5rem;
   }
   .search > span > svg {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
   }
   .phone_number {
     padding: 1rem;
     justify-content: space-between;
-    width: 220px;
+    width: 250px;
     height: 55px;
   }
   .phone_number > svg {
-    width: 45px;
-    height: 40px;
+    width: 50px;
+    height: 45px;
     padding: 10px;
     border-radius: 16px;
   }
   .phone_number > div > p {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
   .phone_number > div > span {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   .navbar_links {
     gap: 2rem;
-    width: 150px;
+    width: 200px;
   }
-  .navbar_links > svg {
-    width: 40px;
-    height: 40px;
+  .navbar_links > a {
+    width: 100%;
+  }
+  .navbar_links > a > svg {
+    width: 35px;
+    height: 35px;
   }
   .mega_menu_btn > svg {
     width: 30px;
@@ -312,14 +321,30 @@
   .mega_menu_btn > span {
     font-size: 1.2rem;
   }
+  .desktop_menu {
+    max-width: 1800px;
+    gap: 0;
+  }
+  .desktop_menu .main_links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
   .main_links li a {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+  }
+  .login_links {
+    width: 500px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
   .login_links > a {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
   .login_links span {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     padding: 1rem;
     width: 120px;
     display: flex;
@@ -327,12 +352,12 @@
     align-items: center;
   }
   .our_shop {
-    width: 250px;
+    width: 300px;
   }
   .our_shop > a {
     padding: 1rem;
-    font-size: 1.2rem;
-    width: 100%;
+    font-size: 1.4rem;
+    width: 300px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -345,7 +370,7 @@
     padding: 5px;
   }
   .mega_menu_dropdown {
-    top: 320px;
+    top: 220px;
   }
 
   .mega_menu_content {
