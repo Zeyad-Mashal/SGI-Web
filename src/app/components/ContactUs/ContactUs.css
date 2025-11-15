@@ -2,15 +2,23 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  padding: 1rem 3rem;
+}
+.contactUS_container {
+  width: 100%;
+  max-width: 1600px;
+  display: flex;
+  justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   padding: 1rem 3rem;
 }
-.ContactUs > h1 {
+.contactUS_container > h1 {
   font-size: 2rem;
   font-weight: bold;
 }
-.ContactUs > p {
+.contactUS_container > p {
   color: rgba(0, 0, 0, 0.5);
 }
 .ContactUs_list {
@@ -63,14 +71,23 @@
   background-color: rgba(215, 223, 43, 1);
 }
 @media screen and (min-width: 1401px) {
+  .contactUS_container {
+    padding: 0;
+  }
   .ContactUs_item {
-    width: 420px;
+    width: 500px;
     height: 250px;
     gap: 1rem;
   }
 }
 @media screen and (max-width: 789px) {
+  .contactUS_container {
+    padding: 0;
+  }
   .ContactUs {
     padding: 20px;
+  }
+  .ContactUs_item {
+    width: 100%;
   }
 }

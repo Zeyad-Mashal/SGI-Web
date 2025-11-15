@@ -30,70 +30,72 @@ const Featured_Products = () => {
 
   return (
     <div className="Featured_Products">
-      <div className="Featured_Products_header">
-        <div className="Featured_Products_header_title">
-          <span>Today’s</span>
-          <h1>Featured Products</h1>
+      <div className="Featured_Products_container">
+        <div className="Featured_Products_header">
+          <div className="Featured_Products_header_title">
+            <span>Today’s</span>
+            <h1>Featured Products</h1>
+          </div>
+
+          {/* أزرار التنقل */}
+          <div className="Featured_Products_nav_buttons">
+            <button ref={prevRef} className="nav_btn">
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </button>
+            <button ref={nextRef} className="nav_btn">
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          </div>
         </div>
 
-        {/* أزرار التنقل */}
-        <div className="Featured_Products_nav_buttons">
-          <button ref={prevRef} className="nav_btn">
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </button>
-          <button ref={nextRef} className="nav_btn">
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
-        </div>
-      </div>
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          onInit={(swiper) => {
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
+            swiper.navigation.init();
+            swiper.navigation.update();
+          }}
+          autoplay={{ delay: 4000, disableOnInteraction: false }}
+          spaceBetween={20}
+          loop={true}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            480: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
+            1400: { slidesPerView: 5 },
+          }}
+          className="Featured_Products_swiper"
+        >
+          {Featured_Products.map((brand, index) => (
+            <SwiperSlide key={index}>
+              <div className="Featured_card">
+                <a href="/product">
+                  <div className="Featured_img">
+                    <FontAwesomeIcon icon={faHeart} />
+                    <p>Featured</p>
+                  </div>
+                  <h2>White Spot Concentrated Lemon</h2>
+                  <div className="Featured_stars">
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <p>(230 reviews) (m.order 30 units)</p>
+                  </div>
+                </a>
 
-      <Swiper
-        modules={[Navigation, Autoplay]}
-        onInit={(swiper) => {
-          swiper.params.navigation.prevEl = prevRef.current;
-          swiper.params.navigation.nextEl = nextRef.current;
-          swiper.navigation.init();
-          swiper.navigation.update();
-        }}
-        autoplay={{ delay: 4000, disableOnInteraction: false }}
-        spaceBetween={20}
-        loop={true}
-        breakpoints={{
-          320: { slidesPerView: 1 },
-          480: { slidesPerView: 2 },
-          768: { slidesPerView: 3 },
-          1024: { slidesPerView: 4 },
-          1400: { slidesPerView: 5 },
-        }}
-        className="Featured_Products_swiper"
-      >
-        {Featured_Products.map((brand, index) => (
-          <SwiperSlide key={index}>
-            <div className="Featured_card">
-              <a href="/product">
-                <div className="Featured_img">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <p>Featured</p>
+                <div className="Featured_price">
+                  <h3>$25.00</h3>
+                  <button>Add to Cart</button>
                 </div>
-                <h2>White Spot Concentrated Lemon</h2>
-                <div className="Featured_stars">
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews) (m.order 30 units)</p>
-                </div>
-              </a>
-
-              <div className="Featured_price">
-                <h3>$25.00</h3>
-                <button>Add to Cart</button>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   );
 };

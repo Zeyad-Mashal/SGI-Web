@@ -1,11 +1,20 @@
 .featrues {
   width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}
+.features_container {
+  width: 100%;
+  display: flex;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 1600px;
   padding: 10px;
   background-color: rgba(247, 247, 247, 1);
-  margin-top: 25px;
 }
 .featrues_item {
   display: flex;

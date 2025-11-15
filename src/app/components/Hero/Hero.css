@@ -74,14 +74,14 @@
 }
 @media screen and (min-width: 1401px) {
   .hero {
-    height: 900px;
+    height: 1200px;
   }
   .hero .hero_left {
-    height: 900px;
+    height: 1200px;
     padding-top: 8rem;
   }
   .hero_right > img {
-    height: 445px;
+    height: 595px;
   }
   .hero_left span {
     padding: 0.5rem;

@@ -3,12 +3,18 @@
   padding: 1rem 3rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+.barnds_container {
+  width: 100%;
+  max-width: 1600px;
+  display: flex;
+  justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   position: relative;
-  margin-top: 50px;
 }
-
 .Brands .brands_header_title > span {
   font-size: 1.2rem;
   font-weight: bold;
@@ -112,6 +118,9 @@
   color: #000;
 }
 @media screen and (min-width: 1401px) {
+  .barnds_container {
+    padding: 0;
+  }
   .brand_card {
     width: 100%;
     max-width: 350px;

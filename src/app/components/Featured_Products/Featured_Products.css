@@ -3,10 +3,18 @@
   padding: 1rem 3rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+.Featured_Products_container {
+  width: 100%;
+  max-width: 1600px;
+  padding: 1rem 3rem;
+  display: flex;
+  justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   position: relative;
-  margin-top: 50px;
 }
 
 .Featured_Products .Featured_Products_header_title > span {
@@ -174,12 +182,18 @@
   color: #000;
 }
 @media screen and (min-width: 1401px) {
+  .Featured_Products_container {
+    padding: 0;
+  }
   .Featured_card {
     width: 100%;
     max-width: 350px;
   }
 }
 @media screen and (max-width: 789px) {
+  .Featured_Products_container {
+    padding: 0;
+  }
   .Featured_Products {
     padding: 20px;
   }

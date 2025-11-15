@@ -1,6 +1,15 @@
 .sgi-home-banner {
   width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 3rem;
+  margin-top: 50px;
+}
+.sgi-home-banner_container {
+  width: 100%;
+  max-width: 1600px;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 3rem;
@@ -10,7 +19,8 @@
   background-repeat: no-repeat;
   height: 600px;
   position: relative;
-  margin-top: 50px;
+  border-radius: 16px;
+  overflow: hidden;
 }
 .overlay {
   position: absolute;
@@ -280,6 +290,12 @@
     flex-direction: column;
     padding: 1rem;
   }
+  .sgi-home-banner_container {
+    height: 900px;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
   .overlay {
     height: 900px;
   }
@@ -299,7 +315,7 @@
     width: 100%;
   }
   .banner_right_imgs {
-    gap: 0.2rem;
+    gap: 1rem;
     width: 100%;
   }
   .banner_right_imgs > img {

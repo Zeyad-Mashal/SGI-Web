@@ -3,12 +3,19 @@
   padding: 1rem 3rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+.our_products_container {
+  width: 100%;
+  max-width: 1600px;
+  padding: 1rem 3rem;
+  display: flex;
+  justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   position: relative;
-  margin-top: 50px;
 }
-
 .Our_Products .Our_Products_header_title > span {
   font-size: 1.2rem;
   font-weight: bold;
@@ -186,11 +193,17 @@
 }
 
 @media screen and (min-width: 1401px) {
+  .our_products_container {
+    padding: 0;
+  }
   .Featured_card {
     max-width: 350px;
   }
 }
 @media screen and (max-width: 789px) {
+  .our_products_container {
+    padding: 0;
+  }
   .Our_Products {
     padding: 20px;
   }
