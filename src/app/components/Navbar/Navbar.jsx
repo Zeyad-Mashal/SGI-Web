@@ -132,7 +132,7 @@ const Navbar = () => {
             <a href="#">About</a>
           </li>
           <li>
-            <a href="#">Shop</a>
+            <a href="/shop">Shop</a>
           </li>
           <li>
             <a href="#">Contact Us</a>
@@ -199,7 +199,7 @@ const Navbar = () => {
         <div className="mobile_menu_links">
           <a href="/">Home</a>
           <a href="#">About</a>
-          <a href="#">Shop</a>
+          <a href="/shop">Shop</a>
           <a href="#">Contact Us</a>
 
           <div className="mobile_categories">
