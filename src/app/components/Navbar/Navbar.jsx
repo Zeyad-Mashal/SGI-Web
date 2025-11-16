@@ -65,7 +65,9 @@ const Navbar = () => {
             <FaRegHeart />
           </a>
 
-          <FaRegUser />
+          <a href="/profile">
+            <FaRegUser />
+          </a>
 
           <a href="/cart">
             <RiShoppingBag3Line />
@@ -104,7 +106,7 @@ const Navbar = () => {
             <FaRegHeart />
           </a>
 
-          <a href="/">
+          <a href="/profile">
             <FaRegUser />
           </a>
 
@@ -145,7 +147,7 @@ const Navbar = () => {
           </span>
         </div>
         <div className="our_shop">
-          <a href="#">
+          <a href="/shop">
             Explore all products <FontAwesomeIcon icon={faArrowRight} />
           </a>
         </div>

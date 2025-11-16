@@ -1,0 +1,327 @@
+.profile {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  max-width: 1800px;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+.profile_info,
+.RecentOrders,
+.Information {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 16px;
+  box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.4);
+  padding: 20px;
+}
+.profile_info_top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.profile_info_top > img {
+  border-radius: 16px;
+  width: 150px;
+  height: 150px;
+}
+.profile_info_content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.profile_title {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.profile_title > h1 {
+  font-size: 30px;
+}
+.profile_title > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 16px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+.profile_info_content p {
+  color: rgba(0, 0, 0, 0.6);
+  margin: 5px 0;
+}
+.profile_contact {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+  margin: 10px 0;
+}
+.profile_contact span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.profile_info_bottom {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+.profile_bottom_item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.profile_bottom_item > svg {
+  font-size: 2.5rem;
+  background-color: white;
+  border-radius: 10px;
+  padding: 5px;
+}
+.bottom_item_content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.bottom_item_content > h3 {
+  font-size: 1.5rem;
+}
+.bottom_item_content > p {
+  color: rgba(0, 0, 0, 0.7);
+}
+.RecentOrders_title {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.RecentOrders_title > h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 25px;
+}
+.RecentOrders_list {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.RecentOrders_item {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.RecentOrders_item_left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.RecentOrders_item_left > svg {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 177, 2, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  color: rgba(0, 125, 78, 1);
+}
+.RecentOrders_item_left > div > h3 {
+  font-size: 20px;
+}
+.RecentOrders_item_left > div > p {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+.RecentOrders_item_right > h3 {
+  font-size: 20px;
+}
+.Information {
+  align-items: flex-start;
+}
+.Information > h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 25px;
+}
+.Information_list {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.Information_item {
+  width: 48%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+}
+.Information_item > h3 {
+  font-size: 20px;
+}
+.Information_item > p {
+  font-size: 1.1rem;
+}
+.Information_item:nth-child(1) {
+  background-color: rgba(103, 70, 180, 0.1);
+}
+.Information_item:nth-child(2) {
+  background-color: rgba(0, 125, 78, 0.1);
+}
+.Information_item:nth-child(3) {
+  background-color: rgba(0, 114, 232, 0.1);
+}
+.Information_item:nth-child(4) {
+  background-color: rgba(215, 223, 43, 0.1);
+}
+.Information_item:nth-child(1) > h3 {
+  color: rgba(103, 70, 180, 1);
+}
+.Information_item:nth-child(2) > h3 {
+  color: rgba(0, 125, 78, 1);
+}
+.Information_item:nth-child(3) > h3 {
+  color: rgba(15, 145, 210, 1);
+}
+.Information_item:nth-child(4) > h3 {
+  color: rgba(189, 122, 0, 1);
+}
+
+@media screen and (max-width: 991px) {
+  .profile_container {
+    width: 100%;
+  }
+  .profile_info_top {
+    flex-direction: column;
+    position: relative;
+  }
+  .profile_info_top > img {
+    display: block;
+    width: 100px;
+    height: 100px;
+  }
+  .profile_title > h1 {
+    font-size: 20px;
+  }
+  .profile_title > button {
+    font-size: 0.7rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .profile_info_content p {
+    font-size: 0.7rem;
+  }
+  .profile_contact {
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .profile_contact span {
+    font-size: 0.7rem;
+  }
+  .profile_info_bottom {
+    flex-direction: column;
+  }
+  .profile_bottom_item {
+    width: 100%;
+  }
+  .profile_bottom_item > svg {
+    font-size: 2rem;
+  }
+  .bottom_item_content > h3 {
+    font-size: 1.2rem;
+  }
+  .bottom_item_content > p {
+    font-size: 0.9rem;
+  }
+  .RecentOrders_title > h2 {
+    font-size: 18px;
+  }
+  .RecentOrders_title > a {
+    font-size: 14px;
+  }
+  .RecentOrders_item {
+    padding: 10px;
+    position: relative;
+  }
+  .RecentOrders_item_left {
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .RecentOrders_item_left > svg {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+  }
+  .RecentOrders_item_left > div > h3 {
+    font-size: 16px;
+  }
+  .RecentOrders_item_left > div > p {
+    font-size: 14px;
+  }
+  .RecentOrders_item_right > h3 {
+    font-size: 16px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .Information > h2 {
+    font-size: 18px;
+  }
+  .Information_item {
+    width: 100%;
+  }
+  .Information_item > h3 {
+    font-size: 17px;
+  }
+  .Information_item > p {
+    font-size: 0.9rem;
+  }
+}

@@ -278,4 +278,7 @@
   .shop_display {
     display: none;
   }
+  .shop_list {
+    justify-content: center;
+  }
 }
