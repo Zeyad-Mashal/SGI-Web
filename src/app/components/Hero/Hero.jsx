@@ -16,14 +16,14 @@ const Hero = ({ params }) => {
       </div>
       <div className="hero_right">
         <Image
-          src={"/images/b1.jpg"}
+          src={"/images/B1F.jpg"}
           alt="hero section navbar"
           loading="lazy"
           width={500}
           height={500}
         />
         <Image
-          src={"/images/b2.jpg"}
+          src={"/images/B2F.jpg"}
           alt="hero section navbar"
           loading="lazy"
           width={500}

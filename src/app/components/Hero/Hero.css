@@ -9,7 +9,7 @@
 }
 .hero .hero_left {
   width: 100%;
-  background-image: url("/images/hero1.jpg");
+  background-image: url("/images/MB22.jpg");
   background-size: cover;
   background-position: center;
   height: 700px;
@@ -21,6 +21,7 @@
   gap: 1rem;
   padding: 3rem 3rem;
   border-radius: 0 16px 16px 0;
+  color: white;
 }
 .hero_right {
   width: 60%;
