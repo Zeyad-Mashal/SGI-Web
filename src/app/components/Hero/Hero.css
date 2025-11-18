@@ -36,7 +36,6 @@
   width: 100%;
   border-radius: 16px 0 0 16px;
   height: 345px;
-  filter: brightness(0.8);
 }
 .hero_left span {
   color: white;
