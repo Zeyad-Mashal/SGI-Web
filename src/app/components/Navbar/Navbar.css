@@ -211,7 +211,10 @@
   animation: fadeIn 0.3s ease-in-out;
   border-radius: 16px;
 }
-
+.mega_menu_dropdown.ar-rtl {
+  left: auto; /* إلغاء خاصية left */
+  right: 20px; /* تطبيق المسافة على اليمين */
+}
 .mega_menu_content {
   display: flex;
   justify-content: space-evenly;
@@ -243,6 +246,16 @@
 .mega_category ul li:hover {
   text-decoration: underline;
 }
+.lang_switch {
+  cursor: pointer;
+  font-weight: bold;
+}
+.lang_switch > span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
 
 @keyframes fadeIn {
   from {
@@ -255,9 +268,15 @@
   }
 }
 
+@media screen and (min-width: 1370px) and (max-width: 1600px) {
+  .navbar {
+    background-color: red;
+  }
+}
+
 /* large screen */
 
-@media screen and (min-width: 1401px) {
+@media screen and (min-width: 1701px) {
   .top_navbar {
     height: 50px;
   }

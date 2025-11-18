@@ -1,7 +1,7 @@
 import React from "react";
 import "./Hero.css";
 import Image from "next/image";
-const Hero = () => {
+const Hero = ({ params }) => {
   return (
     <div className="hero">
       <div className="hero_left">

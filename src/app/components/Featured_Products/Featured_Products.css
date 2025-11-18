@@ -135,6 +135,9 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+.Featured_Products_swiper {
+  direction: ltr;
+}
 /* أزرار السلايدر */
 .Featured_Products_swiper .swiper-button-next,
 .Featured_Products_swiper .swiper-button-prev {

@@ -77,7 +77,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 90%;
   box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.4);
   padding: 8px 2rem;
   border-radius: 16px;
@@ -89,16 +89,20 @@
   gap: 10px;
   border: 1px solid black;
   padding: 8px;
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
+  width: 120px;
 }
 .shop_filter_top > p {
   color: rgba(0, 0, 0, 0.5);
 }
+.shop_filter_top > p > span {
+  font-size: 20px;
+}
 .shop_filter_top > select {
   border: 1px solid black;
   padding: 8px;
-  border-radius: 16px;
+  border-radius: 12px;
   outline: none;
 }
 .shop_display {
@@ -119,7 +123,7 @@
 }
 .shop_list {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   width: 100%;
@@ -265,6 +269,7 @@
   }
   .shop_filter_top {
     padding: 10px;
+    width: 100%;
   }
   .shop_filter_top > h3 {
     font-size: 0.8rem;

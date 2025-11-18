@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,12 +18,13 @@ import { CiSearch } from "react-icons/ci";
 import { FiPhone } from "react-icons/fi";
 import { FaRegHeart, FaRegUser } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
-
+import en from "../../../translation/en.json";
+import ar from "../../../translation/ar.json";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false); // ✅ جديد
-
+  const [isArabic, setIsArabic] = useState(false);
   const categories = [
     {
       name: "Cleaning Supplies",
@@ -42,16 +43,72 @@ const Navbar = () => {
   const toggleCategory = (index) => {
     setActiveCategory(activeCategory === index ? null : index);
   };
+  const [lang, setLang] = useState("en");
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem("lang");
+
+    if (!savedLang) {
+      localStorage.setItem("lang", "en");
+      setLang("en");
+    } else {
+      setLang(savedLang);
+    }
+    if (savedLang === "ar") {
+      setIsArabic(true);
+    }
+  }, []);
+  // تغيير اللغه
+  const toggleLang = () => {
+    const newLang = lang === "en" ? "ar" : "en";
+    setLang(newLang);
+    localStorage.setItem("lang", newLang);
+    window.location.reload();
+  };
+
+  // كود الترجمه في كل الصفحات
+  const [translations, setTranslations] = useState(en);
+
+  useEffect(() => {
+    const lang = localStorage.getItem("lang") || "en";
+
+    if (lang === "ar") {
+      setTranslations(ar);
+    } else {
+      setTranslations(en);
+    }
+  }, []);
 
   return (
     <div className="navbar">
       {/* 🔸 Top Navbar */}
       <div className="top_navbar">
         <p>
-          Premium Cleaning & Hygiene Products for Professionals{" "}
-          <a href="#">shop now</a>
+          {translations.navbartop} <a href="/shop">{translations.shopnow}</a>
         </p>
-        <p>Arabic</p>
+        <p onClick={toggleLang} className="lang_switch">
+          {lang === "en" ? (
+            <span>
+              <Image
+                src={"/images/united-arab-emirates.png"}
+                alt="aue flag arabic lang"
+                width={30}
+                height={30}
+              />
+              AR
+            </span>
+          ) : (
+            <span>
+              <Image
+                src={"/images/united-kingdom.png"}
+                alt="aue flag arabic lang"
+                width={30}
+                height={30}
+              />
+              EN
+            </span>
+          )}
+        </p>
       </div>
 
       {/* 🔸 Middle Navbar */}
@@ -155,7 +212,7 @@ const Navbar = () => {
 
       {/* ✅ Mega Menu Dropdown */}
       {megaMenuOpen && (
-        <div className="mega_menu_dropdown">
+        <div className={`mega_menu_dropdown ${isArabic ? "ar-rtl" : ""}`}>
           <div className="mega_menu_content">
             {categories.map((cat, index) => (
               <>

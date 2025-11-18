@@ -87,7 +87,9 @@ export default function Shop() {
               Filters
             </h3>
 
-            <p>6 products found</p>
+            <p>
+              <span>6</span> products found
+            </p>
             <select>
               <option value="Most Popular">Most Popular</option>
               <option value="Most Popular">Most Popular</option>
