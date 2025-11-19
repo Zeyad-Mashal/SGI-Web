@@ -59,7 +59,7 @@ const Brands = () => {
             320: { slidesPerView: 2.5 },
             480: { slidesPerView: 3 },
             768: { slidesPerView: 3 },
-            1024: { slidesPerView: 4 },
+            1024: { slidesPerView: 5 },
             1401: { slidesPerView: 5 },
           }}
           className="brands_swiper"

@@ -49,7 +49,7 @@
   margin-top: 1rem;
 }
 
-.Featured_cards {
+.Our_Products_list {
   width: 100%;
   margin-top: 1rem;
   display: flex;
@@ -59,7 +59,7 @@
   gap: 1rem;
 }
 
-.Featured_card {
+.Our_Products_item {
   width: 100%;
   max-width: 300px;
   height: 475px;
@@ -72,7 +72,7 @@
   overflow: hidden;
   cursor: pointer;
 }
-.Featured_img {
+.Our_Products_img {
   background-image: url("/images/p1.png");
   background-size: cover;
   background-position: center;
@@ -85,7 +85,7 @@
   padding: 10px;
   border-radius: 16px;
 }
-.Featured_img > svg {
+.Our_Products_img > svg {
   background-color: white;
   width: 15px;
   height: 15px;
@@ -93,49 +93,49 @@
   border-radius: 50%;
   cursor: pointer;
 }
-.Featured_img > svg:hover {
+.Our_Products_img > svg:hover {
   color: red;
 }
-.Featured_img > p {
+.Our_Products_img > p {
   background-color: white;
   padding: 5px 15px;
   border-radius: 16px;
   font-size: 0.8rem;
 }
-.Featured_card h2 {
+.Our_Products_item h2 {
   font-size: 1rem;
   font-weight: bold;
   margin: 10px 0;
   text-align: left;
   padding: 0px 10px;
 }
-.Featured_stars,
-.Featured_price {
+.Our_Products_stars,
+.Our_Products_price {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
   padding: 0 10px;
 }
-.Featured_stars > svg {
+.Our_Products_stars > svg {
   color: rgba(255, 169, 13, 1);
   margin-right: 5px;
 }
-.Featured_stars > p {
+.Our_Products_stars > p {
   margin-left: 10px;
   font-size: 0.9rem;
   color: rgba(139, 138, 138, 1);
 }
-.Featured_price {
+.Our_Products_price {
   margin-top: 5px;
   justify-content: space-between;
 }
-.Featured_price > h3 {
+.Our_Products_price > h3 {
   font-size: 1.2rem;
   font-weight: bold;
   margin-right: 10px;
 }
-.Featured_price > button {
+.Our_Products_price > button {
   padding: 5px 15px;
   background-color: black;
   color: white;
@@ -196,7 +196,7 @@
   .our_products_container {
     padding: 0;
   }
-  .Featured_card {
+  .Our_Products_item {
     max-width: 350px;
   }
 }
@@ -207,7 +207,7 @@
   .Our_Products {
     padding: 20px;
   }
-  .Featured_card {
+  .Our_Products_item {
     max-width: 100%;
   }
   .Our_Products .Our_Products_header_title > h1 {

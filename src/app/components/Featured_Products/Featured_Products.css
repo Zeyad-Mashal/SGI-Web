@@ -1,6 +1,6 @@
 .Featured_Products {
   width: 100%;
-  padding: 1rem 3rem;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,7 +9,7 @@
 .Featured_Products_container {
   width: 100%;
   max-width: 1600px;
-  padding: 1rem 3rem;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -63,17 +63,15 @@
   width: 100%;
 }
 .Featured_card .Featured_img {
-  background-image: url("/images/p1.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   width: 100%;
   height: 340px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 1.5rem;
+  padding: 0;
   border-radius: 16px;
+}
+.Featured_card .Featured_img > img {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 .Featured_img > svg {
   background-color: white;
@@ -82,6 +80,9 @@
   padding: 8px;
   border-radius: 50%;
   cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 .Featured_img > svg:hover {
   color: red;
@@ -91,6 +92,9 @@
   padding: 5px 15px;
   border-radius: 16px;
   font-size: 0.8rem;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 .Featured_card h2 {
   font-size: 1rem;
@@ -201,7 +205,51 @@
     padding: 20px;
   }
   .Featured_card {
-    max-width: 100%;
+    width: 130px;
+    height: auto;
+    gap: 0;
+  }
+  .Featured_card .Featured_img {
+    width: 100%;
+    height: 150px;
+  }
+  .Featured_card .Featured_img p,
+  .Featured_card .Featured_img svg {
+    display: none;
+  }
+  .Featured_card h2 {
+    font-size: 0.75rem;
+    padding: 0 5px;
+  }
+  .Featured_stars,
+  .Featured_price {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 5px;
+  }
+  .Featured_stars > svg {
+    color: rgba(255, 169, 13, 1);
+    margin-right: 5px;
+    font-size: 0.6rem;
+  }
+  .Featured_stars > p {
+    display: none;
+  }
+  .Featured_price {
+    margin-top: 5px;
+    justify-content: flex-start;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .Featured_price > h3 {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  .Featured_price > button {
+    padding: 5px;
+    width: 90%;
+    font-size: 0.8rem;
   }
   .Featured_Products .Featured_Products_header_title > h1 {
     font-size: 1.3rem;

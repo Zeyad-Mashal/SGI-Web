@@ -60,9 +60,9 @@ const Featured_Products = () => {
           spaceBetween={10}
           loop={true}
           breakpoints={{
-            320: { slidesPerView: 1.5 },
-            480: { slidesPerView: 2 },
-            768: { slidesPerView: 3 },
+            320: { slidesPerView: 2.25 },
+            480: { slidesPerView: 3 },
+            768: { slidesPerView: 4 },
             1024: { slidesPerView: 4 },
             1400: { slidesPerView: 5 },
           }}
@@ -73,6 +73,13 @@ const Featured_Products = () => {
               <div className="Featured_card">
                 <a href="/product">
                   <div className="Featured_img">
+                    <Image
+                      src={"/images/p1.png"}
+                      alt="product image"
+                      width={150}
+                      height={150}
+                      loading="lazy"
+                    />
                     <FontAwesomeIcon icon={faHeart} />
                     <p>Featured</p>
                   </div>
