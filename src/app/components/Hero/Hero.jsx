@@ -12,7 +12,7 @@ const Hero = ({ params }) => {
           .Get sale pricing , competitive B2B pricing , and flexible credit
           options .
         </p>
-        <a href="#">Shop Now</a>
+        <a href="/shop">Shop Now</a>
       </div>
       <div className="hero_right">
         <Image

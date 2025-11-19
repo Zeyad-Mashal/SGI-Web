@@ -188,13 +188,7 @@ const Navbar = () => {
             <a href="/">Home</a>
           </li>
           <li>
-            <a href="#">About</a>
-          </li>
-          <li>
             <a href="/shop">Shop</a>
-          </li>
-          <li>
-            <a href="#">Contact Us</a>
           </li>
         </ul>
         <div className="login_links">
@@ -257,9 +251,7 @@ const Navbar = () => {
 
         <div className="mobile_menu_links">
           <a href="/">Home</a>
-          <a href="#">About</a>
           <a href="/shop">Shop</a>
-          <a href="#">Contact Us</a>
 
           <div className="mobile_categories">
             <h3>Categories</h3>

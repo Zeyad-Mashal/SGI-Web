@@ -286,18 +286,18 @@
 }
 @media screen and (max-width: 789px) {
   .sgi-home-banner {
-    height: 900px;
+    height: 1000px;
     flex-direction: column;
     padding: 1rem;
   }
   .sgi-home-banner_container {
-    height: 900px;
+    height: 1000px;
     flex-direction: column;
     padding: 1rem;
     gap: 1rem;
   }
   .overlay {
-    height: 900px;
+    height: 1000px;
   }
   .banner_right {
     width: 100%;
@@ -319,7 +319,7 @@
     width: 100%;
   }
   .banner_right_imgs > img {
-    width: 48%;
+    width: 45%;
   }
   .banner_btns {
     gap: 0.5rem;
