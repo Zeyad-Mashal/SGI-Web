@@ -62,6 +62,63 @@ const Our_Products = () => {
               <button>Add to Cart</button>
             </div>
           </div>
+          <div className="Our_Products_item">
+            <div className="Our_Products_img">
+              <FontAwesomeIcon icon={faHeart} />
+              <p>Featured</p>
+            </div>
+            <h2>White Spot Concentrated Lemon</h2>
+            <div className="Our_Products_stars">
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <p>(230 reviews)</p>
+            </div>
+            <div className="Our_Products_price">
+              <h3>$25.00</h3>
+              <button>Add to Cart</button>
+            </div>
+          </div>
+          <div className="Our_Products_item">
+            <div className="Our_Products_img">
+              <FontAwesomeIcon icon={faHeart} />
+              <p>Featured</p>
+            </div>
+            <h2>White Spot Concentrated Lemon</h2>
+            <div className="Our_Products_stars">
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <p>(230 reviews)</p>
+            </div>
+            <div className="Our_Products_price">
+              <h3>$25.00</h3>
+              <button>Add to Cart</button>
+            </div>
+          </div>
+          <div className="Our_Products_item">
+            <div className="Our_Products_img">
+              <FontAwesomeIcon icon={faHeart} />
+              <p>Featured</p>
+            </div>
+            <h2>White Spot Concentrated Lemon</h2>
+            <div className="Our_Products_stars">
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <p>(230 reviews)</p>
+            </div>
+            <div className="Our_Products_price">
+              <h3>$25.00</h3>
+              <button>Add to Cart</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

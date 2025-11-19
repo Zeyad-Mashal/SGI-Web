@@ -15,20 +15,8 @@ const Hero = ({ params }) => {
         <a href="/shop">Shop Now</a>
       </div>
       <div className="hero_right">
-        <Image
-          src={"/images/B1F.jpg"}
-          alt="hero section navbar"
-          loading="lazy"
-          width={500}
-          height={500}
-        />
-        <Image
-          src={"/images/B2F.jpg"}
-          alt="hero section navbar"
-          loading="lazy"
-          width={500}
-          height={500}
-        />
+        <div className="hero_right_img1"></div>
+        <div className="hero_right_img2"></div>
       </div>
     </div>
   );
