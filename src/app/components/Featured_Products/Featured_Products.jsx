@@ -56,11 +56,11 @@ const Featured_Products = () => {
             swiper.navigation.init();
             swiper.navigation.update();
           }}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
-          spaceBetween={20}
+          // autoplay={{ delay: 4000, disableOnInteraction: false }}
+          spaceBetween={10}
           loop={true}
           breakpoints={{
-            320: { slidesPerView: 1 },
+            320: { slidesPerView: 1.5 },
             480: { slidesPerView: 2 },
             768: { slidesPerView: 3 },
             1024: { slidesPerView: 4 },

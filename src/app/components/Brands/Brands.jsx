@@ -52,14 +52,14 @@ const Brands = () => {
             swiper.navigation.init();
             swiper.navigation.update();
           }}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
+          // autoplay={{ delay: 4000, disableOnInteraction: false }}
           spaceBetween={20}
           loop={true}
           breakpoints={{
-            320: { slidesPerView: 1 },
-            480: { slidesPerView: 2 },
+            320: { slidesPerView: 2.5 },
+            480: { slidesPerView: 3 },
             768: { slidesPerView: 3 },
-            1024: { slidesPerView: 5 },
+            1024: { slidesPerView: 4 },
             1401: { slidesPerView: 5 },
           }}
           className="brands_swiper"

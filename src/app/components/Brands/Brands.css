@@ -55,8 +55,8 @@
   align-items: center;
   flex-direction: column;
   border-radius: 8px;
-  background-color: rgba(7, 101, 133, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 15px;
 }
 
@@ -137,7 +137,15 @@
     padding: 20px;
   }
   .brand_card {
-    max-width: 100%;
+    width: 120px;
+    height: 100px;
+    text-align: center;
+  }
+  .brand_card > img {
+    width: 100%;
+  }
+  .brand_card > span {
+    font-size: 0.8rem;
   }
   .Brands .brands_header_title > h1 {
     font-size: 1.3rem;
