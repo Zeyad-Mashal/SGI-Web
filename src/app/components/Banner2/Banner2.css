@@ -36,6 +36,9 @@
   color: white;
 }
 @media screen and (max-width: 789px) {
+  .banner2_content {
+    top: 15px;
+  }
   .banner2_content > h2 {
     font-size: 12px;
     margin-bottom: 5px;
@@ -50,6 +53,6 @@
     padding: 5px;
   }
   .banner2 > img {
-    height: 100px;
+    height: 90px;
   }
 }
