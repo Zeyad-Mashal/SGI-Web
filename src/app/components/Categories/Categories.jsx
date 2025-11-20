@@ -19,7 +19,7 @@ const Categories = () => {
         <div className="Category_item">
           <a href="/">
             <Image
-              src={"/images/Hotels.webp"}
+              src={"/images/Hotels2.webp"}
               alt="category image"
               width={200}
               height={200}
@@ -30,7 +30,7 @@ const Categories = () => {
         <div className="Category_item">
           <a href="/">
             <Image
-              src={"/images/Laundry&Dryclean.webp"}
+              src={"/images/Laundry&Dryclean2.webp"}
               alt="category image"
               width={200}
               height={200}
@@ -41,7 +41,7 @@ const Categories = () => {
         <div className="Category_item">
           <a href="/">
             <Image
-              src={"/images/Office&Pantry.webp"}
+              src={"/images/Office&Pantry2.webp"}
               alt="category image"
               width={200}
               height={200}
@@ -52,7 +52,7 @@ const Categories = () => {
         <div className="Category_item">
           <a href="/">
             <Image
-              src={"/images/Restaurant&Cafe.webp"}
+              src={"/images/Restaurant&Cafe2.webp"}
               alt="category image"
               width={200}
               height={200}
@@ -63,7 +63,7 @@ const Categories = () => {
         <div className="Category_item">
           <a href="/">
             <Image
-              src={"/images/School&Nursery.webp"}
+              src={"/images/School&Nursery2.webp"}
               alt="category image"
               width={200}
               height={200}
