@@ -132,8 +132,7 @@
   }
   .hero .hero_left {
     width: 100%;
-    border-radius: 0;
-    padding: 1rem;
+    background-image: url("/images/MB12.jpg");
     height: 400px;
   }
   .hero_right {
