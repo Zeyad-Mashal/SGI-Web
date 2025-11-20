@@ -125,14 +125,14 @@
     width: 70%;
   }
 }
-@media screen and (max-width: 991px) {
+@media screen and (max-width: 789px) {
   .hero {
     flex-direction: column;
     height: auto;
   }
   .hero .hero_left {
     width: 100%;
-    background-image: url("/images/MB12.jpg");
+    background-image: url("/images/MB12 copy.jpg");
     height: 400px;
   }
   .hero_right {
