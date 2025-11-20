@@ -8,6 +8,7 @@ import Banner from "../components/Banner/Banner";
 import Our_Products from "../components/Our_Products/Our_Products";
 import ContactUs from "../components/ContactUs/ContactUs";
 import Footer from "../components/Footer/Footer";
+import Categories from "../components/Categories/Categories";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <Brands />
       <Featured_Products />
       <Banner />
+      <Categories />
       <Our_Products />
       <ContactUs />
     </div>
