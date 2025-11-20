@@ -8,7 +8,7 @@ const Categories = () => {
         <div className="Category_item">
           <a href="/">
             <Image
-              src={"/images/CarWash.webp"}
+              src={"/images/CarWashnew.webp"}
               alt="category image"
               width={200}
               height={200}
