@@ -40,6 +40,7 @@
   border: 1px solid rgba(215, 223, 43, 1);
   border-radius: 16px;
   width: 350px;
+  position: relative;
 }
 .ContactUs_item > svg {
   width: 40px;
@@ -48,6 +49,9 @@
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 10px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
 }
 .ContactUs_item > p,
 .ContactUs_item_btn > p {
@@ -76,7 +80,7 @@
   }
   .ContactUs_item {
     width: 500px;
-    height: 250px;
+    height: 200px;
     gap: 1rem;
   }
 }

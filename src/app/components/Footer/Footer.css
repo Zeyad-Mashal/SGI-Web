@@ -11,6 +11,8 @@
 }
 .Footer_container {
   width: 100%;
+  max-width: 1600px;
+
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
@@ -53,6 +55,7 @@
 }
 .footer_copyright {
   width: 100%;
+  max-width: 1600px;
   display: flex;
   justify-content: space-between;
   align-items: center;

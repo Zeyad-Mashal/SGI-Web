@@ -220,7 +220,7 @@
   border-radius: 16px;
   position: absolute;
   bottom: -10px;
-  left: 30px;
+  left: 0px;
   animation: banneranimation2 3s linear infinite;
   box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.2);
 }
@@ -278,7 +278,7 @@
 
 @media screen and (min-width: 1401px) {
   .banner_left_free {
-    left: 120px;
+    left: 70px;
   }
   .banner_left_save {
     right: 140px;
