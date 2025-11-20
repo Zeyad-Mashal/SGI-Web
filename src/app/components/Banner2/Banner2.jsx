@@ -10,6 +10,10 @@ const Banner2 = () => {
         width={3000}
         height={3000}
       />
+      <div className="banner2_content">
+        <h2>Lorem Ipsum is simply dummy</h2>
+        <button>Shop Now</button>
+      </div>
     </div>
   );
 };
