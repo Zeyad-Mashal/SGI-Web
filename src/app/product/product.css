@@ -14,10 +14,28 @@
   align-items: center;
   flex-direction: column;
   gap: 25px;
+  position: relative;
 }
 .product_imgs > img {
   width: 100%;
   border-radius: 16px;
+}
+.product_imgs > button {
+  position: absolute;
+  top: 35%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 9;
+}
+.product_imgs > .left {
+  left: 0%;
+}
+.product_imgs > .right {
+  right: 0%;
 }
 .product_subimgs {
   display: flex;

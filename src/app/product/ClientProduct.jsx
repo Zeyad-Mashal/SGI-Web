@@ -1,31 +1,53 @@
 "use client";
 import React, { useState } from "react";
-import "./product.css";
 import Image from "next/image";
+import "./product.css";
 import { FaStar } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import { FaRegHeart } from "react-icons/fa";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const ClientProduct = () => {
   const price = 100;
   const [qty, setQty] = useState(1);
 
-  // ✅ الصور كلها هنا
   const images = ["/images/p1.png", "/images/p2.png", "/images/p3.png"];
 
-  // ✅ صورة العرض الرئيسية
   const [activeImg, setActiveImg] = useState(images[0]);
-
   const updateQty = (value) => {
     const num = Math.max(0, Number(value));
     setQty(num);
   };
+
   const [activeTab, setActiveTab] = useState("description");
+
+  // Slider arrows
+  const goNext = () => {
+    const currentIndex = images.indexOf(activeImg);
+    const nextIndex = (currentIndex + 1) % images.length;
+    setActiveImg(images[nextIndex]);
+  };
+
+  const goPrev = () => {
+    const currentIndex = images.indexOf(activeImg);
+    const prevIndex = (currentIndex - 1 + images.length) % images.length;
+    setActiveImg(images[prevIndex]);
+  };
+
   return (
     <div className="product">
       <div className="product_container">
         <div className="product_imgs">
-          {/* ✅ الصورة الكبيرة */}
+          {/* Slider arrows */}
+          <button className="slider_btn left" onClick={goPrev}>
+            <IoIosArrowBack />
+          </button>
+
+          <button className="slider_btn right" onClick={goNext}>
+            <IoIosArrowForward />
+          </button>
+
+          {/* Main image */}
           <Image
             src={activeImg}
             alt="product image"
@@ -35,7 +57,7 @@ const ClientProduct = () => {
             className="main_image"
           />
 
-          {/* ✅ الصور الصغيرة */}
+          {/* Small images */}
           <div className="product_subimgs">
             {images.map((img, index) => (
               <div
@@ -57,7 +79,6 @@ const ClientProduct = () => {
           </div>
         </div>
 
-        {/* باقي الكود زي ما هو… */}
         <div className="product_content">
           <span>Laundry & Dryclean</span>
           <h1>Crystal Brite Laundry Sour</h1>
@@ -83,18 +104,17 @@ const ClientProduct = () => {
             <div className="Quantity_counter">
               <div className="counter">
                 <button onClick={() => updateQty(qty - 1)}>-</button>
-
                 <input
                   type="text"
                   value={qty}
                   onChange={(e) => updateQty(e.target.value)}
                 />
-
                 <button onClick={() => updateQty(qty + 1)}>+</button>
               </div>
 
               <div className="total">
                 <h2>
+                  {" "}
                   Total: <span>${(qty * price).toFixed(2)}</span>
                 </h2>
               </div>
@@ -103,15 +123,14 @@ const ClientProduct = () => {
 
           <div className="product_btns">
             <button>
-              <RiShoppingBag3Line />
-              Add To Cart
+              <RiShoppingBag3Line /> Add To Cart
             </button>
             <FaRegHeart />
           </div>
         </div>
       </div>
+
       <div className="product_desc">
-        {/* الأزرار */}
         <div className="product_desc_btns">
           <button
             className={activeTab === "description" ? "active" : ""}
@@ -135,32 +154,27 @@ const ClientProduct = () => {
           </button>
         </div>
 
-        {/* المحتوى المتغير */}
         <div className="product_desc_content">
           {activeTab === "description" && (
             <div className="product_desc_description">
               <h2>Product Description</h2>
               <p>
                 Final-rinse sour formulated to neutralize residual alkalinity
-                from detergents, preventing fabric yellowing (galling) and
-                damage. Blended organic acids with optical brighteners restore
-                the correct pH and help keep whites bright.
+                from detergents, preventing fabric yellowing and damage.
               </p>
-
               <h2>Major Product Uses:</h2>
               <ul>
-                <li>prevent yellowing/galling and fibre damage.</li>
-                <li>improve finishing and help maintain fabric whiteness.</li>
+                <li>prevent yellowing and fibre damage.</li>
+                <li>improve finishing and maintain fabric whiteness.</li>
                 <li>neutralize wash alkalinity.</li>
               </ul>
-
               <h2>Ideal For:</h2>
               <ul>
-                <li>Hotels and hospitality businesses.</li>
-                <li>Office buildings and corporate facilities.</li>
-                <li>Healthcare and medical facilities.</li>
-                <li>Schools and educational institutions.</li>
-                <li>Restaurants and food services.</li>
+                <li>Hotels</li>
+                <li>Offices</li>
+                <li>Healthcare</li>
+                <li>Schools</li>
+                <li>Restaurants</li>
               </ul>
             </div>
           )}
@@ -171,7 +185,7 @@ const ClientProduct = () => {
               <ul>
                 <li>Weight: 1L</li>
                 <li>Material: Organic compound</li>
-                <li>PH Level: Neutralizer 7.0</li>
+                <li>PH Level: 7.0</li>
                 <li>Made in: USA</li>
               </ul>
             </div>
