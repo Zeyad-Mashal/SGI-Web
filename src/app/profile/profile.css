@@ -254,7 +254,7 @@
     right: 0;
   }
   .profile_info_content p {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
   }
   .profile_contact {
     gap: 10px;
@@ -262,7 +262,7 @@
     align-items: flex-start;
   }
   .profile_contact span {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
   }
   .profile_info_bottom {
     flex-direction: column;

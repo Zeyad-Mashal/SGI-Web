@@ -65,14 +65,10 @@ const ClientLogin = () => {
             </label>
             <label>
               <h3>
-                Phone Number<span>*</span>
+                Password<span>*</span>
               </h3>
               <input type="text" />
             </label>
-            <div className="register-terms">
-              <input type="checkbox" />
-              <h4>Agree to the Terms & Condition</h4>
-            </div>
             <button>Sign In</button>
           </div>
         </div>

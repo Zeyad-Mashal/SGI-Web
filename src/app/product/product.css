@@ -246,6 +246,32 @@
 .product_desc_btns button.active {
   border-bottom: 1px solid rgba(215, 223, 43, 1);
 }
+/* === Swiper Fixes Without Changing Your Design === */
+.mainSwiper {
+  width: 100%;
+}
+
+.thumbSwiper {
+  width: 100%;
+}
+
+.thumbSwiper .swiper-slide {
+  width: auto;
+}
+
+.subimg_box {
+  border: 2px solid transparent;
+  padding: 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.subimg_box img {
+  border-radius: 8px;
+  width: 130px;
+  height: auto;
+}
 
 @media screen and (min-width: 1401px) {
   .product_imgs {

@@ -205,10 +205,38 @@
     padding: 0;
   }
   .Our_Products {
-    padding: 20px;
+    padding: 10px;
+  }
+  .Our_Products_list {
+    gap: 0.5rem;
+    padding: 0;
   }
   .Our_Products_item {
-    max-width: 100%;
+    max-width: 48%;
+    height: 310px;
+  }
+  .Our_Products_img {
+    height: 200px;
+  }
+  .Our_Products_img > p {
+    font-size: 0.6rem;
+  }
+  .Our_Products_item h2 {
+    font-size: 0.75rem;
+  }
+  .Our_Products_stars > svg {
+    font-size: 0.6rem;
+    margin: 0;
+  }
+  .Our_Products_stars > p {
+    font-size: 0.7rem;
+  }
+  .Our_Products_price > button {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+  .Our_Products_price > h3 {
+    font-size: 1rem;
   }
   .Our_Products .Our_Products_header_title > h1 {
     font-size: 1.3rem;

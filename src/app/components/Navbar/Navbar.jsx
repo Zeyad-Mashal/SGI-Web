@@ -38,6 +38,26 @@ const Navbar = () => {
       name: "Dispensers",
       sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
     },
+    {
+      name: "Dispensers",
+      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+    },
+    {
+      name: "Dispensers",
+      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+    },
+    {
+      name: "Dispensers",
+      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+    },
+    {
+      name: "Dispensers",
+      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+    },
+    {
+      name: "Dispensers",
+      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+    },
   ];
 
   const toggleCategory = (index) => {

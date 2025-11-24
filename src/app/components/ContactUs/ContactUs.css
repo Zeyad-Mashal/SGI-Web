@@ -62,7 +62,6 @@
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
 }
 .ContactUs_item_btn > button {
   padding: 5px 15px;
@@ -91,7 +90,19 @@
   .ContactUs {
     padding: 20px;
   }
+  .ContactUs_list {
+    justify-content: center;
+  }
   .ContactUs_item {
-    width: 100%;
+    width: 85%;
+    padding: 15px 20px;
+  }
+  .ContactUs_item_btn > button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(215, 223, 43, 1);
+  }
+  .ContactUs_item > svg {
+    top: 10px;
   }
 }
