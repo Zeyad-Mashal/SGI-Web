@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Brands.css";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,11 +8,22 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import GetAllBrands from "@/API/Brands/GetAllBrands";
+// import { Skeleton } from "@heroui/skeleton";
+import { Card, Skeleton } from "@heroui/react";
 
 const Brands = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-
+  useEffect(() => {
+    getAllBrands();
+  }, []);
+  const [allBrands, setAllBrands] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const getAllBrands = () => {
+    GetAllBrands(setAllBrands, setError, setLoading);
+  };
   const brands = [
     { img: "/images/brand1.png", products: 145 },
     { img: "/images/brand2.png", products: 210 },
@@ -64,20 +75,22 @@ const Brands = () => {
           }}
           className="brands_swiper"
         >
-          {brands.map((brand, index) => (
-            <SwiperSlide key={index}>
-              <div className="brand_card">
-                <Image
-                  src={brand.img}
-                  alt="brand image"
-                  loading="lazy"
-                  width={224}
-                  height={60}
-                />
-                <span>{brand.products} products</span>
-              </div>
-            </SwiperSlide>
-          ))}
+          {loading
+            ? "loading ..."
+            : allBrands.map((brand) => (
+                <SwiperSlide key={brand._id}>
+                  <div className="brand_card">
+                    <Image
+                      src={brand.logo}
+                      alt="brand image"
+                      loading="lazy"
+                      width={224}
+                      height={60}
+                    />
+                    <span>{brand.name}</span>
+                  </div>
+                </SwiperSlide>
+              ))}
         </Swiper>
       </div>
     </div>

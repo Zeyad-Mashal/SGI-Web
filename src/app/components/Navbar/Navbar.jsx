@@ -99,6 +99,29 @@ const Navbar = () => {
     }
   }, []);
 
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchBox, setShowSearchBox] = useState(false); // 📱 للموبايل
+  const products = [
+    { id: 1, name: "Blue Mop" },
+    { id: 2, name: "Large Tissue Box" },
+    { id: 3, name: "Hand Soap" },
+    { id: 4, name: "Microfiber Cloth" },
+  ];
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+
+    if (value.trim().length > 0) {
+      const filtered = products.filter((p) =>
+        p.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setSearchResults(filtered);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
   return (
     <div className="navbar">
       {/* 🔸 Top Navbar */}
@@ -138,6 +161,12 @@ const Navbar = () => {
             icon={faBarsStaggered}
             onClick={() => setMenuOpen(true)}
           />
+          <span
+            className="mobile_search_icon"
+            onClick={() => setShowSearchBox(true)}
+          >
+            <CiSearch />
+          </span>
           <a href="/fav">
             <FaRegHeart />
           </a>
@@ -150,7 +179,6 @@ const Navbar = () => {
             <RiShoppingBag3Line />
           </a>
         </div>
-
         <div className="logo">
           <a href="/">
             <Image
@@ -161,12 +189,26 @@ const Navbar = () => {
             />
           </a>
         </div>
-
         <div className="search">
-          <input type="text" placeholder="search" />
+          <input
+            type="text"
+            placeholder="search"
+            value={searchValue}
+            onChange={handleSearch}
+            onFocus={() => searchValue && setSearchResults(products)}
+          />
           <span>
             <CiSearch />
           </span>
+
+          {/* ⬇ Dropdown */}
+          {searchResults.length > 0 && (
+            <div className="search_dropdown">
+              {searchResults.map((item) => (
+                <p key={item.id}>{item.name}</p>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="phone_number">
@@ -177,7 +219,6 @@ const Navbar = () => {
             <span>1-800-555-1234</span>
           </div>
         </div>
-
         <div className="navbar_links">
           <a href="/fav">
             <FaRegHeart />
@@ -303,6 +344,36 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {showSearchBox && (
+        <div className="mobile_search_modal">
+          <div className="mobile_search_header">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchValue}
+              onChange={handleSearch}
+            />
+            <FontAwesomeIcon
+              icon={faXmark}
+              className="close_search"
+              onClick={() => {
+                setShowSearchBox(false);
+                setSearchValue("");
+                setSearchResults([]);
+              }}
+            />
+          </div>
+
+          <div className="mobile_search_results">
+            {searchResults.length > 0 ? (
+              searchResults.map((item) => <p key={item.id}>{item.name}</p>)
+            ) : (
+              <p className="no_items">No results...</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

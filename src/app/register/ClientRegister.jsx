@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import "./register.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,8 +8,25 @@ import {
   faLinkedin,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
-
+import Register from "@/API/Register/Register";
 const ClientRegister = () => {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [taxCard, setTaxCard] = useState("");
+  const [businessLicense, setBusinessLicense] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const handleRegister = () => {
+    const data = {
+      name,
+      phone,
+      email,
+      taxCard,
+      businessLicense,
+    };
+    Register(data, setError, setLoading);
+  };
   return (
     <div className="register">
       <div className="register-container">
@@ -56,44 +73,69 @@ const ClientRegister = () => {
           <p>
             Already have an account? <a href="/login">Sign In</a>
           </p>
+          <a href="/">Go To Home Page</a>
+
           <div className="form-content">
             <label>
               <h3>
                 Company Name<span>*</span>
               </h3>
-              <input type="text" />
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </label>
             <label>
               <h3>
                 Email<span>*</span>
               </h3>
-              <input type="text" />
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </label>
             <label>
               <h3>
                 Phone Number<span>*</span>
               </h3>
-              <input type="text" />
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
             </label>
             <div className="form-optional">
               <label>
                 <h3>
                   Business license <span>( optional )</span>
                 </h3>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={businessLicense}
+                  onChange={(e) => setBusinessLicense(e.target.value)}
+                />
               </label>
               <label>
                 <h3>
                   Tax Card <span>( optional )</span>
                 </h3>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={taxCard}
+                  onChange={(e) => setTaxCard(e.target.value)}
+                />
               </label>
             </div>
             <div className="register-terms">
               <input type="checkbox" />
               <h4>Agree to the Terms & Condition</h4>
             </div>
-            <button>Create an account</button>
+            <button onClick={handleRegister}>
+              {loading ? "Creating..." : "Create an account"}
+            </button>
+            {error}
           </div>
         </div>
       </div>

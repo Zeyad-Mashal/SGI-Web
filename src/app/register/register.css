@@ -161,6 +161,11 @@
   top: -20%;
   left: 0;
 }
+.register-form > a {
+  text-decoration: underline;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.8rem;
+}
 @media screen and (min-width: 1401px) {
   .register-container {
     height: 100vh;

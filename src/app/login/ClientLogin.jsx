@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import "./login.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,8 +8,19 @@ import {
   faLinkedin,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
-
+import Login from "@/API/Login/Login";
 const ClientLogin = () => {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = () => {
+    const data = {
+      email,
+      password,
+    };
+    Login(data, setError, setLoading);
+  };
   return (
     <div className="register">
       <div className="register-container">
@@ -56,20 +67,32 @@ const ClientLogin = () => {
           <p>
             Don’t have an account? <a href="/register">Sign Up</a>
           </p>
+          <a href="/">Go To Home Page</a>
           <div className="form-content">
             <label>
               <h3>
                 Email<span>*</span>
               </h3>
-              <input type="text" />
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </label>
             <label>
               <h3>
                 Password<span>*</span>
               </h3>
-              <input type="text" />
+              <input
+                type="text"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </label>
-            <button>Sign In</button>
+            <button onClick={handleLogin}>
+              {loading ? "loaindg ..." : "Sign In"}
+            </button>
+            {error}
           </div>
         </div>
       </div>
