@@ -9,9 +9,6 @@ import "swiper/css/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import GetAllBrands from "@/API/Brands/GetAllBrands";
-// import { Skeleton } from "@heroui/skeleton";
-import { Card, Skeleton } from "@heroui/react";
-
 const Brands = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
