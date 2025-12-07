@@ -6,7 +6,6 @@ import { FaStar } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import { FaRegHeart } from "react-icons/fa";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-
 const ClientProduct = () => {
   const price = 100;
   const [qty, setQty] = useState(1);

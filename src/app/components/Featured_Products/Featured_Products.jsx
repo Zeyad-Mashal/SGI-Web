@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Featured_Products.css";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,21 +13,19 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import GetFeaturedProducts from "@/API/Products/GetFeaturedProducts";
 const Featured_Products = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-
-  const Featured_Products = [
-    { img: "/images/brand1.png", products: 145 },
-    { img: "/images/brand2.png", products: 210 },
-    { img: "/images/brand3.png", products: 98 },
-    { img: "/images/brand4.png", products: 120 },
-    { img: "/images/brand4.png", products: 120 },
-    { img: "/images/brand5.png", products: 75 },
-    { img: "/images/brand5.png", products: 75 },
-    { img: "/images/brand1.png", products: 75 },
-  ];
-
+  useEffect(() => {
+    getFeaturedProduct();
+  }, []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const getFeaturedProduct = () => {
+    GetFeaturedProducts(setAllProducts, setError, setLoading);
+  };
   return (
     <div className="Featured_Products">
       <div className="Featured_Products_container">
@@ -47,61 +45,70 @@ const Featured_Products = () => {
             </button>
           </div>
         </div>
+        {loading ? (
+          <div className="loader_container">
+            <span className="loader"></span>
+            <span className="loader"></span>
+            <span className="loader"></span>
+            <span className="loader"></span>
+          </div>
+        ) : (
+          <Swiper
+            modules={[Navigation, Autoplay]}
+            onInit={(swiper) => {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }}
+            spaceBetween={10}
+            loop={true}
+            breakpoints={{
+              320: { slidesPerView: 2.25 },
+              480: { slidesPerView: 3 },
+              768: { slidesPerView: 4 },
+              1024: { slidesPerView: 4 },
+              1400: { slidesPerView: 5 },
+            }}
+            className="Featured_Products_swiper"
+          >
+            {allProducts.map((item) => (
+              <SwiperSlide key={item._id}>
+                <div className="Featured_card">
+                  <a href="/product">
+                    <div className="Featured_img">
+                      <Image
+                        src={item.picUrls?.[0] || "/images/empty_product.png"}
+                        alt="product image"
+                        width={150}
+                        height={150}
+                        loading="lazy"
+                      />
+                      <FontAwesomeIcon icon={faHeart} />
+                      <p>Featured</p>
+                    </div>
 
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          onInit={(swiper) => {
-            swiper.params.navigation.prevEl = prevRef.current;
-            swiper.params.navigation.nextEl = nextRef.current;
-            swiper.navigation.init();
-            swiper.navigation.update();
-          }}
-          // autoplay={{ delay: 4000, disableOnInteraction: false }}
-          spaceBetween={10}
-          loop={true}
-          breakpoints={{
-            320: { slidesPerView: 2.25 },
-            480: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 4 },
-            1400: { slidesPerView: 5 },
-          }}
-          className="Featured_Products_swiper"
-        >
-          {Featured_Products.map((brand, index) => (
-            <SwiperSlide key={index}>
-              <div className="Featured_card">
-                <a href="/product">
-                  <div className="Featured_img">
-                    <Image
-                      src={"/images/p1.png"}
-                      alt="product image"
-                      width={150}
-                      height={150}
-                      loading="lazy"
-                    />
-                    <FontAwesomeIcon icon={faHeart} />
-                    <p>Featured</p>
-                  </div>
-                  <h2>White Spot Concentrated Lemon</h2>
-                  <div className="Featured_stars">
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <p>(230 reviews) (m.order 30 units)</p>
-                  </div>
-                </a>
+                    <h2>{item.name}</h2>
 
-                <div className="Featured_price">
-                  <h3>$25.00</h3>
-                  <button>Add to Cart</button>
+                    <div className="Featured_stars">
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <p>(230 reviews)</p>
+                    </div>
+                  </a>
+
+                  <div className="Featured_price">
+                    <h3>AED {item.price}</h3>
+                    <button>Add to Cart</button>
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
     </div>
   );

@@ -21,16 +21,6 @@ const Brands = () => {
   const getAllBrands = () => {
     GetAllBrands(setAllBrands, setError, setLoading);
   };
-  const brands = [
-    { img: "/images/brand1.png", products: 145 },
-    { img: "/images/brand2.png", products: 210 },
-    { img: "/images/brand3.png", products: 98 },
-    { img: "/images/brand4.png", products: 120 },
-    { img: "/images/brand4.png", products: 120 },
-    { img: "/images/brand5.png", products: 75 },
-    { img: "/images/brand5.png", products: 75 },
-    { img: "/images/brand1.png", products: 75 },
-  ];
 
   return (
     <div className="Brands">
@@ -52,43 +42,50 @@ const Brands = () => {
           </div>
         </div>
 
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          onInit={(swiper) => {
-            swiper.params.navigation.prevEl = prevRef.current;
-            swiper.params.navigation.nextEl = nextRef.current;
-            swiper.navigation.init();
-            swiper.navigation.update();
-          }}
-          // autoplay={{ delay: 4000, disableOnInteraction: false }}
-          spaceBetween={20}
-          loop={true}
-          breakpoints={{
-            320: { slidesPerView: 2.5 },
-            480: { slidesPerView: 3 },
-            768: { slidesPerView: 3 },
-            1024: { slidesPerView: 5 },
-            1401: { slidesPerView: 5 },
-          }}
-          className="brands_swiper"
-        >
-          {loading
-            ? "loading ..."
-            : allBrands.map((brand) => (
-                <SwiperSlide key={brand._id}>
-                  <div className="brand_card">
-                    <Image
-                      src={brand.logo}
-                      alt="brand image"
-                      loading="lazy"
-                      width={224}
-                      height={60}
-                    />
-                    <span>{brand.name}</span>
-                  </div>
-                </SwiperSlide>
-              ))}
-        </Swiper>
+        {loading ? (
+          <div className="loader_container">
+            <span className="loader"></span>
+            <span className="loader"></span>
+            <span className="loader"></span>
+            <span className="loader"></span>
+          </div>
+        ) : (
+          <Swiper
+            modules={[Navigation, Autoplay]}
+            onInit={(swiper) => {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }}
+            // autoplay={{ delay: 4000, disableOnInteraction: false }}
+            spaceBetween={20}
+            loop={true}
+            breakpoints={{
+              320: { slidesPerView: 2.5 },
+              480: { slidesPerView: 3 },
+              768: { slidesPerView: 3 },
+              1024: { slidesPerView: 5 },
+              1401: { slidesPerView: 5 },
+            }}
+            className="brands_swiper"
+          >
+            {allBrands.map((brand) => (
+              <SwiperSlide key={brand._id}>
+                <div className="brand_card">
+                  <Image
+                    src={brand.logo}
+                    alt="brand image"
+                    loading="lazy"
+                    width={224}
+                    height={60}
+                  />
+                  <span>{brand.name}</span>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
     </div>
   );

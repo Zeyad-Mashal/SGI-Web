@@ -140,22 +140,21 @@
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
+  position: relative;
 }
 .Featured_card > a {
   width: 100%;
 }
 .Featured_card .Featured_img {
-  background-image: url("/images/p1.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   width: 100%;
   height: 340px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 1.5rem;
+  padding: 0;
   border-radius: 16px;
+}
+.Featured_card .Featured_img > img {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 .Featured_img > svg {
   background-color: white;
@@ -164,6 +163,9 @@
   padding: 8px;
   border-radius: 50%;
   cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 .Featured_img > svg:hover {
   color: red;
@@ -173,6 +175,9 @@
   padding: 5px 15px;
   border-radius: 16px;
   font-size: 0.8rem;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 .Featured_card h2 {
   font-size: 1rem;
@@ -227,6 +232,33 @@
   width: 25px;
   height: 25px;
   cursor: pointer;
+}
+.loader_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  padding: 10px;
+}
+.loader_container > .loader {
+  width: 270px;
+  height: 285px;
+  background: linear-gradient(0.25turn, transparent, #fff, transparent),
+    linear-gradient(#ddd, #ddd), linear-gradient(#ddd, #ddd),
+    linear-gradient(#ddd, #ddd);
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: 215px 220px, 215px 130px, 100px 15px, 150px 15px;
+  background-position: -215px 0, 0 0, 15px 150px, 15px 180px;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  to {
+    background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
+  }
 }
 /* Desktop: لما showFilter = false يخفي الفيلتر */
 @media screen and (min-width: 992px) {

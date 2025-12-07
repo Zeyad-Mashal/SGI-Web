@@ -126,7 +126,7 @@
   justify-content: space-between;
 }
 .Featured_price > h3 {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   margin-right: 10px;
 }
@@ -187,6 +187,31 @@
 .nav_btn:hover {
   background-color: rgba(215, 223, 43, 1);
   color: #000;
+}
+.loader_container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+.loader_container > .loader {
+  width: 250px;
+  height: 265px;
+  background: linear-gradient(0.25turn, transparent, #fff, transparent),
+    linear-gradient(#ddd, #ddd), linear-gradient(#ddd, #ddd),
+    linear-gradient(#ddd, #ddd);
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: 215px 220px, 215px 130px, 100px 15px, 150px 15px;
+  background-position: -215px 0, 0 0, 15px 150px, 15px 180px;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  to {
+    background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
+  }
 }
 @media screen and (min-width: 1401px) {
   .Featured_Products_container {

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { FiBox, FiFilter } from "react-icons/fi";
 import { TbAlignBoxRightMiddle } from "react-icons/tb";
@@ -8,10 +8,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faHeart } from "@fortawesome/free-solid-svg-icons";
 import "./shop.css";
 import { IoMdClose } from "react-icons/io";
-
+import GetProducts from "@/API/Products/GetProducts";
+import Image from "next/image";
 export default function Shop() {
+  useEffect(() => {
+    getAllProducts();
+  }, []);
   const [showFilter, setShowFilter] = useState(false);
   const [showDesktopFilter, setShowDesktopFilter] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const getAllProducts = () => {
+    GetProducts(setAllProducts, setError, setLoading);
+  };
   return (
     <div className="shop">
       <div
@@ -104,144 +114,54 @@ export default function Shop() {
 
           <div className="shop_list">
             {/* CARD 1 */}
-            <div className="Featured_card">
-              <a href="/product">
-                <div className="Featured_img">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <p>Featured</p>
-                </div>
-                <h2>White Spot Concentrated Lemon</h2>
-                <div className="Featured_stars">
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews) (m.order 30 units)</p>
-                </div>
-              </a>
-
-              <div className="Featured_price">
-                <h3>$25.00</h3>
-                <button>Add to Cart</button>
+            {loading ? (
+              <div className="loader_container">
+                <span className="loader"></span>
+                <span className="loader"></span>
+                <span className="loader"></span>
+                <span className="loader"></span>
+                <span className="loader"></span>
+                <span className="loader"></span>
               </div>
-            </div>
+            ) : (
+              allProducts.map((item) => {
+                return (
+                  <div className="Featured_card">
+                    <a href="/product">
+                      <div className="Featured_img">
+                        <Image
+                          src={
+                            item.picUrls && item.picUrls[0]
+                              ? item.picUrls[0]
+                              : "/images/empty_product.png"
+                          }
+                          alt="product image"
+                          width={150}
+                          height={150}
+                          loading="lazy"
+                        />
+                        <FontAwesomeIcon icon={faHeart} />
+                        <p>Featured</p>
+                      </div>
+                      <h2>White Spot Concentrated Lemon</h2>
+                      <div className="Featured_stars">
+                        <FontAwesomeIcon icon={faStar} />
+                        <FontAwesomeIcon icon={faStar} />
+                        <FontAwesomeIcon icon={faStar} />
+                        <FontAwesomeIcon icon={faStar} />
+                        <FontAwesomeIcon icon={faStar} />
+                        <p>(230 reviews) (m.order 30 units)</p>
+                      </div>
+                    </a>
 
-            {/* COPY SAME CARDS */}
-            <div className="Featured_card">
-              <a href="/product">
-                <div className="Featured_img">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <p>Featured</p>
-                </div>
-                <h2>White Spot Concentrated Lemon</h2>
-                <div className="Featured_stars">
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews) (m.order 30 units)</p>
-                </div>
-              </a>
-
-              <div className="Featured_price">
-                <h3>$25.00</h3>
-                <button>Add to Cart</button>
-              </div>
-            </div>
-
-            <div className="Featured_card">
-              <a href="/product">
-                <div className="Featured_img">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <p>Featured</p>
-                </div>
-                <h2>White Spot Concentrated Lemon</h2>
-                <div className="Featured_stars">
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews) (m.order 30 units)</p>
-                </div>
-              </a>
-
-              <div className="Featured_price">
-                <h3>$25.00</h3>
-                <button>Add to Cart</button>
-              </div>
-            </div>
-
-            <div className="Featured_card">
-              <a href="/product">
-                <div className="Featured_img">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <p>Featured</p>
-                </div>
-                <h2>White Spot Concentrated Lemon</h2>
-                <div className="Featured_stars">
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews) (m.order 30 units)</p>
-                </div>
-              </a>
-
-              <div className="Featured_price">
-                <h3>$25.00</h3>
-                <button>Add to Cart</button>
-              </div>
-            </div>
-
-            <div className="Featured_card">
-              <a href="/product">
-                <div className="Featured_img">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <p>Featured</p>
-                </div>
-                <h2>White Spot Concentrated Lemon</h2>
-                <div className="Featured_stars">
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews) (m.order 30 units)</p>
-                </div>
-              </a>
-
-              <div className="Featured_price">
-                <h3>$25.00</h3>
-                <button>Add to Cart</button>
-              </div>
-            </div>
-
-            <div className="Featured_card">
-              <a href="/product">
-                <div className="Featured_img">
-                  <FontAwesomeIcon icon={faHeart} />
-                  <p>Featured</p>
-                </div>
-                <h2>White Spot Concentrated Lemon</h2>
-                <div className="Featured_stars">
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <FontAwesomeIcon icon={faStar} />
-                  <p>(230 reviews) (m.order 30 units)</p>
-                </div>
-              </a>
-
-              <div className="Featured_price">
-                <h3>$25.00</h3>
-                <button>Add to Cart</button>
-              </div>
-            </div>
+                    <div className="Featured_price">
+                      <h3>$25.00</h3>
+                      <button>Add to Cart</button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
