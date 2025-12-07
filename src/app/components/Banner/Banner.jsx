@@ -3,7 +3,6 @@ import "./Banner.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt } from "@fortawesome/free-solid-svg-icons";
-import { navigate } from "next/dist/client/components/segment-cache-impl/navigation";
 const Banner = () => {
   return (
     <div className="sgi-home-banner">

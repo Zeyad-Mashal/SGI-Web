@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../components/Navbar/Navbar";
 import Hero from "../components/Hero/Hero";
 import Featrues from "../components/Featrues/Featrues";
 import Brands from "../components/Brands/Brands";
@@ -7,7 +6,6 @@ import Featured_Products from "../components/Featured_Products/Featured_Products
 import Banner from "../components/Banner/Banner";
 import Our_Products from "../components/Our_Products/Our_Products";
 import ContactUs from "../components/ContactUs/ContactUs";
-import Footer from "../components/Footer/Footer";
 import Categories from "../components/Categories/Categories";
 import Banner2 from "../components/Banner2/Banner2";
 
