@@ -264,7 +264,6 @@
 .product_desc_btns button.active {
   border-bottom: 1px solid rgba(215, 223, 43, 1);
 }
-/* === Swiper Fixes Without Changing Your Design === */
 .mainSwiper {
   width: 100%;
 }

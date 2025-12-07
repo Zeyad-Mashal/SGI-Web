@@ -1,12 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import "./product.css";
 import { FaStar } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import { FaRegHeart } from "react-icons/fa";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { useParams } from "next/navigation";
+import ProductDetails from "@/API/Products/ProductDetails";
 const ClientProduct = () => {
+  const { id } = useParams();
   const price = 100;
   const [qty, setQty] = useState(1);
 
@@ -22,16 +25,37 @@ const ClientProduct = () => {
 
   // Slider arrows
   const goNext = () => {
-    const currentIndex = images.indexOf(activeImg);
-    const nextIndex = (currentIndex + 1) % images.length;
-    setActiveImg(images[nextIndex]);
+    if (!productDetails?.picUrls) return;
+
+    const imgs = productDetails.picUrls;
+    const currentIndex = imgs.indexOf(activeImg);
+    const nextIndex = (currentIndex + 1) % imgs.length;
+    setActiveImg(imgs[nextIndex]);
   };
 
   const goPrev = () => {
-    const currentIndex = images.indexOf(activeImg);
-    const prevIndex = (currentIndex - 1 + images.length) % images.length;
-    setActiveImg(images[prevIndex]);
+    if (!productDetails?.picUrls) return;
+
+    const imgs = productDetails.picUrls;
+    const currentIndex = imgs.indexOf(activeImg);
+    const prevIndex = (currentIndex - 1 + imgs.length) % imgs.length;
+    setActiveImg(imgs[prevIndex]);
   };
+
+  useEffect(() => {
+    getProductDetails();
+  }, []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [productDetails, setProductDetails] = useState([]);
+  const getProductDetails = () => {
+    ProductDetails(setProductDetails, setError, setLoading, id);
+  };
+  useEffect(() => {
+    if (productDetails?.picUrls?.length > 0) {
+      setActiveImg(productDetails.picUrls[0]);
+    }
+  }, [productDetails]);
 
   return (
     <div className="product">
@@ -48,7 +72,7 @@ const ClientProduct = () => {
 
           {/* Main image */}
           <Image
-            src={activeImg}
+            src={activeImg ? activeImg : "/images/empty_product.png"}
             alt="product image"
             loading="lazy"
             width={390}
@@ -58,29 +82,30 @@ const ClientProduct = () => {
 
           {/* Small images */}
           <div className="product_subimgs">
-            {images.map((img, index) => (
-              <div
-                key={index}
-                className={`subimg_box ${
-                  activeImg === img ? "active_subimg" : ""
-                }`}
-                onClick={() => setActiveImg(img)}
-              >
-                <Image
-                  src={img}
-                  alt="product"
-                  width={130}
-                  height={130}
-                  loading="lazy"
-                />
-              </div>
-            ))}
+            {productDetails?.picUrls?.length > 0 &&
+              productDetails.picUrls.map((img, index) => (
+                <div
+                  key={index}
+                  className={`subimg_box ${
+                    activeImg === img ? "active_subimg" : ""
+                  }`}
+                  onClick={() => setActiveImg(img)}
+                >
+                  <Image
+                    src={img}
+                    alt="product"
+                    width={130}
+                    height={130}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
           </div>
         </div>
 
         <div className="product_content">
-          <span>Laundry & Dryclean</span>
-          <h1>Crystal Brite Laundry Sour</h1>
+          {/* <span>{productDetails?.categories[0]}</span> */}
+          <h1>{productDetails.name}</h1>
           <p>
             <FaStar />
             <FaStar />
@@ -90,7 +115,7 @@ const ClientProduct = () => {
             <span>(4.5 Rating) 150+ Reviews</span>
           </p>
           <h3>
-            $ 44 <span>per unit</span>
+            AED {productDetails.price} <span>per unit</span>
           </h3>
           <h4>Minimum Order: 30 units / case</h4>
           <h5>

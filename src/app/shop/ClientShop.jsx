@@ -98,7 +98,7 @@ export default function Shop() {
             </h3>
 
             <p>
-              <span>6</span> products found
+              <span>{allProducts.length}</span> products found
             </p>
             <select>
               <option value="Most Popular">Most Popular</option>
@@ -107,8 +107,8 @@ export default function Shop() {
               <option value="Most Popular">Most Popular</option>
             </select>
             <div className="shop_display">
-              <TbAlignBoxRightMiddle />
-              <AiOutlineBars />
+              <TbAlignBoxRightMiddle className="flex-display" />
+              <AiOutlineBars className="grid-display" />
             </div>
           </div>
 
@@ -126,8 +126,8 @@ export default function Shop() {
             ) : (
               allProducts.map((item) => {
                 return (
-                  <div className="Featured_card">
-                    <a href="/product">
+                  <div className="Featured_card" key={item._id}>
+                    <a href={`/product/${item._id}`}>
                       <div className="Featured_img">
                         <Image
                           src={
