@@ -14,7 +14,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import GetFeaturedProducts from "@/API/Products/GetFeaturedProducts";
+import { addToCart } from "@/utils/cartUtils";
+import { useToast } from "@/context/ToastContext";
+
 const Featured_Products = () => {
+  const { showToast } = useToast();
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   useEffect(() => {
@@ -102,7 +106,16 @@ const Featured_Products = () => {
 
                   <div className="Featured_price">
                     <h3>AED {item.price}</h3>
-                    <button>Add to Cart</button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToCart(item, 1);
+                        showToast("Product added to cart!", "success");
+                      }}
+                    >
+                      Add to Cart
+                    </button>
                   </div>
                 </div>
               </SwiperSlide>

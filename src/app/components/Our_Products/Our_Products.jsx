@@ -15,7 +15,10 @@ import {
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import GetProducts from "@/API/Products/GetProducts";
+import { addToCart } from "@/utils/cartUtils";
+import { useToast } from "@/context/ToastContext";
 const Our_Products = () => {
+  const { showToast } = useToast();
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   useEffect(() => {
@@ -81,7 +84,16 @@ const Our_Products = () => {
                     </div>
                     <div className="Our_Products_price">
                       <h3>AED {item.price}</h3>
-                      <button>Add to Cart</button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          addToCart(item, 1);
+                          showToast("Product added to cart!", "success");
+                        }}
+                      >
+                        Add to Cart
+                      </button>
                     </div>
                   </a>
                 </div>

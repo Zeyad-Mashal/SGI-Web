@@ -10,7 +10,10 @@ import "./shop.css";
 import { IoMdClose } from "react-icons/io";
 import GetProducts from "@/API/Products/GetProducts";
 import Image from "next/image";
+import { addToCart } from "@/utils/cartUtils";
+import { useToast } from "@/context/ToastContext";
 export default function Shop() {
+  const { showToast } = useToast();
   useEffect(() => {
     getAllProducts();
   }, []);
@@ -143,7 +146,7 @@ export default function Shop() {
                         <FontAwesomeIcon icon={faHeart} />
                         <p>Featured</p>
                       </div>
-                      <h2>White Spot Concentrated Lemon</h2>
+                      <h2>{item.name}</h2>
                       <div className="Featured_stars">
                         <FontAwesomeIcon icon={faStar} />
                         <FontAwesomeIcon icon={faStar} />
@@ -155,8 +158,17 @@ export default function Shop() {
                     </a>
 
                     <div className="Featured_price">
-                      <h3>$25.00</h3>
-                      <button>Add to Cart</button>
+                      <h3>AED {item.price}</h3>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          addToCart(item, 1);
+                          showToast("Product added to cart!", "success");
+                        }}
+                      >
+                        Add to Cart
+                      </button>
                     </div>
                   </div>
                 );

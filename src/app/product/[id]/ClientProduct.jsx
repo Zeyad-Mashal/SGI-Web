@@ -8,9 +8,11 @@ import { FaRegHeart } from "react-icons/fa";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useParams } from "next/navigation";
 import ProductDetails from "@/API/Products/ProductDetails";
+import { addToCart } from "@/utils/cartUtils";
+import { useToast } from "@/context/ToastContext";
 const ClientProduct = () => {
+  const { showToast } = useToast();
   const { id } = useParams();
-  const price = 100;
   const [qty, setQty] = useState(1);
 
   const images = ["/images/p1.png", "/images/p2.png", "/images/p3.png"];
@@ -139,14 +141,21 @@ const ClientProduct = () => {
               <div className="total">
                 <h2>
                   {" "}
-                  Total: <span>${(qty * price).toFixed(2)}</span>
+                  Total: <span>AED {(qty * (productDetails.price || 0)).toFixed(2)}</span>
                 </h2>
               </div>
             </div>
           </div>
 
           <div className="product_btns">
-            <button>
+            <button
+              onClick={() => {
+                if (productDetails && productDetails._id) {
+                  addToCart(productDetails, qty);
+                  showToast("Product added to cart!", "success");
+                }
+              }}
+            >
               <RiShoppingBag3Line /> Add To Cart
             </button>
             <FaRegHeart />
