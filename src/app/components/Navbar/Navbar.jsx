@@ -135,7 +135,6 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      {/* 🔸 Top Navbar */}
       <div className="top_navbar">
         <p>
           {translations.navbartop} <a href="/shop">{translations.shopnow}</a>
