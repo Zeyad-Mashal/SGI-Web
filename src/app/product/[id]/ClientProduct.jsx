@@ -4,14 +4,20 @@ import Image from "next/image";
 import "./product.css";
 import { FaStar } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useParams } from "next/navigation";
 import ProductDetails from "@/API/Products/ProductDetails";
 import { addToCart } from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
+import {
+  toggleFavorite,
+  isFavorited,
+  getFavorites,
+} from "@/utils/favoriteUtils";
 const ClientProduct = () => {
   const { showToast } = useToast();
+  const [favorites, setFavorites] = useState([]);
   const { id } = useParams();
   const [qty, setQty] = useState(1);
 
@@ -43,13 +49,31 @@ const ClientProduct = () => {
     const prevIndex = (currentIndex - 1 + imgs.length) % imgs.length;
     setActiveImg(imgs[prevIndex]);
   };
+  const [productDetails, setProductDetails] = useState([]);
 
   useEffect(() => {
     getProductDetails();
+    setFavorites(getFavorites());
   }, []);
+
+  useEffect(() => {
+    setFavorites(getFavorites());
+  }, [productDetails]);
+
+  const handleFavoriteClick = () => {
+    if (productDetails && productDetails._id) {
+      const wasFavorited = isFavorited(productDetails._id);
+      const updatedFavorites = toggleFavorite(productDetails);
+      setFavorites(updatedFavorites);
+      if (wasFavorited) {
+        showToast("Removed from favorites", "info");
+      } else {
+        showToast("Added to favorites!", "success");
+      }
+    }
+  };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [productDetails, setProductDetails] = useState([]);
   const getProductDetails = () => {
     ProductDetails(setProductDetails, setError, setLoading, id);
   };
@@ -141,7 +165,10 @@ const ClientProduct = () => {
               <div className="total">
                 <h2>
                   {" "}
-                  Total: <span>AED {(qty * (productDetails.price || 0)).toFixed(2)}</span>
+                  Total:{" "}
+                  <span>
+                    AED {(qty * (productDetails.price || 0)).toFixed(2)}
+                  </span>
                 </h2>
               </div>
             </div>
@@ -158,7 +185,30 @@ const ClientProduct = () => {
             >
               <RiShoppingBag3Line /> Add To Cart
             </button>
-            <FaRegHeart />
+            {productDetails && productDetails._id && (
+              <div
+                onClick={handleFavoriteClick}
+                style={{
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  transform: isFavorited(productDetails._id)
+                    ? "scale(1.2)"
+                    : "scale(1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                className={`heart-icon ${
+                  isFavorited(productDetails._id) ? "favorited" : ""
+                }`}
+              >
+                {isFavorited(productDetails._id) ? (
+                  <FaHeart style={{ color: "#ef4444", fontSize: "24px" }} />
+                ) : (
+                  <FaRegHeart style={{ fontSize: "24px" }} />
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

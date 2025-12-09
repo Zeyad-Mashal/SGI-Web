@@ -5,18 +5,42 @@ import { FiBox, FiFilter } from "react-icons/fi";
 import { TbAlignBoxRightMiddle } from "react-icons/tb";
 import { AiOutlineBars } from "react-icons/ai";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStar,
+  faHeart as faHeartSolid,
+} from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import "./shop.css";
 import { IoMdClose } from "react-icons/io";
 import GetProducts from "@/API/Products/GetProducts";
 import Image from "next/image";
 import { addToCart } from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
+import {
+  toggleFavorite,
+  isFavorited,
+  getFavorites,
+} from "@/utils/favoriteUtils";
 export default function Shop() {
   const { showToast } = useToast();
+  const [favorites, setFavorites] = useState([]);
   useEffect(() => {
     getAllProducts();
+    setFavorites(getFavorites());
   }, []);
+
+  const handleFavoriteClick = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const wasFavorited = isFavorited(item._id);
+    const updatedFavorites = toggleFavorite(item);
+    setFavorites(updatedFavorites);
+    if (wasFavorited) {
+      showToast("Removed from favorites", "info");
+    } else {
+      showToast("Added to favorites!", "success");
+    }
+  };
   const [showFilter, setShowFilter] = useState(false);
   const [showDesktopFilter, setShowDesktopFilter] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -143,7 +167,23 @@ export default function Shop() {
                           height={150}
                           loading="lazy"
                         />
-                        <FontAwesomeIcon icon={faHeart} />
+                        <FontAwesomeIcon
+                          icon={isFavorited(item._id) ? faHeartSolid : faHeart}
+                          className={`heart-icon ${
+                            isFavorited(item._id) ? "favorited" : ""
+                          }`}
+                          onClick={(e) => handleFavoriteClick(e, item)}
+                          style={{
+                            color: isFavorited(item._id)
+                              ? "#ef4444"
+                              : "inherit",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            transform: isFavorited(item._id)
+                              ? "scale(1.2)"
+                              : "scale(1)",
+                          }}
+                        />
                         <p>Featured</p>
                       </div>
                       <h2>{item.name}</h2>

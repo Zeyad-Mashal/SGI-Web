@@ -13,17 +13,38 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import GetProducts from "@/API/Products/GetProducts";
 import { addToCart } from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
+import {
+  toggleFavorite,
+  isFavorited,
+  getFavorites,
+} from "@/utils/favoriteUtils";
 const Our_Products = () => {
   const { showToast } = useToast();
+  const [favorites, setFavorites] = useState([]);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   useEffect(() => {
     getAllProducts();
+    setFavorites(getFavorites());
   }, []);
+
+  const handleFavoriteClick = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const wasFavorited = isFavorited(item._id);
+    const updatedFavorites = toggleFavorite(item);
+    setFavorites(updatedFavorites);
+    if (wasFavorited) {
+      showToast("Removed from favorites", "info");
+    } else {
+      showToast("Added to favorites!", "success");
+    }
+  };
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -70,7 +91,21 @@ const Our_Products = () => {
                         height={150}
                         loading="lazy"
                       />
-                      <FontAwesomeIcon icon={faHeart} />
+                      <FontAwesomeIcon
+                        icon={isFavorited(item._id) ? faHeartSolid : faHeart}
+                        className={`heart-icon ${
+                          isFavorited(item._id) ? "favorited" : ""
+                        }`}
+                        onClick={(e) => handleFavoriteClick(e, item)}
+                        style={{
+                          color: isFavorited(item._id) ? "#ef4444" : "inherit",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          transform: isFavorited(item._id)
+                            ? "scale(1.2)"
+                            : "scale(1)",
+                        }}
+                      />
                       <p>Featured</p>
                     </div>
                     <h2>{item.name}</h2>

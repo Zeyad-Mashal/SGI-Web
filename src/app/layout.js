@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./components/HeartAnimation.css";
 import ClientLayout from "./ClientLayout";
 
 const geistSans = Geist({
