@@ -163,12 +163,12 @@ const ClientProduct = () => {
             Description
           </button>
 
-          <button
+          {/* <button
             className={activeTab === "specs" ? "active" : ""}
             onClick={() => setActiveTab("specs")}
           >
             Specifications
-          </button>
+          </button> */}
 
           <button
             className={activeTab === "reviews" ? "active" : ""}
@@ -182,28 +182,19 @@ const ClientProduct = () => {
           {activeTab === "description" && (
             <div className="product_desc_description">
               <h2>Product Description</h2>
-              <p>
-                Final-rinse sour formulated to neutralize residual alkalinity
-                from detergents, preventing fabric yellowing and damage.
-              </p>
+              <p>{productDetails.description}</p>
               <h2>Major Product Uses:</h2>
               <ul>
-                <li>prevent yellowing and fibre damage.</li>
-                <li>improve finishing and maintain fabric whiteness.</li>
-                <li>neutralize wash alkalinity.</li>
+                <li>{productDetails.uses}</li>
               </ul>
               <h2>Ideal For:</h2>
               <ul>
-                <li>Hotels</li>
-                <li>Offices</li>
-                <li>Healthcare</li>
-                <li>Schools</li>
-                <li>Restaurants</li>
+                <li>{productDetails.features}</li>
               </ul>
             </div>
           )}
 
-          {activeTab === "specs" && (
+          {/* {activeTab === "specs" && (
             <div className="product_desc_description">
               <h2>Specifications</h2>
               <ul>
@@ -213,7 +204,7 @@ const ClientProduct = () => {
                 <li>Made in: USA</li>
               </ul>
             </div>
-          )}
+          )} */}
 
           {activeTab === "reviews" && (
             <div className="product_desc_description">

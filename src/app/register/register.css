@@ -63,7 +63,7 @@
   width: 70%;
 }
 .register-form {
-  max-width: 500px;
+  max-width: 700px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -104,16 +104,20 @@
 .form-content label h3 {
   color: rgba(0, 0, 0, 0.8);
   font-weight: bold;
+  font-size: 0.9rem;
 }
 .form-content > label > input,
 .form-optional > label > input {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   outline: none;
   transition: border-color 0.3s ease;
   width: 100%;
+}
+.form-optional > label > input {
+  font-weight: normal;
 }
 .form-content > label > h3 > span {
   color: rgba(255, 0, 0, 0.8);
@@ -127,6 +131,9 @@
   gap: 1rem;
   margin-top: 1rem;
   position: relative;
+}
+.form-optional > label > h3 {
+  font-size: 0.8rem;
 }
 .register-terms {
   width: 100%;
@@ -165,6 +172,20 @@
   text-decoration: underline;
   color: rgba(0, 0, 0, 0.6);
   font-size: 0.8rem;
+}
+.wrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.wrap > label {
+  width: 30%;
+}
+.wrap > label > h3 {
+  font-size: 0.7rem;
+  font-weight: bold;
 }
 @media screen and (min-width: 1401px) {
   .register-container {
@@ -245,10 +266,13 @@
 }
 @media screen and (max-width: 789px) {
   .register {
-    height: 98vh;
+    height: 150vh;
   }
   .register-img {
     display: none;
+  }
+  .wrap > label {
+    width: 100%;
   }
   .register-form h1 {
     font-size: 1.7rem;
@@ -256,13 +280,12 @@
   .register-form p {
     font-size: 0.9rem;
   }
-  .form-optional h3 {
+  .form-optional > label > h3 {
     font-size: 0.8rem;
-    display: flex;
-    flex-direction: column;
+    font-weight: normal;
   }
   .form-optional::before {
-    top: -15%;
+    top: -7%;
   }
   .register-form button {
     font-size: 1rem;

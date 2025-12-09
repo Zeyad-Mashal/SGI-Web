@@ -17,7 +17,11 @@ const ContactUs = () => {
             <h3>Email</h3>
             <p>Office : hello@skyline.co</p>
             <div className="ContactUs_item_btn">
-              <button>Contact us</button>
+              <button>
+                <a href="mailto:hello@skyline.co" target="_blanck">
+                  Contact us
+                </a>
+              </button>
               <p>*available 24 hrs</p>
             </div>
           </div>
@@ -26,7 +30,11 @@ const ContactUs = () => {
             <h3>Phone</h3>
             <p>Office : +91 8932-1151-22</p>
             <div className="ContactUs_item_btn">
-              <button>Contact us</button>
+              <button>
+                <a href="tel:+201205222331" target="_blanck">
+                  Contact us
+                </a>
+              </button>
               <p>*available 24 hrs</p>
             </div>
           </div>
@@ -36,7 +44,14 @@ const ContactUs = () => {
             <h3>Location</h3>
             <p>Office : 123 Maple Street, Springfield</p>
             <div className="ContactUs_item_btn">
-              <button>Contact us</button>
+              <button>
+                <a
+                  href="https://maps.app.goo.gl/9hJnb1rssfoAHoYPA"
+                  target="_blanck"
+                >
+                  Contact us
+                </a>
+              </button>
               <p>*available 24 hrs</p>
             </div>
           </div>

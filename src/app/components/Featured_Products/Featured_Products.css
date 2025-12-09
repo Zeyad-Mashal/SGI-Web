@@ -72,6 +72,7 @@
   width: 100%;
   height: 100%;
   position: relative;
+  border-radius: 16px;
 }
 .Featured_img > svg {
   background-color: white;

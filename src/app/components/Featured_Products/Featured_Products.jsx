@@ -75,7 +75,7 @@ const Featured_Products = () => {
             {allProducts.map((item) => (
               <SwiperSlide key={item._id}>
                 <div className="Featured_card">
-                  <a href="/product">
+                  <a href={`/product/${item._id}`}>
                     <div className="Featured_img">
                       <Image
                         src={item.picUrls?.[0] || "/images/empty_product.png"}

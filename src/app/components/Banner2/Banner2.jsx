@@ -12,7 +12,9 @@ const Banner2 = () => {
       />
       <div className="banner2_content">
         <h2>Lorem Ipsum is simply dummy</h2>
-        <button>Shop Now</button>
+        <button>
+          <a href="/shop">Shop Now</a>
+        </button>
       </div>
     </div>
   );

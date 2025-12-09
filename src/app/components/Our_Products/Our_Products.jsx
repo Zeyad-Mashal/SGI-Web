@@ -54,34 +54,36 @@ const Our_Products = () => {
             allProducts.slice(-8).map((item) => {
               return (
                 <div className="Our_Products_item" key={item._id}>
-                  <div className="ourProducts_img">
-                    <Image
-                      src={
-                        item.picUrls && item.picUrls[0]
-                          ? item.picUrls[0]
-                          : "/images/empty_product.png"
-                      }
-                      alt="product image"
-                      width={150}
-                      height={150}
-                      loading="lazy"
-                    />
-                    <FontAwesomeIcon icon={faHeart} />
-                    <p>Featured</p>
-                  </div>
-                  <h2>{item.name}</h2>
-                  <div className="Our_Products_stars">
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <p>(230 reviews)</p>
-                  </div>
-                  <div className="Our_Products_price">
-                    <h3>AED {item.price}</h3>
-                    <button>Add to Cart</button>
-                  </div>
+                  <a href={`/product/${item._id}`}>
+                    <div className="ourProducts_img">
+                      <Image
+                        src={
+                          item.picUrls && item.picUrls[0]
+                            ? item.picUrls[0]
+                            : "/images/empty_product.png"
+                        }
+                        alt="product image"
+                        width={150}
+                        height={150}
+                        loading="lazy"
+                      />
+                      <FontAwesomeIcon icon={faHeart} />
+                      <p>Featured</p>
+                    </div>
+                    <h2>{item.name}</h2>
+                    <div className="Our_Products_stars">
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <FontAwesomeIcon icon={faStar} />
+                      <p>(230 reviews)</p>
+                    </div>
+                    <div className="Our_Products_price">
+                      <h3>AED {item.price}</h3>
+                      <button>Add to Cart</button>
+                    </div>
+                  </a>
                 </div>
               );
             })

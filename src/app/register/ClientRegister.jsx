@@ -104,28 +104,50 @@ const ClientRegister = () => {
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                placeholder="05 XXX XXXX"
               />
             </label>
-            <div className="form-optional">
+            <div className="form-optional wrap">
               <label>
                 <h3>
-                  Business license <span>( optional )</span>
+                  VAT Registration <span>( optional )</span>
                 </h3>
                 <input
-                  type="text"
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg"
                   value={businessLicense}
                   onChange={(e) => setBusinessLicense(e.target.value)}
                 />
               </label>
               <label>
                 <h3>
-                  Tax Card <span>( optional )</span>
+                  Tax Registration Number<span>( optional )</span>
                 </h3>
                 <input
                   type="text"
                   value={taxCard}
                   onChange={(e) => setTaxCard(e.target.value)}
                 />
+              </label>
+            </div>
+            <div className="form-optional wrap">
+              <label>
+                <h3>
+                  Commercial License <span>( optional )</span>
+                </h3>
+                <input type="file" accept=".pdf,.png,.jpg,.jpeg" />
+              </label>
+              <label>
+                <h3>
+                  Tax Number<span>( optional )</span>
+                </h3>
+                <input type="text" />
+              </label>
+              <label>
+                <h3>
+                  Expiry Date<span>( optional )</span>
+                </h3>
+                <input type="text" />
               </label>
             </div>
             <div className="register-terms">

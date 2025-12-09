@@ -52,8 +52,8 @@
   border-radius: 16px 0 0 16px;
 }
 .hero_left span {
-  color: white;
-  background-color: black;
+  color: black;
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 10px;
   width: 107px;
   height: 30px;
@@ -68,10 +68,10 @@
   font-size: 35px;
   font-weight: bold;
   line-height: 1.2;
-  width: 80%;
+  width: 40%;
 }
 .hero_left p {
-  width: 60%;
+  width: 40%;
   font-size: 1rem;
   line-height: 1.5;
 }
@@ -85,6 +85,7 @@
   height: 40px;
   text-align: center;
   font-size: 16px;
+  color: black;
 }
 @media screen and (min-width: 1401px) {
   .hero {

@@ -13,6 +13,7 @@ import {
   faArrowRight,
   faXmark,
   faChevronDown,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { CiSearch } from "react-icons/ci";
 import { FiPhone } from "react-icons/fi";
@@ -23,7 +24,9 @@ import ar from "../../../translation/ar.json";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false); // ✅ جديد
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [activeMainCategory, setActiveMainCategory] = useState(null);
+  const [subPanelVisible, setSubPanelVisible] = useState(false);
   const [isArabic, setIsArabic] = useState(false);
   const categories = [
     {
@@ -39,26 +42,34 @@ const Navbar = () => {
       sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
     },
     {
-      name: "Dispensers",
-      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+      name: "Waste Management",
+      sub: ["Trash Bags", "Recycling Bins", "Compost Supplies"],
     },
     {
-      name: "Dispensers",
-      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+      name: "Hygiene & Safety",
+      sub: ["Gloves", "Masks", "Sanitizers"],
     },
     {
-      name: "Dispensers",
-      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
-    },
-    {
-      name: "Dispensers",
-      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
-    },
-    {
-      name: "Dispensers",
-      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
+      name: "Facility Care",
+      sub: ["Air Fresheners", "Floor Care", "Surface Care"],
     },
   ];
+
+  const closeMegaMenu = () => {
+    setMegaMenuOpen(false);
+    setActiveMainCategory(null);
+    setSubPanelVisible(false);
+  };
+
+  const openSubPanel = (index) => {
+    setActiveMainCategory(index);
+    setSubPanelVisible(true);
+  };
+
+  const handleBackToMain = () => {
+    setSubPanelVisible(false);
+    setActiveMainCategory(null);
+  };
 
   const toggleCategory = (index) => {
     setActiveCategory(activeCategory === index ? null : index);
@@ -216,7 +227,11 @@ const Navbar = () => {
 
           <div>
             <p>Call Us</p>
-            <span>1-800-555-1234</span>
+            <span>
+              <a href="tel:1-800-555-1234" target="_blanck">
+                1-800-555-1234
+              </a>
+            </span>
           </div>
         </div>
         <div className="navbar_links">
@@ -238,7 +253,16 @@ const Navbar = () => {
       <div className="menu desktop_menu">
         <div
           className="mega_menu_btn"
-          onClick={() => setMegaMenuOpen(!megaMenuOpen)}
+          onClick={() =>
+            setMegaMenuOpen((prev) => {
+              const next = !prev;
+              if (!next) {
+                setSubPanelVisible(false);
+                setActiveMainCategory(null);
+              }
+              return next;
+            })
+          }
         >
           <FontAwesomeIcon icon={faBarsStaggered} />
           <span>Browse all categories</span>
@@ -267,30 +291,59 @@ const Navbar = () => {
 
       {/* ✅ Mega Menu Dropdown */}
       {megaMenuOpen && (
-        <div className={`mega_menu_dropdown ${isArabic ? "ar-rtl" : ""}`}>
-          <div className="mega_menu_content">
-            {categories.map((cat, index) => (
-              <>
-                <div key={index} className="mega_category">
-                  <h4>{cat.name}</h4>
-                  <ul>
-                    {cat.sub.map((sub, i) => (
-                      <li key={i}>{sub}</li>
-                    ))}
-                  </ul>
+        <>
+          <div className="mega_menu_overlay" onClick={closeMegaMenu}></div>
+          <div
+            className={`mega_menu_dropdown side ${isArabic ? "ar-rtl" : ""} ${
+              subPanelVisible ? "sub_open" : ""
+            }`}
+          >
+            <div className="mega_menu_header_row">
+              <span>Browse all categories</span>
+              <FontAwesomeIcon icon={faXmark} onClick={closeMegaMenu} />
+            </div>
+            <div className="mega_menu_track">
+              <div className="mega_panel mega_panel_main">
+                {categories.map((cat, index) => (
+                  <button
+                    key={cat.name}
+                    className={`mega_main_item ${
+                      activeMainCategory === index ? "active" : ""
+                    }`}
+                    onClick={() => openSubPanel(index)}
+                  >
+                    <span>{cat.name}</span>
+                    <FontAwesomeIcon icon={faChevronDown} rotation={270} />
+                  </button>
+                ))}
+              </div>
+              <div className="mega_panel mega_panel_sub">
+                <div className="mega_sub_header">
+                  <button className="mega_back_btn" onClick={handleBackToMain}>
+                    <FontAwesomeIcon icon={faChevronDown} rotation={90} />
+                    <span>Main menu</span>
+                  </button>
                 </div>
-                <div className="mega_category">
-                  <h4>{cat.name}</h4>
-                  <ul>
-                    {cat.sub.map((sub, i) => (
-                      <li key={i}>{sub}</li>
-                    ))}
-                  </ul>
-                </div>
-              </>
-            ))}
+                <h4 className="mega_sub_title">
+                  {activeMainCategory !== null
+                    ? categories[activeMainCategory].name
+                    : "Choose a category"}
+                </h4>
+                <ul className="mega_sub_list">
+                  {activeMainCategory !== null ? (
+                    categories[activeMainCategory].sub.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))
+                  ) : (
+                    <li className="mega_placeholder">
+                      Select a category to see subcategories
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* 🔸 Mobile Menu Overlay */}

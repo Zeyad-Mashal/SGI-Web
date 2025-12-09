@@ -245,6 +245,7 @@
 }
 .product_desc_description > h2 {
   font-size: 20px;
+  width: 250px;
   font-weight: bold;
 }
 .product_desc_description > p {
