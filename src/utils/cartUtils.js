@@ -39,7 +39,8 @@ export const addToCart = (product, quantity = 1) => {
             picUrls: product.picUrls || [],
             quantity: quantity,
             description: product.description || '',
-            categories: product.categories || []
+            categories: product.categories || [],
+            sku: product.sku || product.SKU || product._id // Include SKU if available
         });
     }
 

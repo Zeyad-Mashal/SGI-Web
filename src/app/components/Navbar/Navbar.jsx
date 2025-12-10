@@ -75,10 +75,11 @@ const Navbar = () => {
     setActiveCategory(activeCategory === index ? null : index);
   };
   const [lang, setLang] = useState("en");
-
+  const [token, setToken] = useState(null);
   useEffect(() => {
     const savedLang = localStorage.getItem("lang");
-
+    const token = localStorage.getItem("token");
+    setToken(token);
     if (!savedLang) {
       localStorage.setItem("lang", "en");
       setLang("en");
@@ -180,10 +181,11 @@ const Navbar = () => {
           <a href="/fav">
             <FaRegHeart />
           </a>
-
-          <a href="/profile">
-            <FaRegUser />
-          </a>
+          {!token && (
+            <a href="/profile">
+              <FaRegUser />
+            </a>
+          )}
 
           <a href="/cart">
             <RiShoppingBag3Line />

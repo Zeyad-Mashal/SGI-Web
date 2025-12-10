@@ -1,5 +1,5 @@
-const URL = "https://sgi-dy1p.onrender.com/api/v1/auth/register";
-const Register = async (data, setError, setLoading) => {
+const URL = "https://sgi-dy1p.onrender.com/api/v1/address/add";
+const AddAddress = async (data, setError, setLoading, getAddresses) => {
     setLoading(true)
     try {
         const response = await fetch(URL, {
@@ -14,8 +14,7 @@ const Register = async (data, setError, setLoading) => {
 
         if (response.ok) {
             setLoading(false);
-            // localStorage.setItem('user', JSON.stringify(result.user));
-            return window.location.href = "/login";
+            getAddresses()
         } else {
             if (response.status == 400) {
                 setError(result.message);
@@ -34,4 +33,4 @@ const Register = async (data, setError, setLoading) => {
         setLoading(false)
     }
 }
-export default Register;
+export default AddAddress;

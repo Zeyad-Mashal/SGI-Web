@@ -1,32 +1,38 @@
-const URL = "https://sgi-dy1p.onrender.com/api/v1/auth/register";
-const Register = async (data, setError, setLoading) => {
+const URL = "https://sgi-dy1p.onrender.com/api/v1/order/create";
+const CreateOrder = async (order, setError, setLoading, setDiscount) => {
     setLoading(true)
+    const id = localStorage.getItem("userId");
+    const finalUrl = id ? `${URL}?merchantId=${id}` : URL;
+
     try {
-        const response = await fetch(URL, {
+        const response = await fetch(finalUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(order)
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            setLoading(false);
-            // localStorage.setItem('user', JSON.stringify(result.user));
-            return window.location.href = "/login";
+            if (setDiscount && result.discount) {
+                setDiscount(result.discount);
+            }
+            setLoading(false)
+            return result;
         } else {
-            if (response.status == 400) {
+            if (response.status == 404) {
                 setError(result.message);
                 setLoading(false)
-
+                console.log(result.message);
             } else if (response.status == 403) {
                 setError(result.message);
                 setLoading(false)
             } else {
                 setError(result.message);
                 setLoading(false)
+                console.log(result.message);
             }
         }
     } catch (error) {
@@ -34,4 +40,4 @@ const Register = async (data, setError, setLoading) => {
         setLoading(false)
     }
 }
-export default Register;
+export default CreateOrder;   

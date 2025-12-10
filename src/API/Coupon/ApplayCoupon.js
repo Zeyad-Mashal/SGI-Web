@@ -1,5 +1,5 @@
-const URL = "https://sgi-dy1p.onrender.com/api/v1/auth/register";
-const Register = async (data, setError, setLoading) => {
+const URL = "https://sgi-dy1p.onrender.com/api/v1/coupon/apply";
+const ApplayCoupon = async (coupon, setError, setLoading, setDiscount) => {
     setLoading(true)
     try {
         const response = await fetch(URL, {
@@ -7,19 +7,21 @@ const Register = async (data, setError, setLoading) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({ coupon })
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            setLoading(false);
-            // localStorage.setItem('user', JSON.stringify(result.user));
-            return window.location.href = "/login";
+            setDiscount(result.discount);
+            setLoading(false)
+            return result;
         } else {
             if (response.status == 400) {
                 setError(result.message);
                 setLoading(false)
+                console.log(result.message);
+
 
             } else if (response.status == 403) {
                 setError(result.message);
@@ -34,4 +36,4 @@ const Register = async (data, setError, setLoading) => {
         setLoading(false)
     }
 }
-export default Register;
+export default ApplayCoupon;
