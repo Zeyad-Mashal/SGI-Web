@@ -21,6 +21,7 @@ import { FaRegHeart, FaRegUser } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
+import Search from "@/API/Search/Search";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
@@ -114,21 +115,29 @@ const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchBox, setShowSearchBox] = useState(false); // 📱 للموبايل
-  const products = [
-    { id: 1, name: "Blue Mop" },
-    { id: 2, name: "Large Tissue Box" },
-    { id: 3, name: "Hand Soap" },
-    { id: 4, name: "Microfiber Cloth" },
-  ];
-  const handleSearch = (e) => {
+  const [searchedProducts, setSearchedProducts] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const handleSearch = async (e) => {
     const value = e.target.value;
     setSearchValue(value);
+    setError(null);
+    if (value.trim().length === 0) {
+      setSearchResults([]);
+      setSearchedProducts([]); // اغلاق نتائج البحث
+      return;
+    }
 
-    if (value.trim().length > 0) {
-      const filtered = products.filter((p) =>
-        p.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setSearchResults(filtered);
+    setLoading(true);
+    const response = await Search(
+      setSearchedProducts,
+      setError,
+      setLoading,
+      value
+    );
+
+    if (response && response.products) {
+      setSearchResults(response.products);
     } else {
       setSearchResults([]);
     }
@@ -207,18 +216,57 @@ const Navbar = () => {
             placeholder="search"
             value={searchValue}
             onChange={handleSearch}
-            onFocus={() => searchValue && setSearchResults(products)}
+            onFocus={() => {
+              if (searchValue.trim().length > 0) {
+                handleSearch({ target: { value: searchValue } });
+              }
+            }}
           />
           <span>
             <CiSearch />
           </span>
 
           {/* ⬇ Dropdown */}
-          {searchResults.length > 0 && (
+          {/* 🔎 SEARCH DROPDOWN */}
+          {searchValue.trim().length > 0 && (
             <div className="search_dropdown">
-              {searchResults.map((item) => (
-                <p key={item.id}>{item.name}</p>
-              ))}
+              {/* لو فيه Error */}
+              {error && (
+                <div className="no_results">
+                  <FontAwesomeIcon icon={faXmark} className="no_results_icon" />
+                  <p>No products found, Please Search Another Product.</p>
+                </div>
+              )}
+
+              {/* لو مفيش نتائج */}
+              {!error && searchedProducts.length === 0 && (
+                <div className="no_results">
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="no_results_icon"
+                  />
+                  <p>Searching ...</p>
+                </div>
+              )}
+
+              {/* لو فيه نتائج */}
+              {searchedProducts.length > 0 &&
+                searchedProducts.map((item) => (
+                  <div className="search_item" key={item._id}>
+                    <a href={`/product/${item._id}`}>
+                      <Image
+                        src={item?.picUrls?.[0] || "/images/empty_product.png"}
+                        alt={item.name || "product image"}
+                        width={100}
+                        height={100}
+                      />
+                      <div className="search_item_info">
+                        <p>{item.name}</p>
+                        <p>{item.price} AED</p>
+                      </div>
+                    </a>
+                  </div>
+                ))}
             </div>
           )}
         </div>
@@ -420,8 +468,23 @@ const Navbar = () => {
           </div>
 
           <div className="mobile_search_results">
-            {searchResults.length > 0 ? (
-              searchResults.map((item) => <p key={item.id}>{item.name}</p>)
+            {searchedProducts.length > 0 ? (
+              searchedProducts.map((item) => (
+                <div className="search_item" key={item._id}>
+                  <a href={`/product/${item._id}`}>
+                    <Image
+                      src={item?.picUrls?.[0] || "/images/empty_product.png"}
+                      alt={item.name || "product image"}
+                      width={100}
+                      height={100}
+                    />
+                    <div className="search_item_info">
+                      <p>{item.name}</p>
+                      <p>{item.price} AED</p>
+                    </div>
+                  </a>
+                </div>
+              ))
             ) : (
               <p className="no_items">No results...</p>
             )}
