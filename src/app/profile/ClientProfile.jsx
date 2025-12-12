@@ -23,6 +23,7 @@ import AddAddress from "@/API/Address/AddAddress";
 import CreateOrder from "@/API/Orders/CreateOrder";
 import CreatePO from "@/API/PO/CreatePO";
 import { useToast } from "@/context/ToastContext";
+import Trader from "@/API/Trader/Trader";
 
 const ClientProfile = () => {
   const { showToast } = useToast();
@@ -48,7 +49,8 @@ const ClientProfile = () => {
   const [reorderError, setReorderError] = useState("");
   const [reorderSuccess, setReorderSuccess] = useState("");
   const [userId, setUserId] = useState("");
-
+  const [traderDetails, setTraderDetails] = useState(null);
+  const [traderStats, setTraderStats] = useState(null);
   useEffect(() => {
     GetRecentOrders(setRecentOrders, setError, setLoading);
     const id = localStorage.getItem("userId");
@@ -57,7 +59,11 @@ const ClientProfile = () => {
       getAddresses();
       getPOAddresses();
     }
+    getTraderDetails();
   }, []);
+  const getTraderDetails = () => {
+    Trader(setTraderDetails, setTraderStats, setError, setLoading);
+  };
 
   const getAddresses = () => {
     GetAddress(setReorderAddresses, setReorderError, setReorderLoading);
@@ -508,26 +514,25 @@ const ClientProfile = () => {
             />
             <div className="profile_info_content">
               <div className="profile_title">
-                <h1>Sarah Johnson</h1>
+                <h1>{traderDetails?.name}</h1>
                 <button>
                   <FaRegEdit />
                   Edit Profile
                 </button>
               </div>
-              <p>Procurement Manager</p>
-              <p>Premium Cleaning Solution inc.</p>
+              <p>{traderDetails?.priceTier}</p>
               <div className="profile_contact">
                 <span>
                   <MdOutlineMailOutline />
-                  sarah.johnson@email.com
+                  {traderDetails?.email}
                 </span>
                 <span>
                   <FiPhone />
-                  +1 (555) 123-475
+                  {traderDetails?.phone}
                 </span>
                 <span>
                   <MdOutlineDateRange />
-                  Member since January 2023
+                  {traderDetails?.registeredAt}
                 </span>
               </div>
             </div>
@@ -536,7 +541,7 @@ const ClientProfile = () => {
             <div className="profile_bottom_item">
               <BsBoxSeam />
               <div className="bottom_item_content">
-                <h3>148</h3>
+                <h3>{traderStats?.totalOrders}</h3>
                 <p>Total Orders</p>
               </div>
             </div>
@@ -544,7 +549,7 @@ const ClientProfile = () => {
               <MdOutlineAttachMoney />
 
               <div className="bottom_item_content">
-                <h3>45000$</h3>
+                <h3>{traderStats?.totalPaid.toFixed(0)} AED</h3>
                 <p>Total Spent</p>
               </div>
             </div>
