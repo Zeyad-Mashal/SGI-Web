@@ -21,8 +21,11 @@ import GetRecentOrders from "@/API/GetRecentOrders/GetRecentOrders";
 import GetAddress from "@/API/Address/GetAddress";
 import AddAddress from "@/API/Address/AddAddress";
 import CreateOrder from "@/API/Orders/CreateOrder";
+import CreatePO from "@/API/PO/CreatePO";
+import { useToast } from "@/context/ToastContext";
 
 const ClientProfile = () => {
+  const { showToast } = useToast();
   const [recentOrders, setRecentOrders] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -52,11 +55,16 @@ const ClientProfile = () => {
     setUserId(id || "");
     if (id) {
       getAddresses();
+      getPOAddresses();
     }
   }, []);
 
   const getAddresses = () => {
     GetAddress(setReorderAddresses, setReorderError, setReorderLoading);
+  };
+
+  const getPOAddresses = () => {
+    GetAddress(setPoAddresses, setPoError, setPoLoading);
   };
 
   const formatDate = (dateString) => {
@@ -107,6 +115,12 @@ const ClientProfile = () => {
   };
 
   const handleReorder = (order) => {
+    // Check if it's a purchase order
+    if (order.isPurchase) {
+      handlePORorder(order);
+      return;
+    }
+
     // Initialize reorder items with quantities
     const items = (order.cartItems || []).map((item) => ({
       ...item,
@@ -119,6 +133,53 @@ const ClientProfile = () => {
     setReorderPaymentWay(order.paymentWay || "Cash on Delivery");
     calculateReorderTotal(items);
     setIsReorderModalOpen(true);
+  };
+
+  const handlePORorder = async (order) => {
+    // Close the order details modal first
+    closeModal();
+
+    // Create a link object from the order image
+    if (order.orderImg) {
+      const linkObj = {
+        type: order.orderImg.endsWith(".pdf")
+          ? "application/pdf"
+          : "image/link",
+        url: order.orderImg,
+        isLink: true,
+      };
+
+      // Set the current PO item
+      setCurrentPOItem(linkObj);
+
+      // Pre-fill form with order data
+      setPoUserName(order.userName || "");
+      setPoPhone(order.userPhone || "");
+      setPoEmail(order.email || "");
+      setPoCity(order.city || "");
+      setPoPaymentWay(order.paymentWay || "Cash on Delivery");
+      setPoTotalAmount(order.totalAmount?.toString() || "");
+
+      // Load addresses if needed
+      if (userId && poAddresses.length === 0) {
+        getPOAddresses();
+      }
+
+      // Try to find and select the address if it exists
+      if (order.address && poAddresses.length > 0) {
+        const addressIndex = poAddresses.findIndex(
+          (addr) => addr === order.address
+        );
+        if (addressIndex !== -1) {
+          setPoSelectedAddressIndex(addressIndex);
+        }
+      }
+
+      // Open PO modal
+      setIsPOModalOpen(true);
+    } else {
+      showToast("Purchase order image not found", "error");
+    }
   };
 
   const closeReorderModal = () => {
@@ -234,6 +295,22 @@ const ClientProfile = () => {
   const [purchaseOrderImages, setPurchaseOrderImages] = useState([]); // files or links
   const [purchaseOrderLink, setPurchaseOrderLink] = useState(""); // optional link input
 
+  // Purchase Order Modal State
+  const [isPOModalOpen, setIsPOModalOpen] = useState(false);
+  const [currentPOItem, setCurrentPOItem] = useState(null); // The file or link being processed
+  const [poUserName, setPoUserName] = useState("");
+  const [poPhone, setPoPhone] = useState("");
+  const [poEmail, setPoEmail] = useState("");
+  const [poCity, setPoCity] = useState("");
+  const [poSelectedAddressIndex, setPoSelectedAddressIndex] = useState(null);
+  const [poAddresses, setPoAddresses] = useState([]);
+  const [poNewAddress, setPoNewAddress] = useState("");
+  const [poPaymentWay, setPoPaymentWay] = useState("Cash on Delivery");
+  const [poTotalAmount, setPoTotalAmount] = useState("");
+  const [poLoading, setPoLoading] = useState(false);
+  const [poError, setPoError] = useState("");
+  const [poSuccess, setPoSuccess] = useState("");
+
   const handleFileUpload = (file) => {
     if (!file) return;
 
@@ -249,6 +326,13 @@ const ClientProfile = () => {
     }
 
     setPurchaseOrderImages((prev) => [...prev, file]);
+    // Open PO modal for this file
+    setCurrentPOItem(file);
+    setIsPOModalOpen(true);
+    // Load addresses if not already loaded
+    if (userId && poAddresses.length === 0) {
+      getPOAddresses();
+    }
   };
 
   const handleLinkAdd = () => {
@@ -276,29 +360,139 @@ const ClientProfile = () => {
 
     setPurchaseOrderImages((prev) => [...prev, linkObj]);
     setPurchaseOrderLink(""); // Clear input after adding
+    // Open PO modal for this link
+    setCurrentPOItem(linkObj);
+    setIsPOModalOpen(true);
+    // Load addresses if not already loaded
+    if (userId && poAddresses.length === 0) {
+      getPOAddresses();
+    }
   };
 
   const removePurchaseOrderItem = (index) => {
     setPurchaseOrderImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Helper function to prepare purchase order data for API submission
-  const getPurchaseOrderData = () => {
-    const files = purchaseOrderImages.filter((item) => !item.isLink);
-    const links = purchaseOrderImages
-      .filter((item) => item.isLink)
-      .map((item) => item.url);
-
-    return {
-      files: files, // Array of File objects
-      links: links, // Array of URL strings
-      totalItems: purchaseOrderImages.length,
-    };
+  const closePOModal = () => {
+    setIsPOModalOpen(false);
+    setCurrentPOItem(null);
+    setPoUserName("");
+    setPoPhone("");
+    setPoEmail("");
+    setPoCity("");
+    setPoSelectedAddressIndex(null);
+    setPoNewAddress("");
+    setPoPaymentWay("Cash on Delivery");
+    setPoTotalAmount("");
+    setPoError("");
+    setPoSuccess("");
   };
 
-  // Example: Use this function when submitting to API
-  // const purchaseOrderData = getPurchaseOrderData();
-  // Then send files and links to your API endpoint
+  const selectPOAddress = (index) => {
+    setPoSelectedAddressIndex(index);
+  };
+
+  const handleAddPOAddress = () => {
+    if (poNewAddress.trim() === "") return;
+
+    const updatedAddresses = [...poAddresses, poNewAddress];
+    const data = {
+      addresses: updatedAddresses,
+      userId: userId,
+    };
+    AddAddress(data, setPoError, setPoLoading, getPOAddresses);
+    setPoNewAddress("");
+  };
+
+  const handleSubmitPO = async () => {
+    // Validation
+    if (!poUserName.trim()) {
+      setPoError("Please enter your name");
+      return;
+    }
+    if (!poPhone.trim()) {
+      setPoError("Please enter your phone number");
+      return;
+    }
+    if (!poEmail.trim()) {
+      setPoError("Please enter your email");
+      return;
+    }
+    if (!poCity.trim()) {
+      setPoError("Please enter city");
+      return;
+    }
+    if (
+      poSelectedAddressIndex === null ||
+      !poAddresses[poSelectedAddressIndex]
+    ) {
+      setPoError("Please select a delivery address");
+      return;
+    }
+    if (!currentPOItem) {
+      setPoError("No purchase order item selected");
+      return;
+    }
+    if (!poTotalAmount || parseFloat(poTotalAmount) <= 0) {
+      setPoError("Please enter a valid total amount");
+      return;
+    }
+
+    setPoError("");
+    setPoSuccess("");
+    setPoLoading(true);
+
+    try {
+      // Create FormData
+      const formData = new FormData();
+
+      // Add image (file or link)
+      if (currentPOItem.isLink) {
+        // For links, we'll send the URL as a string
+        // The backend might need to handle this differently
+        formData.append("image", currentPOItem.url);
+      } else {
+        // For files, append the file
+        formData.append("image", currentPOItem);
+      }
+
+      // Add other form data
+      formData.append("userName", poUserName.trim());
+      formData.append("userPhone", poPhone.trim());
+      formData.append("email", poEmail.trim());
+      formData.append("city", poCity.trim());
+      formData.append("address", poAddresses[poSelectedAddressIndex]);
+      formData.append("paymentWay", poPaymentWay);
+      formData.append("totalAmount", parseFloat(poTotalAmount));
+
+      // Call CreatePO API
+      const result = await CreatePO(formData, setPoError, setPoLoading);
+
+      // If result is returned, it means the API call was successful
+      if (result !== undefined) {
+        // Remove the processed item from the list
+        const itemIndex = purchaseOrderImages.findIndex(
+          (item) =>
+            (item.isLink && item.url === currentPOItem.url) ||
+            (!item.isLink && item === currentPOItem)
+        );
+        if (itemIndex !== -1) {
+          setPurchaseOrderImages((prev) =>
+            prev.filter((_, i) => i !== itemIndex)
+          );
+        }
+        // Close modal immediately
+        closePOModal();
+        // Show success toast
+        showToast("Purchase order submitted successfully!", "success");
+        // Refresh orders list
+        GetRecentOrders(setRecentOrders, setError, setLoading);
+      }
+    } catch (error) {
+      setPoError("An error occurred while submitting the purchase order");
+      setPoLoading(false);
+    }
+  };
 
   return (
     <div className="profile">
@@ -788,20 +982,21 @@ const ClientProfile = () => {
               )}
 
               {/* Reorder Button */}
-              {selectedOrder.cartItems &&
-                selectedOrder.cartItems.length > 0 && (
-                  <div
-                    className="order_section"
-                    style={{ border: "none", padding: "0" }}
+              {((selectedOrder.cartItems &&
+                selectedOrder.cartItems.length > 0) ||
+                selectedOrder.isPurchase) && (
+                <div
+                  className="order_section"
+                  style={{ border: "none", padding: "0" }}
+                >
+                  <button
+                    className="reorder_btn"
+                    onClick={() => handleReorder(selectedOrder)}
                   >
-                    <button
-                      className="reorder_btn"
-                      onClick={() => handleReorder(selectedOrder)}
-                    >
-                      <FaRedo /> Reorder
-                    </button>
-                  </div>
-                )}
+                    <FaRedo /> Reorder
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1162,7 +1357,8 @@ const ClientProfile = () => {
                           >
                             {order.orderStatus || "New"}
                           </div>
-                          {order.cartItems && order.cartItems.length > 0 && (
+                          {((order.cartItems && order.cartItems.length > 0) ||
+                            order.isPurchase) && (
                             <button
                               className="reorder_btn_small"
                               onClick={(e) => {
@@ -1180,6 +1376,271 @@ const ClientProfile = () => {
                   })}
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Purchase Order Modal */}
+      {isPOModalOpen && currentPOItem && (
+        <div className="order_modal_overlay" onClick={closePOModal}>
+          <div
+            className="order_modal_content reorder_modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="order_modal_header">
+              <h2>Purchase Order Details</h2>
+              <button className="close_modal_btn" onClick={closePOModal}>
+                <IoClose size={24} />
+              </button>
+            </div>
+
+            <div className="order_modal_body">
+              {poError && <div className="error_message">{poError}</div>}
+
+              {poSuccess && <div className="success_message">{poSuccess}</div>}
+
+              {/* Preview of uploaded item */}
+              <div className="order_section">
+                <h3>Purchase Order</h3>
+                <div className="po_preview_container">
+                  {currentPOItem.isLink ? (
+                    <div className="po_link_preview">
+                      <span>🔗 Link</span>
+                      <a
+                        href={currentPOItem.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {currentPOItem.url}
+                      </a>
+                    </div>
+                  ) : currentPOItem.type.startsWith("image") ? (
+                    <img
+                      src={URL.createObjectURL(currentPOItem)}
+                      className="po_image_preview"
+                      alt="Purchase order"
+                    />
+                  ) : (
+                    <div className="pdf_preview">
+                      <span>📄 PDF</span>
+                      <small>{currentPOItem.name}</small>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Personal Information */}
+              <div className="order_section">
+                <h3>Personal Information</h3>
+                <div className="checkout_personal_info">
+                  <div className="checkout_personal_info_item">
+                    <h3>Name:</h3>
+                    <input
+                      type="text"
+                      placeholder="Enter your name"
+                      value={poUserName}
+                      onChange={(e) => setPoUserName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="checkout_personal_info_item">
+                    <h3>Phone:</h3>
+                    <input
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={poPhone}
+                      onChange={(e) => setPoPhone(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="checkout_personal_info_item">
+                    <h3>Email:</h3>
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={poEmail}
+                      onChange={(e) => setPoEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Address Selection */}
+              <div className="order_section">
+                <h3>Delivery Address</h3>
+                <div className="checkout_personal_info">
+                  <div className="checkout_personal_info_item">
+                    <h3>City:</h3>
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={poCity}
+                      onChange={(e) => setPoCity(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Add New Address */}
+                {userId && (
+                  <div className="add_address_section">
+                    <h3>Add New Address:</h3>
+                    <div className="add_address_group">
+                      <input
+                        type="text"
+                        placeholder="Enter Address to Save"
+                        value={poNewAddress}
+                        onChange={(e) => setPoNewAddress(e.target.value)}
+                      />
+                      <button
+                        className="add_address_btn"
+                        onClick={handleAddPOAddress}
+                      >
+                        <FiPlus size={22} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Address List */}
+                {userId && poAddresses.length > 0 && (
+                  <div style={{ width: "100%", marginTop: "1rem" }}>
+                    <h3>Select Delivery Address:</h3>
+                    <div className="addresses_list">
+                      {poAddresses.map((address, index) => (
+                        <div
+                          key={index}
+                          className="address_card"
+                          style={{
+                            border:
+                              poSelectedAddressIndex === index
+                                ? "2px solid #4caf50"
+                                : "1px solid #ddd",
+                            background:
+                              poSelectedAddressIndex === index
+                                ? "#f3fff5"
+                                : "#f8f9fb",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => selectPOAddress(index)}
+                        >
+                          <div className="address_left">
+                            <div className="address_icon"></div>
+                            <p className="address_text">{address}</p>
+                          </div>
+
+                          <div className="address_actions">
+                            {poSelectedAddressIndex === index && (
+                              <span
+                                style={{
+                                  color: "#4caf50",
+                                  fontWeight: "bold",
+                                  marginLeft: "0.5rem",
+                                }}
+                              >
+                                <FaCheck />
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {userId && poAddresses.length === 0 && (
+                  <p className="no_address">
+                    No saved addresses. Please add an address above to continue.
+                  </p>
+                )}
+
+                {!userId && (
+                  <p className="no_address" style={{ color: "red" }}>
+                    Please log in to select a delivery address.
+                  </p>
+                )}
+              </div>
+
+              {/* Payment Method */}
+              <div className="order_section">
+                <h3>Payment Method</h3>
+                <div className="checkout_personal_info">
+                  <div className="checkout_personal_info_item">
+                    <select
+                      value={poPaymentWay}
+                      onChange={(e) => setPoPaymentWay(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "0.5rem 1rem",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <option value="Cash on Delivery">Cash on Delivery</option>
+                      <option value="Credit Card">Credit Card</option>
+                      <option value="Debit Card">Debit Card</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Amount */}
+              <div className="order_section">
+                <h3>Total Amount</h3>
+                <div className="checkout_personal_info">
+                  <div className="checkout_personal_info_item">
+                    <h3>Amount (AED):</h3>
+                    <input
+                      type="number"
+                      placeholder="Enter total amount"
+                      value={poTotalAmount}
+                      onChange={(e) => setPoTotalAmount(e.target.value)}
+                      min="0"
+                      step="0.01"
+                      required
+                      style={{
+                        width: "100%",
+                        padding: "0.5rem 1rem",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit Buttons */}
+              <div
+                className="order_section"
+                style={{
+                  display: "flex",
+                  gap: "1rem",
+                  border: "none",
+                  padding: "0",
+                }}
+              >
+                <button
+                  onClick={handleSubmitPO}
+                  disabled={poLoading}
+                  className="submit_reorder_btn"
+                  style={{ flex: 1 }}
+                >
+                  {poLoading ? "Sending..." : "Send PO"}
+                </button>
+                <button
+                  onClick={closePOModal}
+                  disabled={poLoading}
+                  className="submit_reorder_btn"
+                  style={{
+                    flex: 1,
+                    background: "#6c757d",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>
