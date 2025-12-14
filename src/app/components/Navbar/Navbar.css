@@ -245,11 +245,28 @@
   display: flex;
   width: 200%;
   height: 100%;
-  transform: translateX(0);
   transition: transform 0.32s ease;
 }
-.mega_menu_dropdown.sub_open .mega_menu_track {
+
+/* LTR: Initial state - show main panel (0-50%) */
+.mega_menu_dropdown:not(.ar-rtl) .mega_menu_track {
+  transform: translateX(0);
+}
+
+/* LTR: When sub panel opens, slide left to show sub panel (50-100%) */
+.mega_menu_dropdown:not(.ar-rtl).sub_open .mega_menu_track {
   transform: translateX(-50%);
+}
+
+/* RTL: In Arabic, panels are reversed in DOM (sub first at 0-50%, main second at 50-100%) */
+/* Initially show main panel (at 50-100%), so start at -50% */
+.mega_menu_dropdown.ar-rtl .mega_menu_track {
+  transform: translateX(50%);
+}
+
+/* RTL: When sub panel opens, show sub panel (at 0-50%), so go to 0% */
+.mega_menu_dropdown.ar-rtl.sub_open .mega_menu_track {
+  transform: translateX(0);
 }
 .mega_panel {
   width: 50%;
@@ -262,6 +279,13 @@
   background: #fafafa;
   border-left: 1px solid #ededed;
   margin-top: -12px;
+}
+/* RTL: Change border from left to right for Arabic */
+.mega_menu_dropdown.ar-rtl .mega_panel_sub {
+  border-left: none;
+  border-right: 1px solid #ededed;
+  padding-left: 0.35rem;
+  padding-right: 1.1rem;
 }
 .mega_main_item {
   width: 100%;

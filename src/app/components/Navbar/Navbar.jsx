@@ -22,39 +22,27 @@ import { RiShoppingBag3Line } from "react-icons/ri";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 import Search from "@/API/Search/Search";
+import GetCategories from "@/API/Categories/GetCategories";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [activeMainCategory, setActiveMainCategory] = useState(null);
   const [subPanelVisible, setSubPanelVisible] = useState(false);
-  const [isArabic, setIsArabic] = useState(false);
-  const categories = [
-    {
-      name: "Cleaning Supplies",
-      sub: ["Detergents", "Mops & Buckets", "Brushes"],
-    },
-    {
-      name: "Paper Products",
-      sub: ["Tissues", "Paper Towels", "Napkins"],
-    },
-    {
-      name: "Dispensers",
-      sub: ["Soap Dispensers", "Towel Dispensers", "Sanitizer Stands"],
-    },
-    {
-      name: "Waste Management",
-      sub: ["Trash Bags", "Recycling Bins", "Compost Supplies"],
-    },
-    {
-      name: "Hygiene & Safety",
-      sub: ["Gloves", "Masks", "Sanitizers"],
-    },
-    {
-      name: "Facility Care",
-      sub: ["Air Fresheners", "Floor Care", "Surface Care"],
-    },
-  ];
+  // Initialize isArabic from localStorage immediately
+  const [isArabic, setIsArabic] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("lang") === "ar";
+    }
+    return false;
+  });
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    GetCategories(setCategories, setError, setLoading);
+  }, []);
 
   const closeMegaMenu = () => {
     setMegaMenuOpen(false);
@@ -75,7 +63,13 @@ const Navbar = () => {
   const toggleCategory = (index) => {
     setActiveCategory(activeCategory === index ? null : index);
   };
-  const [lang, setLang] = useState("en");
+  // Initialize lang from localStorage immediately to avoid initial render with wrong language
+  const [lang, setLang] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("lang") || "en";
+    }
+    return "en";
+  });
   const [token, setToken] = useState(null);
   useEffect(() => {
     const savedLang = localStorage.getItem("lang");
@@ -116,8 +110,6 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchBox, setShowSearchBox] = useState(false); // 📱 للموبايل
   const [searchedProducts, setSearchedProducts] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const handleSearch = async (e) => {
     const value = e.target.value;
     setSearchValue(value);
@@ -352,44 +344,111 @@ const Navbar = () => {
               <FontAwesomeIcon icon={faXmark} onClick={closeMegaMenu} />
             </div>
             <div className="mega_menu_track">
-              <div className="mega_panel mega_panel_main">
-                {categories.map((cat, index) => (
-                  <button
-                    key={cat.name}
-                    className={`mega_main_item ${
-                      activeMainCategory === index ? "active" : ""
-                    }`}
-                    onClick={() => openSubPanel(index)}
-                  >
-                    <span>{cat.name}</span>
-                    <FontAwesomeIcon icon={faChevronDown} rotation={270} />
-                  </button>
-                ))}
-              </div>
-              <div className="mega_panel mega_panel_sub">
-                <div className="mega_sub_header">
-                  <button className="mega_back_btn" onClick={handleBackToMain}>
-                    <FontAwesomeIcon icon={faChevronDown} rotation={90} />
-                    <span>Main menu</span>
-                  </button>
-                </div>
-                <h4 className="mega_sub_title">
-                  {activeMainCategory !== null
-                    ? categories[activeMainCategory].name
-                    : "Choose a category"}
-                </h4>
-                <ul className="mega_sub_list">
-                  {activeMainCategory !== null ? (
-                    categories[activeMainCategory].sub.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))
-                  ) : (
-                    <li className="mega_placeholder">
-                      Select a category to see subcategories
-                    </li>
-                  )}
-                </ul>
-              </div>
+              {isArabic ? (
+                <>
+                  {/* RTL: Sub panel first, then main panel */}
+                  <div className="mega_panel mega_panel_sub">
+                    <div className="mega_sub_header">
+                      <button
+                        className="mega_back_btn"
+                        onClick={handleBackToMain}
+                      >
+                        <FontAwesomeIcon icon={faChevronDown} rotation={90} />
+                        <span>Main menu</span>
+                      </button>
+                    </div>
+                    <h4 className="mega_sub_title">
+                      {activeMainCategory !== null
+                        ? categories[activeMainCategory]?.name?.[lang] ||
+                          categories[activeMainCategory]?.name?.en ||
+                          "Choose a category"
+                        : "Choose a category"}
+                    </h4>
+                    <ul className="mega_sub_list">
+                      {activeMainCategory !== null &&
+                      categories[activeMainCategory]?.subCategories ? (
+                        categories[activeMainCategory].subCategories.map(
+                          (subCat) => (
+                            <li key={subCat._id}>
+                              {subCat.name?.[lang] || subCat.name?.en || ""}
+                            </li>
+                          )
+                        )
+                      ) : (
+                        <li className="mega_placeholder">
+                          Select a category to see subcategories
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                  <div className="mega_panel mega_panel_main">
+                    {categories.map((cat, index) => (
+                      <button
+                        key={cat._id || index}
+                        className={`mega_main_item ${
+                          activeMainCategory === index ? "active" : ""
+                        }`}
+                        onClick={() => openSubPanel(index)}
+                      >
+                        <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
+                        <FontAwesomeIcon icon={faChevronDown} rotation={270} />
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* LTR: Main panel first, then sub panel */}
+                  <div className="mega_panel mega_panel_main">
+                    {categories.map((cat, index) => (
+                      <button
+                        key={cat._id || index}
+                        className={`mega_main_item ${
+                          activeMainCategory === index ? "active" : ""
+                        }`}
+                        onClick={() => openSubPanel(index)}
+                      >
+                        <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
+                        <FontAwesomeIcon icon={faChevronDown} rotation={270} />
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mega_panel mega_panel_sub">
+                    <div className="mega_sub_header">
+                      <button
+                        className="mega_back_btn"
+                        onClick={handleBackToMain}
+                      >
+                        <FontAwesomeIcon icon={faChevronDown} rotation={90} />
+                        <span>Main menu</span>
+                      </button>
+                    </div>
+                    <h4 className="mega_sub_title">
+                      {activeMainCategory !== null
+                        ? categories[activeMainCategory]?.name?.[lang] ||
+                          categories[activeMainCategory]?.name?.en ||
+                          "Choose a category"
+                        : "Choose a category"}
+                    </h4>
+                    <ul className="mega_sub_list">
+                      {activeMainCategory !== null &&
+                      categories[activeMainCategory]?.subCategories ? (
+                        categories[activeMainCategory].subCategories.map(
+                          (subCat) => (
+                            <li key={subCat._id}>
+                              {subCat.name?.[lang] || subCat.name?.en || ""}
+                            </li>
+                          )
+                        )
+                      ) : (
+                        <li className="mega_placeholder">
+                          Select a category to see subcategories
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </>
@@ -419,21 +478,25 @@ const Navbar = () => {
           <div className="mobile_categories">
             <h3>Categories</h3>
             {categories.map((cat, index) => (
-              <div key={index} className="category_item">
+              <div key={cat._id || index} className="category_item">
                 <div
                   className="category_header"
                   onClick={() => toggleCategory(index)}
                 >
-                  <span>{cat.name}</span>
+                  <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
                   <FontAwesomeIcon icon={faChevronDown} />
                 </div>
-                {activeCategory === index && (
-                  <ul className="subcategory_list">
-                    {cat.sub.map((sub, i) => (
-                      <li key={i}>{sub}</li>
-                    ))}
-                  </ul>
-                )}
+                {activeCategory === index &&
+                  cat.subCategories &&
+                  cat.subCategories.length > 0 && (
+                    <ul className="subcategory_list">
+                      {cat.subCategories.map((subCat, i) => (
+                        <li key={subCat._id || i}>
+                          {subCat.name?.[lang] || subCat.name?.en || ""}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
               </div>
             ))}
           </div>
