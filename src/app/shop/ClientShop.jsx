@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { FiBox, FiFilter } from "react-icons/fi";
 import { TbAlignBoxRightMiddle } from "react-icons/tb";
@@ -13,6 +14,7 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import "./shop.css";
 import { IoMdClose } from "react-icons/io";
 import GetProducts from "@/API/Products/GetProducts";
+import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
 import Image from "next/image";
 import { addToCart } from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
@@ -23,11 +25,18 @@ import {
 } from "@/utils/favoriteUtils";
 export default function Shop() {
   const { showToast } = useToast();
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("category");
   const [favorites, setFavorites] = useState([]);
+  
   useEffect(() => {
-    getAllProducts();
+    if (categoryId) {
+      getProductsByCategory(categoryId);
+    } else {
+      getAllProducts();
+    }
     setFavorites(getFavorites());
-  }, []);
+  }, [categoryId]);
 
   const handleFavoriteClick = (e, item) => {
     e.preventDefault();
@@ -46,8 +55,13 @@ export default function Shop() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
+  
   const getAllProducts = () => {
     GetProducts(setAllProducts, setError, setLoading);
+  };
+
+  const getProductsByCategory = (categoryId) => {
+    GetProductSByCategory(setAllProducts, setError, setLoading, categoryId);
   };
   return (
     <div className="shop">

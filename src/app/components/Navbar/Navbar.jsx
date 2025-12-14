@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
@@ -23,7 +24,9 @@ import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 import Search from "@/API/Search/Search";
 import GetCategories from "@/API/Categories/GetCategories";
+import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
 const Navbar = () => {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
@@ -58,6 +61,13 @@ const Navbar = () => {
   const handleBackToMain = () => {
     setSubPanelVisible(false);
     setActiveMainCategory(null);
+  };
+
+  const handleSubCategoryClick = (subCategoryId) => {
+    // Close the mega menu
+    closeMegaMenu();
+    // Navigate to shop page with category ID
+    router.push(`/shop?category=${subCategoryId}`);
   };
 
   const toggleCategory = (index) => {
@@ -369,7 +379,11 @@ const Navbar = () => {
                       categories[activeMainCategory]?.subCategories ? (
                         categories[activeMainCategory].subCategories.map(
                           (subCat) => (
-                            <li key={subCat._id}>
+                            <li
+                              key={subCat._id}
+                              onClick={() => handleSubCategoryClick(subCat._id)}
+                              style={{ cursor: "pointer" }}
+                            >
                               {subCat.name?.[lang] || subCat.name?.en || ""}
                             </li>
                           )
@@ -435,7 +449,11 @@ const Navbar = () => {
                       categories[activeMainCategory]?.subCategories ? (
                         categories[activeMainCategory].subCategories.map(
                           (subCat) => (
-                            <li key={subCat._id}>
+                            <li
+                              key={subCat._id}
+                              onClick={() => handleSubCategoryClick(subCat._id)}
+                              style={{ cursor: "pointer" }}
+                            >
                               {subCat.name?.[lang] || subCat.name?.en || ""}
                             </li>
                           )
@@ -491,7 +509,14 @@ const Navbar = () => {
                   cat.subCategories.length > 0 && (
                     <ul className="subcategory_list">
                       {cat.subCategories.map((subCat, i) => (
-                        <li key={subCat._id || i}>
+                        <li
+                          key={subCat._id || i}
+                          onClick={() => {
+                            handleSubCategoryClick(subCat._id);
+                            setMenuOpen(false);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
                           {subCat.name?.[lang] || subCat.name?.en || ""}
                         </li>
                       ))}
