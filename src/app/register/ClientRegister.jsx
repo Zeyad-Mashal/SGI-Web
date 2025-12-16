@@ -13,19 +13,47 @@ const ClientRegister = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [taxCard, setTaxCard] = useState("");
-  const [businessLicense, setBusinessLicense] = useState("");
+  const [taxRegistration, setTaxRegistration] = useState("");
+  const [taxNumber, setTaxNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [vatFile, setVatFile] = useState(null);
+  const [commercialFile, setCommercialFile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const handleRegister = () => {
-    const data = {
-      name,
-      phone,
-      email,
-      taxCard,
-      businessLicense,
-    };
-    Register(data, setError, setLoading);
+    // Validation
+    if (!name.trim()) {
+      setError("Please enter company name");
+      return;
+    }
+    if (!email.trim()) {
+      setError("Please enter email");
+      return;
+    }
+    if (!phone.trim()) {
+      setError("Please enter phone number");
+      return;
+    }
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append("name", name.trim());
+    formData.append("email", email.trim());
+    formData.append("phone", phone.trim());
+    formData.append("taxRegistration", taxRegistration.trim());
+    formData.append("taxNumber", taxNumber.trim());
+    formData.append("expiryDate", expiryDate.trim());
+
+    // Append files if they exist
+    if (vatFile) {
+      formData.append("vatFile", vatFile);
+    }
+    if (commercialFile) {
+      formData.append("commercialFile", commercialFile);
+    }
+
+    Register(formData, setError, setLoading);
   };
   return (
     <div className="register">
@@ -110,44 +138,77 @@ const ClientRegister = () => {
             <div className="form-optional wrap">
               <label>
                 <h3>
-                  VAT Registration <span>( optional )</span>
-                </h3>
-                <input
-                  type="file"
-                  accept=".pdf,.png,.jpg,.jpeg"
-                  value={businessLicense}
-                  onChange={(e) => setBusinessLicense(e.target.value)}
-                />
-              </label>
-              <label>
-                <h3>
                   Tax Registration Number<span>( optional )</span>
                 </h3>
                 <input
                   type="text"
-                  value={taxCard}
-                  onChange={(e) => setTaxCard(e.target.value)}
+                  value={taxRegistration}
+                  onChange={(e) => setTaxRegistration(e.target.value)}
+                />
+              </label>
+              <label>
+                <h3>
+                  Tax Number<span>( optional )</span>
+                </h3>
+                <input
+                  type="text"
+                  value={taxNumber}
+                  onChange={(e) => setTaxNumber(e.target.value)}
                 />
               </label>
             </div>
             <div className="form-optional wrap">
               <label>
                 <h3>
-                  Commercial License <span>( optional )</span>
+                  VAT File <span>( optional )</span>
                 </h3>
-                <input type="file" accept=".pdf,.png,.jpg,.jpeg" />
+                <input
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg"
+                  onChange={(e) => setVatFile(e.target.files[0] || null)}
+                />
+                {vatFile && (
+                  <p
+                    style={{
+                      fontSize: "0.85rem",
+                      color: "#666",
+                      marginTop: "0.25rem",
+                    }}
+                  >
+                    {vatFile.name}
+                  </p>
+                )}
               </label>
               <label>
                 <h3>
-                  Tax Number<span>( optional )</span>
+                  Commercial File <span>( optional )</span>
                 </h3>
-                <input type="text" />
+                <input
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg"
+                  onChange={(e) => setCommercialFile(e.target.files[0] || null)}
+                />
+                {commercialFile && (
+                  <p
+                    style={{
+                      fontSize: "0.85rem",
+                      color: "#666",
+                      marginTop: "0.25rem",
+                    }}
+                  >
+                    {commercialFile.name}
+                  </p>
+                )}
               </label>
               <label>
                 <h3>
                   Expiry Date<span>( optional )</span>
                 </h3>
-                <input type="text" />
+                <input
+                  type="date"
+                  value={expiryDate}
+                  onChange={(e) => setExpiryDate(e.target.value)}
+                />
               </label>
             </div>
             <div className="register-terms">

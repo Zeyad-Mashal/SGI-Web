@@ -1,13 +1,13 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/auth/register";
-const Register = async (data, setError, setLoading) => {
+const Register = async (formData, setError, setLoading) => {
     setLoading(true)
     try {
         const response = await fetch(URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                // Don't set Content-Type for FormData, browser will set it automatically with boundary
             },
-            body: JSON.stringify(data)
+            body: formData
         });
 
         const result = await response.json();
