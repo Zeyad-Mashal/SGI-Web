@@ -83,7 +83,7 @@ const Navbar = () => {
   const [token, setToken] = useState(null);
   useEffect(() => {
     const savedLang = localStorage.getItem("lang");
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("sgitoken");
     setToken(token);
     if (!savedLang) {
       localStorage.setItem("lang", "en");
@@ -192,7 +192,7 @@ const Navbar = () => {
           <a href="/fav">
             <FaRegHeart />
           </a>
-          {!token && (
+          {token && (
             <a href="/profile">
               <FaRegUser />
             </a>
@@ -290,9 +290,11 @@ const Navbar = () => {
             <FaRegHeart />
           </a>
 
-          <a href="/profile">
-            <FaRegUser />
-          </a>
+          {token && (
+            <a href="/profile">
+              <FaRegUser />
+            </a>
+          )}
 
           <a href="/cart">
             <RiShoppingBag3Line />
