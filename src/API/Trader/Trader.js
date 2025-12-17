@@ -1,21 +1,21 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/user/merchant/details";
 const Trader = async (setTraderDetails, setTraderStats, setError, setLoading) => {
     setLoading(true)
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("sgitoken");
 
     try {
         const response = await fetch(URL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'authorization': token
+                'authorization': `sgiQ${token}`
             },
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            setTraderDetails(result.trader)
+            setTraderDetails(result.merchant)
             setTraderStats(result.stats)
             setLoading(false)
 

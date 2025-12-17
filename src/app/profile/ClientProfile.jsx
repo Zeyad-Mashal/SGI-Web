@@ -506,7 +506,7 @@ const ClientProfile = () => {
         <div className="profile_info">
           <div className="profile_info_top">
             <Image
-              src={"/images/p1.png"}
+              src={"/images/avatar.jpg"}
               alt="profile pic"
               loading="lazy"
               width={120}
@@ -515,10 +515,10 @@ const ClientProfile = () => {
             <div className="profile_info_content">
               <div className="profile_title">
                 <h1>{traderDetails?.name}</h1>
-                <button>
+                {/* <button>
                   <FaRegEdit />
                   Edit Profile
-                </button>
+                </button> */}
               </div>
               <p>{traderDetails?.priceTier}</p>
               <div className="profile_contact">
@@ -553,13 +553,13 @@ const ClientProfile = () => {
                 <p>Total Spent</p>
               </div>
             </div>
-            <div className="profile_bottom_item">
+            {/* <div className="profile_bottom_item">
               <BsBoxSeam />
               <div className="bottom_item_content">
                 <h3>25%</h3>
                 <p>Active Savings</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -756,7 +756,7 @@ const ClientProfile = () => {
             )}
           </div>
         </div>
-        <div className="Information">
+        {/* <div className="Information">
           <h2>
             <RiFilePaper2Line />
             Business Information
@@ -779,7 +779,7 @@ const ClientProfile = () => {
               <p>Premium Cleaning Solution inc.</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Order Details Modal */}

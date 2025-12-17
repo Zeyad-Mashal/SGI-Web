@@ -1,7 +1,7 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/order/marchent/get";
 const GetRecentOrders = async (setRecentOrders, setError, setLoading) => {
     setLoading(true)
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("sgitoken");
     const lang = localStorage.getItem("lang");
     try {
         const response = await fetch(URL, {
@@ -9,7 +9,7 @@ const GetRecentOrders = async (setRecentOrders, setError, setLoading) => {
             headers: {
                 'Content-Type': 'application/json',
                 'accept-language': lang,
-                'Authorization': token
+                'Authorization': `sgiQ${token}`
             },
         });
 
