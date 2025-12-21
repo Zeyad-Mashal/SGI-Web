@@ -180,3 +180,18 @@
     width: 70%;
   }
 }
+@media screen and (min-width: 1370px) and (max-width: 1600px) {
+  .hero .hero_left > h1 {
+    width: 40%;
+    font-size: 2rem;
+  }
+  .hero .hero_left > p {
+    font-size: 1.5rem;
+  }
+  .hero .hero_left > a {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    width: 150px;
+    height: 40px;
+  }
+}

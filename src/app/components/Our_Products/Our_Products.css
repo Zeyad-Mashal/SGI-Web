@@ -337,3 +337,17 @@
     font-size: 0.5rem;
   }
 }
+@media screen and (min-width: 1370px) and (max-width: 1600px) {
+  .our_products_container {
+    padding: 0;
+  }
+  .Our_Products_list {
+    padding: 0;
+  }
+  .Our_Products {
+    padding: 30px;
+  }
+  .Our_Products_item {
+    max-width: 340px;
+  }
+}

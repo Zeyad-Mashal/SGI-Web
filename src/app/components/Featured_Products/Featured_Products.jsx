@@ -22,8 +22,18 @@ import {
   isFavorited,
   getFavorites,
 } from "@/utils/favoriteUtils";
-
+import en from "../../../translation/en.json";
+import ar from "../../../translation/ar.json";
 const Featured_Products = () => {
+  const [translations, setTranslations] = useState(en);
+  useEffect(() => {
+    const lang = localStorage.getItem("lang") || "en";
+    if (lang === "ar") {
+      setTranslations(ar);
+    } else {
+      setTranslations(en);
+    }
+  }, []);
   const { showToast } = useToast();
   const [favorites, setFavorites] = useState([]);
   const prevRef = useRef(null);
@@ -56,8 +66,8 @@ const Featured_Products = () => {
       <div className="Featured_Products_container">
         <div className="Featured_Products_header">
           <div className="Featured_Products_header_title">
-            <span>Today’s</span>
-            <h1>Featured Products</h1>
+            <span>{translations.todays}</span>
+            <h1>{translations.featuredproducts}</h1>
           </div>
 
           {/* أزرار التنقل */}
@@ -124,7 +134,7 @@ const Featured_Products = () => {
                             : "scale(1)",
                         }}
                       />
-                      <p>Featured</p>
+                      <p>{translations.featured}</p>
                     </div>
 
                     <h2>{item.name}</h2>
@@ -135,12 +145,14 @@ const Featured_Products = () => {
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
-                      <p>(230 reviews)</p>
+                      <p>{translations.reviews} (230)</p>
                     </div>
                   </a>
 
                   <div className="Featured_price">
-                    <h3>AED {item.price}</h3>
+                    <h3>
+                      {translations.aed} {item.price}
+                    </h3>
                     <button
                       onClick={(e) => {
                         e.preventDefault();
@@ -149,7 +161,7 @@ const Featured_Products = () => {
                         showToast("Product added to cart!", "success");
                       }}
                     >
-                      Add to Cart
+                      {translations.addtocart}
                     </button>
                   </div>
                 </div>

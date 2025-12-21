@@ -1,22 +1,34 @@
+"use client";
+import { useState, useEffect } from "react";
 import React from "react";
 import "./Banner.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt } from "@fortawesome/free-solid-svg-icons";
+import en from "../../../translation/en.json";
+import ar from "../../../translation/ar.json";
 const Banner = () => {
+  const [translations, setTranslations] = useState(en);
+  useEffect(() => {
+    const lang = localStorage.getItem("lang") || "en";
+    if (lang === "ar") {
+      setTranslations(ar);
+    } else {
+      setTranslations(en);
+    }
+  }, []);
   return (
     <div className="sgi-home-banner">
       <div className="sgi-home-banner_container">
         <div className="overlay"></div>
         <div className="banner_right">
-          <span>Limited time offer </span>
+          <span>{translations.limitedtimeoffer}</span>
           <h1>
-            Professional Cleaning Solution <span>For Every Business</span>
+            {translations.professionalcleaningsolution}{" "}
+            <span>{translations.foreverybusiness}</span>
           </h1>
           <p>
-            Stock up on premium cleaning supplies at wholesale prices . perfect
-            for hotels, restaurants, offices, healthcare facilities, and
-            cleaning services companies .
+            {translations.stockuponpremiumcleaningsuppliesatwholesaleprices}
           </p>
           <div className="banner_right_imgs">
             <Image
@@ -36,22 +48,22 @@ const Banner = () => {
           </div>
           <div className="banner_btns">
             <button className="banner_btn1">
-              <a href="/shop">Shop Now</a>
+              <a href="/shop">{translations.shopnow}</a>
             </button>
-            <button className="banner_btn2">Contact Us</button>
+            <button className="banner_btn2">{translations.contactus}</button>
           </div>
         </div>
         <div className="banner_left">
           <div className="banner_left_free">
-            <p>Free shipping</p>
+            <p>{translations.freeshipping}</p>
             <h3>+500$</h3>
           </div>
           <div className="banner_left_main">
             <p>
-              <FontAwesomeIcon icon={faBolt} /> Exclusive Deal
+              <FontAwesomeIcon icon={faBolt} /> {translations.exclusivedeal}
             </p>
-            <h1>Wholesale Benefits</h1>
-            <span>Premium products at unbeatable prices</span>
+            <h1>{translations.wholesalebenefits}</h1>
+            <span>{translations.premiumproductsatunbeatableprices}</span>
             <div className="banner_left_main_products">
               <div className="banner_left_main_product">
                 <Image
@@ -62,8 +74,8 @@ const Banner = () => {
                   height={150}
                 />
                 <div className="banner_left_main_product_info">
-                  <h3>Hand Sanitizer</h3>
-                  <span>From 40$</span>
+                  <h3>{translations.handsanitizer}</h3>
+                  <span> 40{translations.aed}</span>
                 </div>
               </div>
               <div className="banner_left_main_product">
@@ -75,8 +87,10 @@ const Banner = () => {
                   height={150}
                 />
                 <div className="banner_left_main_product_info">
-                  <h3>Hand Sanitizer</h3>
-                  <span>From 40$</span>
+                  <h3>{translations.handsanitizer}</h3>
+                  <span>
+                    {translations.from}40{translations.aed}
+                  </span>
                 </div>
               </div>
             </div>
@@ -84,21 +98,21 @@ const Banner = () => {
             <div className="banner_left_main_stats">
               <div className="banner_left_main_stat">
                 <h2>500+</h2>
-                <span>Orders</span>
+                <span>{translations.orders}</span>
               </div>
               <div className="banner_left_main_stat">
                 <h2>24h</h2>
-                <span>Delivery</span>
+                <span>{translations.delivery}</span>
               </div>
               <div className="banner_left_main_stat">
                 <h2>100%</h2>
-                <span>Quality</span>
+                <span>{translations.quality}</span>
               </div>
             </div>
           </div>
 
           <div className="banner_left_save">
-            <p>Save</p>
+            <p>{translations.save}</p>
             <h3>40%</h3>
           </div>
         </div>

@@ -9,7 +9,18 @@ import "swiper/css/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import GetAllBrands from "@/API/Brands/GetAllBrands";
+import en from "../../../translation/en.json";
+import ar from "../../../translation/ar.json";
 const Brands = () => {
+  const [translations, setTranslations] = useState(en);
+  useEffect(() => {
+    const lang = localStorage.getItem("lang") || "en";
+    if (lang === "ar") {
+      setTranslations(ar);
+    } else {
+      setTranslations(en);
+    }
+  }, []);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   useEffect(() => {
@@ -27,8 +38,8 @@ const Brands = () => {
       <div className="barnds_container">
         <div className="brands_header">
           <div className="brands_header_title">
-            <span>Brands</span>
-            <h1>Browse By brand</h1>
+            <span>{translations.brands}</span>
+            <h1>{translations.browsebybrand}</h1>
           </div>
 
           {/* أزرار التنقل */}

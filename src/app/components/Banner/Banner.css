@@ -350,3 +350,13 @@
     display: none;
   }
 }
+@media screen and (min-width: 1370px) and (max-width: 1600px) {
+  .banner_left_free {
+    bottom: -20px;
+    left: 20px;
+  }
+  .banner_left_save {
+    right: 50px;
+    top: -20px;
+  }
+}

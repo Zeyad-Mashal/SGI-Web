@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import "./Footer.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,7 +9,18 @@ import {
   faInstagram,
   faLinkedin,
 } from "@fortawesome/free-brands-svg-icons";
+import en from "../../../translation/en.json";
+import ar from "../../../translation/ar.json";
 const Footer = () => {
+  const [translations, setTranslations] = useState(en);
+  useEffect(() => {
+    const lang = localStorage.getItem("lang") || "en";
+    if (lang === "ar") {
+      setTranslations(ar);
+    } else {
+      setTranslations(en);
+    }
+  }, []);
   return (
     <div className="Footer">
       <div className="Footer_container">
@@ -20,40 +32,35 @@ const Footer = () => {
             width={200}
             height={200}
           />
-          <p>
-            We provide high-quality cleaning and hygiene solutions designed
-            specifically for businesses and organizations. Our wide range of
-            liquid detergents and professional cleaning products .
-          </p>
+          <p>{translations.footerdescription}</p>
         </div>
         <div className="footer_company">
-          <h3>Company</h3>
+          <h3>{translations.company}</h3>
           <ul>
-            <li>Home</li>
-            <li>Shop</li>
-            <li>About us</li>
+            <li>{translations.home}</li>
+            <li>{translations.shop}</li>
+            <li>{translations.aboutus}</li>
           </ul>
         </div>
         <div className="footer_company">
-          <h3>Support</h3>
+          <h3>{translations.support}</h3>
           <ul>
-            <li>Contact us</li>
-            <li>Blogs</li>
+            <li>{translations.contactus}</li>
           </ul>
         </div>
         <div className="footer_company">
-          <h3>Resources</h3>
+          <h3>{translations.resources}</h3>
           <ul>
-            <li>Help center</li>
-            <li>FAQs</li>
-            <li>Terms of Service</li>
-            <li>Privacy Policy</li>
+            <li>{translations.helpcenter}</li>
+            <li>{translations.faqs}</li>
+            <li>{translations.termsofservice}</li>
+            <li>{translations.privacypolicy}</li>
           </ul>
         </div>
       </div>
       <hr />
       <div className="footer_copyright">
-        <p>© sgi Inc. All Rights Reserved.</p>
+        <p>{translations.allrightsreserved}</p>
         <div className="footer_social">
           <FontAwesomeIcon icon={faXTwitter} />
           <FontAwesomeIcon icon={faSquareFacebook} />

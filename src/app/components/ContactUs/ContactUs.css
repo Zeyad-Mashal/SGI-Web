@@ -73,6 +73,9 @@
 .ContactUs_item_btn > button:hover {
   background-color: rgba(215, 223, 43, 1);
 }
+.ContactUs_item > h3 {
+  margin-right: 2rem;
+}
 @media screen and (min-width: 1401px) {
   .contactUS_container {
     padding: 0;
@@ -104,5 +107,18 @@
   }
   .ContactUs_item > svg {
     top: 10px;
+  }
+}
+@media screen and (min-width: 1370px) and (max-width: 1600px) {
+  .ContactUs_list {
+    padding: 0;
+  }
+  .ContactUs_item {
+    width: 32%;
+  }
+  .ContactUs_item_btn > button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(215, 223, 43, 1);
   }
 }

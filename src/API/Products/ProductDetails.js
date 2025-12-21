@@ -1,12 +1,13 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/product/details/";
 const ProductDetails = async (setProductDetails, setError, setLoading, id) => {
     setLoading(true)
+    const lang = localStorage.getItem("lang")
     try {
         const response = await fetch(`${URL}${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'accept-language': "en"
+                'accept-language': lang
             },
         });
 

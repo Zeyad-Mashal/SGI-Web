@@ -23,7 +23,18 @@ import {
   isFavorited,
   getFavorites,
 } from "@/utils/favoriteUtils";
+import en from "../../../translation/en.json";
+import ar from "../../../translation/ar.json";
 const Our_Products = () => {
+  const [translations, setTranslations] = useState(en);
+  useEffect(() => {
+    const lang = localStorage.getItem("lang") || "en";
+    if (lang === "ar") {
+      setTranslations(ar);
+    } else {
+      setTranslations(en);
+    }
+  }, []);
   const { showToast } = useToast();
   const [favorites, setFavorites] = useState([]);
   const prevRef = useRef(null);
@@ -56,11 +67,11 @@ const Our_Products = () => {
       <div className="our_products_container">
         <div className="Our_Products_header">
           <div className="Our_Products_header_title">
-            <span>Our Products</span>
-            <h1>Explore Our Products</h1>
+            <span>{translations.ourproducts}</span>
+            <h1>{translations.exploreourproducts}</h1>
           </div>
           <a href="/shop">
-            View All <MdKeyboardArrowRight />
+            {translations.viewall} <MdKeyboardArrowRight />
           </a>
         </div>
         <div className="Our_Products_list">
@@ -106,7 +117,7 @@ const Our_Products = () => {
                             : "scale(1)",
                         }}
                       />
-                      <p>Featured</p>
+                      <p>{translations.featured}</p>
                     </div>
                     <h2>{item.name}</h2>
                     <div className="Our_Products_stars">
@@ -115,7 +126,7 @@ const Our_Products = () => {
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
-                      <p>(230 reviews)</p>
+                      <p>{translations.reviews} (230)</p>
                     </div>
                     <div className="Our_Products_price">
                       <h3>AED {item.price}</h3>
@@ -127,7 +138,7 @@ const Our_Products = () => {
                           showToast("Product added to cart!", "success");
                         }}
                       >
-                        Add to Cart
+                        {translations.addtocart}
                       </button>
                     </div>
                   </a>

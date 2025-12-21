@@ -35,7 +35,7 @@ const Navbar = () => {
   // Initialize isArabic from localStorage immediately
   const [isArabic, setIsArabic] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("lang") === "ar";
+      return localStorage.getItem("lang") === "en";
     }
     return false;
   });
@@ -247,7 +247,7 @@ const Navbar = () => {
                     icon={faSearch}
                     className="no_results_icon"
                   />
-                  <p>Searching ...</p>
+                  <p>{translations.searching}</p>
                 </div>
               )}
 
@@ -264,7 +264,9 @@ const Navbar = () => {
                       />
                       <div className="search_item_info">
                         <p>{item.name}</p>
-                        <p>{item.price} AED</p>
+                        <p>
+                          {item.price} {translations.aed}
+                        </p>
                       </div>
                     </a>
                   </div>
@@ -277,7 +279,7 @@ const Navbar = () => {
           <FiPhone />
 
           <div>
-            <p>Call Us</p>
+            <p>{translations.callus}</p>
             <span>
               <a href="tel:1-800-555-1234" target="_blanck">
                 1-800-555-1234
@@ -318,26 +320,27 @@ const Navbar = () => {
           }
         >
           <FontAwesomeIcon icon={faBarsStaggered} />
-          <span>Browse all categories</span>
+          <span>{translations.browseallcategories}</span>
         </div>
 
         <ul className="main_links">
           <li>
-            <a href="/">Home</a>
+            <a href="/">{translations.home}</a>
           </li>
           <li>
-            <a href="/shop">Shop</a>
+            <a href="/shop">{translations.shop}</a>
           </li>
         </ul>
         <div className="login_links">
-          <a href="/login">Login</a>
+          <a href="/login">{translations.login}</a>
           <span>
-            <a href="/register">Sign Up</a>
+            <a href="/register">{translations.signup}</a>
           </span>
         </div>
         <div className="our_shop">
           <a href="/shop">
-            Explore all products <FontAwesomeIcon icon={faArrowRight} />
+            {translations.exploreallproducts}{" "}
+            <FontAwesomeIcon icon={faArrowRight} />
           </a>
         </div>
       </div>
@@ -352,7 +355,7 @@ const Navbar = () => {
             }`}
           >
             <div className="mega_menu_header_row">
-              <span>Browse all categories</span>
+              <span>{translations.browseallcategories}</span>
               <FontAwesomeIcon icon={faXmark} onClick={closeMegaMenu} />
             </div>
             <div className="mega_menu_track">
@@ -366,7 +369,7 @@ const Navbar = () => {
                         onClick={handleBackToMain}
                       >
                         <FontAwesomeIcon icon={faChevronDown} rotation={90} />
-                        <span>Main menu</span>
+                        <span>{translations.mainmenu}</span>
                       </button>
                     </div>
                     <h4 className="mega_sub_title">
@@ -392,7 +395,7 @@ const Navbar = () => {
                         )
                       ) : (
                         <li className="mega_placeholder">
-                          Select a category to see subcategories
+                          {translations.selectacategorytoseesubcategories}
                         </li>
                       )}
                     </ul>
@@ -436,7 +439,7 @@ const Navbar = () => {
                         onClick={handleBackToMain}
                       >
                         <FontAwesomeIcon icon={faChevronDown} rotation={90} />
-                        <span>Main menu</span>
+                        <span>{translations.mainmenu}</span>
                       </button>
                     </div>
                     <h4 className="mega_sub_title">
@@ -462,7 +465,7 @@ const Navbar = () => {
                         )
                       ) : (
                         <li className="mega_placeholder">
-                          Select a category to see subcategories
+                          {translations.selectacategorytoseesubcategories}
                         </li>
                       )}
                     </ul>
@@ -492,11 +495,11 @@ const Navbar = () => {
         </div>
 
         <div className="mobile_menu_links">
-          <a href="/">Home</a>
-          <a href="/shop">Shop</a>
+          <a href="/">{translations.home}</a>
+          <a href="/shop">{translations.shop}</a>
 
           <div className="mobile_categories">
-            <h3>Categories</h3>
+            <h3>{translations.categories}</h3>
             {categories.map((cat, index) => (
               <div key={cat._id || index} className="category_item">
                 <div
@@ -529,9 +532,9 @@ const Navbar = () => {
           </div>
 
           <div className="mobile_actions">
-            <a href="/login">Login</a>
+            <a href="/login">{translations.login}</a>
             <a href="/register" className="signup_btn">
-              Sign Up
+              {translations.signup}
             </a>
           </div>
         </div>
@@ -542,7 +545,7 @@ const Navbar = () => {
           <div className="mobile_search_header">
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={translations.searchproducts}
               value={searchValue}
               onChange={handleSearch}
             />
@@ -576,7 +579,7 @@ const Navbar = () => {
                 </div>
               ))
             ) : (
-              <p className="no_items">No results...</p>
+              <p className="no_items">{translations.noresults}</p>
             )}
           </div>
         </div>

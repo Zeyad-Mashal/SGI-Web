@@ -147,7 +147,6 @@
 }
 .desktop_menu .main_links li {
   cursor: pointer;
-  font-weight: 500;
   font-size: 14px;
 }
 .desktop_menu .main_links li:hover {
@@ -162,13 +161,12 @@
 .login_links > a {
   text-decoration: underline;
   color: black;
-  font-weight: 500;
 }
 .login_links span {
   border: 1px solid rgba(215, 223, 43, 1);
   border-radius: 16px;
   padding: 0.7rem 1rem;
-  width: 80px;
+  width: auto;
   height: 40px;
   font-size: 0.8rem;
 }
@@ -507,12 +505,6 @@
   font-size: 24px;
   margin-bottom: 8px;
   color: #999;
-}
-
-@media screen and (min-width: 1370px) and (max-width: 1600px) {
-  .navbar {
-    background-color: red;
-  }
 }
 
 /* large screen */
