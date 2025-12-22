@@ -35,7 +35,7 @@ const Navbar = () => {
   // Initialize isArabic from localStorage immediately
   const [isArabic, setIsArabic] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("lang") === "en";
+      return localStorage.getItem("lang") === "ar";
     }
     return false;
   });
@@ -93,6 +93,8 @@ const Navbar = () => {
     }
     if (savedLang === "ar") {
       setIsArabic(true);
+    } else {
+      setIsArabic(false);
     }
   }, []);
   // تغيير اللغه
