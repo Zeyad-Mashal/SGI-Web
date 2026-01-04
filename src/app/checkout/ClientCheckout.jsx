@@ -9,6 +9,20 @@ import CreateOrder from "@/API/Orders/CreateOrder";
 import { getCart, getCartTotal, clearCart } from "@/utils/cartUtils";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa6";
+import en from "../../translation/en.json";
+import ar from "../../translation/ar.json";
+
+// UAE Cities with translations
+const UAE_CITIES = [
+  { value: "abu-dhabi", en: "Abu Dhabi", ar: "أبو ظبي" },
+  { value: "dubai", en: "Dubai", ar: "دبي" },
+  { value: "sharjah", en: "Sharjah", ar: "الشارقة" },
+  { value: "ajman", en: "Ajman", ar: "عجمان" },
+  { value: "ras-al-khaimah", en: "Ras Al Khaimah", ar: "رأس الخيمة" },
+  { value: "fujairah", en: "Fujairah", ar: "الفجيرة" },
+  { value: "umm-al-quwain", en: "Umm Al Quwain", ar: "أم القيوين" },
+  { value: "al-ain", en: "Al Ain", ar: "العين" },
+];
 
 const ClientCheckout = () => {
   const router = useRouter();
@@ -22,6 +36,11 @@ const ClientCheckout = () => {
   // Address Information
   const [city, setCity] = useState("");
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(null);
+  const [writtenAddress, setWrittenAddress] = useState(""); // For non-logged-in users
+
+  // Language
+  const [lang, setLang] = useState("en");
+  const [translations, setTranslations] = useState(en);
 
   // Payment
   const [paymentWay, setPaymentWay] = useState("Cash on Delivery");
@@ -40,9 +59,40 @@ const ClientCheckout = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Helper function to decode JWT token and get userId
+  const getUserIdFromToken = () => {
+    try {
+      const token = localStorage.getItem("sgitoken");
+      if (!token) return null;
+      
+      // JWT format: header.payload.signature
+      const payload = token.split('.')[1];
+      if (!payload) return null;
+      
+      // Decode base64 payload
+      const decodedPayload = JSON.parse(atob(payload));
+      return decodedPayload.id || null;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
+
+  const getAddresses = () => {
+    GetAddress(setAddresses, setError, setLoading);
+  };
+
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
+    // Check for token (logged in status)
+    const token = localStorage.getItem("sgitoken");
+    const userId = token ? getUserIdFromToken() : null;
+    
     setId(userId || "");
+
+    // Load language
+    const savedLang = localStorage.getItem("lang") || "en";
+    setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
 
     // Load cart items
     const cart = getCart();
@@ -68,10 +118,6 @@ const ClientCheckout = () => {
       getAddresses();
     }
   }, []);
-
-  const getAddresses = () => {
-    GetAddress(setAddresses, setError, setLoading);
-  };
 
   const HandleAddAddress = () => {
     if (newAddress.trim() === "") return;
@@ -103,23 +149,38 @@ const ClientCheckout = () => {
   const handleSubmitOrder = async () => {
     // Validation
     if (!firstName.trim() || !lastName.trim()) {
-      setError("Please enter your full name");
+      setError(lang === "ar" ? "يرجى إدخال الاسم الكامل" : "Please enter your full name");
       return;
     }
     if (!userPhone.trim()) {
-      setError("Please enter your phone number");
+      setError(lang === "ar" ? "يرجى إدخال رقم الهاتف" : "Please enter your phone number");
       return;
     }
     if (!city.trim()) {
-      setError("Please enter city");
+      setError(lang === "ar" ? "يرجى اختيار المدينة" : "Please select a city");
       return;
     }
-    if (selectedAddressIndex === null || !addresses[selectedAddressIndex]) {
-      setError("Please select a delivery address");
-      return;
+
+    // Address validation: for logged-in users, require selected address; for non-logged-in, require written address
+    let deliveryAddress = "";
+    if (id) {
+      // Logged-in user: must select an address
+      if (selectedAddressIndex === null || !addresses[selectedAddressIndex]) {
+        setError(lang === "ar" ? "يرجى اختيار عنوان التوصيل" : "Please select a delivery address");
+        return;
+      }
+      deliveryAddress = addresses[selectedAddressIndex];
+    } else {
+      // Non-logged-in user: must write an address
+      if (!writtenAddress.trim()) {
+        setError(lang === "ar" ? "يرجى إدخال عنوان التوصيل" : "Please enter your delivery address");
+        return;
+      }
+      deliveryAddress = writtenAddress.trim();
     }
+
     if (cartItems.length === 0) {
-      setError("Your cart is empty");
+      setError(lang === "ar" ? "سلة التسوق فارغة" : "Your cart is empty");
       return;
     }
 
@@ -136,22 +197,22 @@ const ClientCheckout = () => {
     }));
 
     // Format order data
-    const selectedAddress = addresses[selectedAddressIndex];
     const orderData = {
       paymentWay: paymentWay,
       userName: `${firstName.trim()} ${lastName.trim()}`,
       userPhone: userPhone.trim(),
+      email: email.trim() || undefined,
       totalAmount: totalAmount,
-      city: city.trim(),
-      address: selectedAddress,
+      city: city.trim(), // City value from dropdown
+      address: deliveryAddress,
       cartItems: formattedCartItems,
     };
 
-    // Create order
+    // Create order (works without login)
     const result = await CreateOrder(orderData, setError, setLoading, () => {});
 
     if (result) {
-      setSuccess("Order placed successfully!");
+      setSuccess(lang === "ar" ? "تم تقديم الطلب بنجاح!" : "Order placed successfully!");
       // Clear cart
       clearCart();
       // Clear saved coupon
@@ -271,24 +332,66 @@ const ClientCheckout = () => {
         <hr />
 
         {/* ------------------ Delivery Details ------------------ */}
-        <h2>Delivery Details:</h2>
+        <h2>{lang === "ar" ? "تفاصيل التوصيل:" : "Delivery Details:"}</h2>
 
         <div className="checkout_delivery_info">
-          {/* City Field */}
+          {/* City Field - Dropdown */}
           <div style={{ width: "100%", marginBottom: "1rem" }}>
-            <h3>City:</h3>
+            <h3>{lang === "ar" ? "المدينة:" : "City:"}</h3>
             <div className="checkout_personal_info">
               <div className="checkout_personal_info_item">
-                <input
-                  type="text"
-                  placeholder="City"
+                <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem 1rem",
+                    border: "1px solid rgba(0, 0, 0, 0.2)",
+                    borderRadius: "8px",
+                  }}
                   required
-                />
+                >
+                  <option value="">
+                    {lang === "ar" ? "اختر المدينة" : "Select City"}
+                  </option>
+                  {UAE_CITIES.map((cityOption) => (
+                    <option key={cityOption.value} value={cityOption.value}>
+                      {lang === "ar" ? cityOption.ar : cityOption.en}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
+
+          {/* Address Input for Non-Logged-In Users */}
+          {!id && (
+            <div style={{ width: "100%", marginBottom: "1rem" }}>
+              <h3>{lang === "ar" ? "عنوان التوصيل:" : "Delivery Address:"}</h3>
+              <div className="checkout_personal_info">
+                <div className="checkout_personal_info_item">
+                  <textarea
+                    placeholder={
+                      lang === "ar"
+                        ? "أدخل عنوان التوصيل الكامل (مثل: الشارع، المبنى، رقم الشقة)"
+                        : "Enter your complete delivery address (e.g., Street, Building, Apartment Number)"
+                    }
+                    value={writtenAddress}
+                    onChange={(e) => setWrittenAddress(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "0.5rem 1rem",
+                      border: "1px solid rgba(0, 0, 0, 0.2)",
+                      borderRadius: "8px",
+                      minHeight: "100px",
+                      resize: "vertical",
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* ------------------ Add New Address (for saving) ------------------ */}
           {id && (
@@ -372,11 +475,6 @@ const ClientCheckout = () => {
             </p>
           )}
 
-          {!id && (
-            <p className="no_address" style={{ color: "red" }}>
-              Please log in to select a delivery address.
-            </p>
-          )}
         </div>
 
         <hr />

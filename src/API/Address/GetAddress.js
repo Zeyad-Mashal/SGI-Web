@@ -1,7 +1,28 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/address/get/";
 const GetAddress = async (setAddresses, setError, setLoading) => {
     setLoading(true)
-    const id = localStorage.getItem("userId");
+    
+    // Get userId from token
+    let id = null;
+    try {
+        const token = localStorage.getItem("sgitoken");
+        if (token) {
+            const payload = token.split('.')[1];
+            if (payload) {
+                const decodedPayload = JSON.parse(atob(payload));
+                id = decodedPayload.id || null;
+            }
+        }
+    } catch (error) {
+        console.error("Error decoding token:", error);
+    }
+    
+    if (!id) {
+        setError("User ID not found");
+        setLoading(false);
+        return;
+    }
+    
     try {
         const response = await fetch(`${URL}${id}`, {
             method: 'GET',
