@@ -261,7 +261,16 @@
   border: none;
   cursor: pointer;
 }
-
+.product_content > .boxItem {
+  cursor: pointer;
+  color: rgba(0, 125, 78, 1);
+  font-weight: bold;
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+.product_content > .boxItem:hover {
+  color: rgba(0, 125, 78, 1);
+}
 .product_desc_btns button.active {
   border-bottom: 1px solid rgba(215, 223, 43, 1);
 }

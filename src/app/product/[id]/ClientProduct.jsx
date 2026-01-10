@@ -20,6 +20,7 @@ const ClientProduct = () => {
   const [favorites, setFavorites] = useState([]);
   const { id } = useParams();
   const [qty, setQty] = useState(1);
+  const [useBoxPrice, setUseBoxPrice] = useState(false);
 
   const images = ["/images/p1.png", "/images/p2.png", "/images/p3.png"];
 
@@ -27,6 +28,30 @@ const ClientProduct = () => {
   const updateQty = (value) => {
     const num = Math.max(0, Number(value));
     setQty(num);
+  };
+
+  const handleBoxClick = () => {
+    if (productDetails?.boxPrice && productDetails?.piecesNumber) {
+      if (useBoxPrice) {
+        // Switch back to unit pricing
+        setUseBoxPrice(false);
+        setQty(1);
+        showToast("Switched to unit pricing", "info");
+      } else {
+        // Switch to box pricing - quantity represents number of boxes
+        setUseBoxPrice(true);
+        setQty(1); // Start with 1 box, user can increase
+        showToast("Box pricing applied!", "success");
+      }
+    }
+  };
+
+  // Get current price (box price if selected, otherwise regular price)
+  const getCurrentPrice = () => {
+    if (useBoxPrice && productDetails?.boxPrice) {
+      return productDetails.boxPrice;
+    }
+    return productDetails?.price || 0;
   };
 
   const [activeTab, setActiveTab] = useState("description");
@@ -141,19 +166,39 @@ const ClientProduct = () => {
             <span>(4.5 Rating) 150+ Reviews</span>
           </p>
           <h3>
-            AED {productDetails.price} <span>per unit</span>
+            AED {getCurrentPrice()}{" "}
+            <span>{useBoxPrice ? "per box" : "per unit"}</span>
           </h3>
           <h4>Minimum Order: 30 units / case</h4>
           <h5>
             Review our Refund & Exchange Policy before purchasing{" "}
             <a href="#">Learn more</a>
           </h5>
+          {productDetails?.boxPrice && productDetails?.piecesNumber && (
+            <h4
+              onClick={handleBoxClick}
+              // style={{
+              //   cursor: "pointer",
+              //   color: useBoxPrice ? "#4caf50" : "inherit",
+              //   fontWeight: useBoxPrice ? "bold" : "normal",
+              //   textDecoration: useBoxPrice ? "underline" : "none",
+              //   userSelect: "none",
+              // }}
+              className="boxItem"
+            >
+              Review Box Available{" "}
+              {useBoxPrice && `(${productDetails.piecesNumber} pieces per box)`}{" "}
+              {useBoxPrice && "✓"}
+            </h4>
+          )}
 
           <div className="Quantity">
-            <h3>Quantity</h3>
+            <h3>Quantity {useBoxPrice ? "(Boxes)" : "(Units)"}</h3>
             <div className="Quantity_counter">
               <div className="counter">
-                <button onClick={() => updateQty(qty - 1)}>-</button>
+                <button onClick={() => updateQty(Math.max(1, qty - 1))}>
+                  -
+                </button>
                 <input
                   type="text"
                   value={qty}
@@ -164,12 +209,20 @@ const ClientProduct = () => {
 
               <div className="total">
                 <h2>
-                  {" "}
-                  Total:{" "}
-                  <span>
-                    AED {(qty * (productDetails.price || 0)).toFixed(2)}
-                  </span>
+                  Total: <span>AED {(qty * getCurrentPrice()).toFixed(2)}</span>
                 </h2>
+                {useBoxPrice && productDetails?.piecesNumber && (
+                  <p
+                    style={{
+                      fontSize: "0.9rem",
+                      color: "#666",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    ({qty} box(es) × {productDetails.piecesNumber} pieces ={" "}
+                    {qty * productDetails.piecesNumber} total pieces)
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -178,8 +231,25 @@ const ClientProduct = () => {
             <button
               onClick={() => {
                 if (productDetails && productDetails._id) {
-                  addToCart(productDetails, qty);
-                  showToast("Product added to cart!", "success");
+                  // Create a modified product object with the current price
+                  // If box pricing, use boxPrice and quantity represents boxes
+                  // If unit pricing, use regular price and quantity represents units
+                  const productToAdd = {
+                    ...productDetails,
+                    price: getCurrentPrice(),
+                    // Store pricing mode info for cart
+                    isBoxPricing: useBoxPrice,
+                    piecesPerBox: useBoxPrice
+                      ? productDetails.piecesNumber
+                      : undefined,
+                  };
+                  addToCart(productToAdd, qty);
+                  const message = useBoxPrice
+                    ? `${qty} box(es) added to cart! (${
+                        qty * productDetails.piecesNumber
+                      } pieces)`
+                    : "Product added to cart!";
+                  showToast(message, "success");
                 }
               }}
             >

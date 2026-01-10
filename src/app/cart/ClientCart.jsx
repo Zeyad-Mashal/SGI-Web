@@ -241,12 +241,31 @@ const ClientCart = () => {
                               <div className="product_item_top_title">
                                 <h2>{item.name}</h2>
                                 <span>
-                                  {item.categories?.length > 0
-                                    ? item.categories[0]
-                                    : "Product"}
+                                  {(() => {
+                                    if (!item.categories?.length) return "Product";
+                                    const category = item.categories[0];
+                                    // Handle both object format {_id, name: {en, ar}} and string format
+                                    if (typeof category === 'string') {
+                                      return category;
+                                    }
+                                    if (category?.name) {
+                                      // Check if name is an object with lang keys
+                                      if (typeof category.name === 'object' && category.name !== null) {
+                                        const lang = localStorage.getItem("lang") || "en";
+                                        return category.name[lang] || category.name.en || "Product";
+                                      }
+                                      return String(category.name);
+                                    }
+                                    return "Product";
+                                  })()}
                                 </span>
                                 <p>
-                                  AED {item.price} <span>per unit</span>
+                                  AED {item.price} <span>{item.isBoxPricing ? "per box" : "per unit"}</span>
+                                  {item.isBoxPricing && item.piecesPerBox && (
+                                    <span style={{ fontSize: "0.85em", color: "#666", marginLeft: "0.5rem" }}>
+                                      ({item.piecesPerBox} pieces/box)
+                                    </span>
+                                  )}
                                 </p>
                               </div>
 

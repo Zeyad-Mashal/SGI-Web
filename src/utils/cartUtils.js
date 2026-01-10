@@ -28,8 +28,27 @@ export const addToCart = (product, quantity = 1) => {
     const existingItemIndex = cart.findIndex(item => item._id === product._id);
 
     if (existingItemIndex > -1) {
-        // If product already exists, update quantity
-        cart[existingItemIndex].quantity += quantity;
+        // If product already exists with same pricing mode, update quantity
+        // Otherwise, add as new item (different pricing mode)
+        const existingItem = cart[existingItemIndex];
+        if (existingItem.isBoxPricing === product.isBoxPricing && 
+            existingItem.piecesPerBox === product.piecesPerBox) {
+            cart[existingItemIndex].quantity += quantity;
+        } else {
+            // Different pricing mode, add as separate item
+            cart.push({
+                _id: product._id,
+                name: product.name,
+                price: product.price,
+                picUrls: product.picUrls || [],
+                quantity: quantity,
+                description: product.description || '',
+                categories: product.categories || [],
+                sku: product.sku || product.SKU || product._id,
+                isBoxPricing: product.isBoxPricing || false,
+                piecesPerBox: product.piecesPerBox || undefined
+            });
+        }
     } else {
         // Add new product to cart
         cart.push({
@@ -40,7 +59,9 @@ export const addToCart = (product, quantity = 1) => {
             quantity: quantity,
             description: product.description || '',
             categories: product.categories || [],
-            sku: product.sku || product.SKU || product._id // Include SKU if available
+            sku: product.sku || product.SKU || product._id,
+            isBoxPricing: product.isBoxPricing || false,
+            piecesPerBox: product.piecesPerBox || undefined
         });
     }
 
