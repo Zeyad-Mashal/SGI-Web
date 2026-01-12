@@ -21,6 +21,49 @@ const ClientRegister = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // File size validation - max 200 KB
+  const MAX_FILE_SIZE = 200 * 1024; // 200 KB in bytes
+
+  const validateFileSize = (file) => {
+    if (file && file.size > MAX_FILE_SIZE) {
+      setError(`File size exceeds 200 KB. Please choose a smaller file.`);
+      return false;
+    }
+    return true;
+  };
+
+  const handleVatFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (validateFileSize(file)) {
+        setVatFile(file);
+        setError(null); // Clear any previous errors
+      } else {
+        // Clear the file input
+        e.target.value = "";
+        setVatFile(null);
+      }
+    } else {
+      setVatFile(null);
+    }
+  };
+
+  const handleCommercialFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (validateFileSize(file)) {
+        setCommercialFile(file);
+        setError(null); // Clear any previous errors
+      } else {
+        // Clear the file input
+        e.target.value = "";
+        setCommercialFile(null);
+      }
+    } else {
+      setCommercialFile(null);
+    }
+  };
+
   const handleRegister = () => {
     // Validation
     if (!name.trim()) {
@@ -165,7 +208,7 @@ const ClientRegister = () => {
                 <input
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg"
-                  onChange={(e) => setVatFile(e.target.files[0] || null)}
+                  onChange={handleVatFileChange}
                 />
                 {vatFile && (
                   <p
@@ -186,7 +229,7 @@ const ClientRegister = () => {
                 <input
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg"
-                  onChange={(e) => setCommercialFile(e.target.files[0] || null)}
+                  onChange={handleCommercialFileChange}
                 />
                 {commercialFile && (
                   <p
@@ -215,10 +258,28 @@ const ClientRegister = () => {
               <input type="checkbox" />
               <h4>Agree to the Terms & Condition</h4>
             </div>
+            {error && (
+              <div
+                style={{
+                  padding: "0.75rem 1rem",
+                  backgroundColor: "#fee",
+                  border: "1px solid #fcc",
+                  borderRadius: "8px",
+                  color: "#c33",
+                  fontSize: "0.9rem",
+                  marginBottom: "1rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <span style={{ fontSize: "1.2rem" }}>⚠️</span>
+                <span>{error}</span>
+              </div>
+            )}
             <button onClick={handleRegister}>
               {loading ? "Creating..." : "Create an account"}
             </button>
-            {error}
           </div>
         </div>
       </div>
