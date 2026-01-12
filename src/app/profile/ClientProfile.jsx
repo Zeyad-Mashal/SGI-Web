@@ -52,10 +52,10 @@ const ClientProfile = () => {
   const [traderDetails, setTraderDetails] = useState(null);
   const [traderStats, setTraderStats] = useState(null);
   useEffect(() => {
-    GetRecentOrders(setRecentOrders, setError, setLoading);
     const id = localStorage.getItem("userId");
     setUserId(id || "");
     if (id) {
+      GetRecentOrders(setRecentOrders, setError, setLoading);
       getAddresses();
       getPOAddresses();
     }
@@ -288,7 +288,9 @@ const ClientProfile = () => {
     if (result) {
       setReorderSuccess("Order placed successfully!");
       // Refresh orders list
-      GetRecentOrders(setRecentOrders, setError, setLoading);
+      if (userId) {
+        GetRecentOrders(setRecentOrders, setError, setLoading);
+      }
       // Close modal after delay
       setTimeout(() => {
         closeReorderModal();
@@ -492,7 +494,9 @@ const ClientProfile = () => {
         // Show success toast
         showToast("Purchase order submitted successfully!", "success");
         // Refresh orders list
-        GetRecentOrders(setRecentOrders, setError, setLoading);
+        if (userId) {
+          GetRecentOrders(setRecentOrders, setError, setLoading);
+        }
       }
     } catch (error) {
       setPoError("An error occurred while submitting the purchase order");

@@ -2,10 +2,18 @@ const URL = "https://sgi-dy1p.onrender.com/api/v1/order/create";
 const CreatePO = async (formData, setPoError, setPoLoading) => {
     setPoLoading(true)
     const id = localStorage.getItem("userId");
-    // const finalUrl = id ? `${URL}?merchantId=${id}` : URL;
     const token = localStorage.getItem("token");
+    
+    // Add userId to FormData if it exists
+    if (id) {
+        formData.append("userId", id);
+    }
+    
+    // Build URL with merchantId if userId exists
+    const finalUrl = id ? `${URL}?merchantId=${id}` : URL;
+    
     try {
-        const response = await fetch(`${URL}?merchantId=${id}`, {
+        const response = await fetch(finalUrl, {
             method: 'POST',
             headers: {
                 'authorization': token

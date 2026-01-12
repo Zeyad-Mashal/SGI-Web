@@ -53,6 +53,9 @@ const ClientCheckout = () => {
   // Cart and Order
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [tax, setTax] = useState(0);
+  const [discount, setDiscount] = useState(0);
 
   // State Management
   const [loading, setLoading] = useState(false);
@@ -64,11 +67,11 @@ const ClientCheckout = () => {
     try {
       const token = localStorage.getItem("sgitoken");
       if (!token) return null;
-      
+
       // JWT format: header.payload.signature
-      const payload = token.split('.')[1];
+      const payload = token.split(".")[1];
       if (!payload) return null;
-      
+
       // Decode base64 payload
       const decodedPayload = JSON.parse(atob(payload));
       return decodedPayload.id || null;
@@ -86,7 +89,7 @@ const ClientCheckout = () => {
     // Check for token (logged in status)
     const token = localStorage.getItem("sgitoken");
     const userId = token ? getUserIdFromToken() : null;
-    
+
     setId(userId || "");
 
     // Load language
@@ -99,18 +102,25 @@ const ClientCheckout = () => {
     setCartItems(cart);
 
     // Calculate total amount
-    const subtotal = getCartTotal();
-    const tax = subtotal * 0.08;
-    const total = subtotal + tax;
+    // Tax is always 8% of the order price (subtotal)
+    const calculatedSubtotal = getCartTotal();
+    const calculatedTax = calculatedSubtotal * 0.08; // 8% of order price
+    const totalBeforeDiscount = calculatedSubtotal + calculatedTax; // Subtotal + Tax
+
+    setSubtotal(calculatedSubtotal);
+    setTax(calculatedTax);
 
     // Check for saved coupon discount
     const savedCoupon = localStorage.getItem("savedCoupon");
     if (savedCoupon) {
-      const { discount } = JSON.parse(savedCoupon);
-      const discountAmount = total * (discount / 100);
-      setTotalAmount(total - discountAmount);
+      const { discount: discountPercent } = JSON.parse(savedCoupon);
+      // Discount is applied to the total (subtotal + tax)
+      const discountAmount = totalBeforeDiscount * (discountPercent / 100);
+      setDiscount(discountAmount);
+      setTotalAmount(totalBeforeDiscount - discountAmount);
     } else {
-      setTotalAmount(total);
+      setDiscount(0);
+      setTotalAmount(totalBeforeDiscount);
     }
 
     // Load addresses if user is logged in
@@ -149,11 +159,19 @@ const ClientCheckout = () => {
   const handleSubmitOrder = async () => {
     // Validation
     if (!firstName.trim() || !lastName.trim()) {
-      setError(lang === "ar" ? "يرجى إدخال الاسم الكامل" : "Please enter your full name");
+      setError(
+        lang === "ar"
+          ? "يرجى إدخال الاسم الكامل"
+          : "Please enter your full name"
+      );
       return;
     }
     if (!userPhone.trim()) {
-      setError(lang === "ar" ? "يرجى إدخال رقم الهاتف" : "Please enter your phone number");
+      setError(
+        lang === "ar"
+          ? "يرجى إدخال رقم الهاتف"
+          : "Please enter your phone number"
+      );
       return;
     }
     if (!city.trim()) {
@@ -166,14 +184,22 @@ const ClientCheckout = () => {
     if (id) {
       // Logged-in user: must select an address
       if (selectedAddressIndex === null || !addresses[selectedAddressIndex]) {
-        setError(lang === "ar" ? "يرجى اختيار عنوان التوصيل" : "Please select a delivery address");
+        setError(
+          lang === "ar"
+            ? "يرجى اختيار عنوان التوصيل"
+            : "Please select a delivery address"
+        );
         return;
       }
       deliveryAddress = addresses[selectedAddressIndex];
     } else {
       // Non-logged-in user: must write an address
       if (!writtenAddress.trim()) {
-        setError(lang === "ar" ? "يرجى إدخال عنوان التوصيل" : "Please enter your delivery address");
+        setError(
+          lang === "ar"
+            ? "يرجى إدخال عنوان التوصيل"
+            : "Please enter your delivery address"
+        );
         return;
       }
       deliveryAddress = writtenAddress.trim();
@@ -212,7 +238,9 @@ const ClientCheckout = () => {
     const result = await CreateOrder(orderData, setError, setLoading, () => {});
 
     if (result) {
-      setSuccess(lang === "ar" ? "تم تقديم الطلب بنجاح!" : "Order placed successfully!");
+      setSuccess(
+        lang === "ar" ? "تم تقديم الطلب بنجاح!" : "Order placed successfully!"
+      );
       // Clear cart
       clearCart();
       // Clear saved coupon
@@ -474,7 +502,6 @@ const ClientCheckout = () => {
               No saved addresses. Please add an address above to continue.
             </p>
           )}
-
         </div>
 
         <hr />
@@ -515,7 +542,51 @@ const ClientCheckout = () => {
                 <p>AED {(item.price * item.quantity).toFixed(2)}</p>
               </div>
             ))}
+
             <hr style={{ margin: "1rem 0" }} />
+
+            {/* Order Price (Subtotal) */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "0.5rem",
+              }}
+            >
+              <p>Order Price:</p>
+              <p>AED {subtotal.toFixed(2)}</p>
+            </div>
+
+            {/* Tax - 8% of Order Price */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "0.5rem",
+              }}
+            >
+              <p>Tax (8%):</p>
+              <p>AED {tax.toFixed(2)}</p>
+            </div>
+
+            {/* Discount (if applicable) */}
+            {discount > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "0.5rem",
+                  color: "#4caf50",
+                }}
+              >
+                <p>Discount:</p>
+                <p>- AED {discount.toFixed(2)}</p>
+              </div>
+            )}
+
+            <hr style={{ margin: "1rem 0" }} />
+
+            {/* Total Amount */}
             <div
               style={{
                 display: "flex",

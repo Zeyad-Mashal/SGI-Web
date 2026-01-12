@@ -4,13 +4,19 @@ const CreateOrder = async (order, setError, setLoading, setDiscount) => {
     const id = localStorage.getItem("userId");
     const finalUrl = id ? `${URL}?merchantId=${id}` : URL;
 
+    // Add userId to order body if it exists
+    const orderData = { ...order };
+    if (id) {
+        orderData.userId = id;
+    }
+
     try {
         const response = await fetch(finalUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(order)
+            body: JSON.stringify(orderData)
         });
 
         const result = await response.json();

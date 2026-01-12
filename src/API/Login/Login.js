@@ -15,6 +15,7 @@ const Login = async (data, setError, setLoading) => {
         if (response.ok) {
             setLoading(false);
             localStorage.setItem('sgitoken', result.token);
+            localStorage.setItem('userId', result.id);
             return window.location.href = "/";
         } else {
             if (response.status == 400) {

@@ -2,9 +2,17 @@ const URL = "https://sgi-dy1p.onrender.com/api/v1/order/marchent/get";
 const GetRecentOrders = async (setRecentOrders, setError, setLoading) => {
     setLoading(true)
     const token = localStorage.getItem("sgitoken");
+    const userId = localStorage.getItem("userId");
     const lang = localStorage.getItem("lang");
+    
+    // Build URL with userId query parameter if available
+    let apiUrl = URL;
+    if (userId) {
+        apiUrl = `${URL}?userId=${userId}`;
+    }
+    
     try {
-        const response = await fetch(URL, {
+        const response = await fetch(apiUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
