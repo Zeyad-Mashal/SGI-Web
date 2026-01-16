@@ -9,7 +9,7 @@
 }
 .hero .hero_left {
   width: 100%;
-  background-image: url("/images/MB22 copy.jpg");
+  background-image: url("/images/Banner1copy.png");
   background-size: cover;
   background-position: center;
   height: 560px;
@@ -21,7 +21,7 @@
   gap: 1rem;
   padding: 3rem 3rem;
   border-radius: 0 16px 16px 0;
-  color: white;
+  color: black;
 }
 .hero .hero_right {
   width: 50%;
@@ -133,7 +133,7 @@
   }
   .hero .hero_left {
     width: 100%;
-    background-image: url("/images/MB12 copy.jpg");
+    background-image: url("/images/Bannermobcopy.png");
     height: 400px;
   }
   .hero_right {

@@ -17,7 +17,7 @@ const Banner2 = () => {
   return (
     <div className="banner2">
       <Image
-        src={"/images/BannerCarWash.webp"}
+        src={"/images/Banner2copy.png"}
         alt="banner image"
         width={3000}
         height={3000}

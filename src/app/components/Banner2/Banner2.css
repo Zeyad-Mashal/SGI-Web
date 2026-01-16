@@ -17,23 +17,24 @@
   color: rgba(0, 0, 0, 0.7);
 }
 .banner2_content > h2 {
-  font-size: 20px;
+  font-size: 40px;
   font-weight: bold;
-  color: black;
+  color: white;
   margin-bottom: 1rem;
 }
 .banner2_content > button {
   margin-top: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 8px;
-  width: 120px;
+  width: 160px;
   border-radius: 16px;
   transition: 0.3s ease;
   cursor: pointer;
+  color: white;
 }
 .banner2_content > button:hover {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
 }
 @media screen and (max-width: 789px) {
   .banner2_content {
@@ -53,6 +54,6 @@
     padding: 5px;
   }
   .banner2 > img {
-    height: 90px;
+    height: 120px;
   }
 }
