@@ -253,7 +253,7 @@
   font-size: 0.9rem;
 }
 .product_desc_description > ul li {
-  list-style-type: disc;
+  list-style-type: none;
   color: rgba(0, 0, 0, 0.5);
 }
 .product_desc_btns button {
