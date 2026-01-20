@@ -31,7 +31,19 @@ const ClientProduct = () => {
   };
 
   const handleBoxClick = () => {
-    if (productDetails?.boxPrice && productDetails?.piecesNumber) {
+    const boxPrice = Number(productDetails?.boxPrice);
+    const piecesNumber = Number(productDetails?.piecesNumber);
+    
+    if (productDetails?.boxPrice !== null &&
+        productDetails?.boxPrice !== undefined &&
+        productDetails?.boxPrice !== "" &&
+        !isNaN(boxPrice) &&
+        boxPrice > 0 &&
+        productDetails?.piecesNumber !== null &&
+        productDetails?.piecesNumber !== undefined &&
+        productDetails?.piecesNumber !== "" &&
+        !isNaN(piecesNumber) &&
+        piecesNumber > 0) {
       if (useBoxPrice) {
         // Switch back to unit pricing
         setUseBoxPrice(false);
@@ -48,8 +60,14 @@ const ClientProduct = () => {
 
   // Get current price (box price if selected, otherwise regular price)
   const getCurrentPrice = () => {
-    if (useBoxPrice && productDetails?.boxPrice) {
-      return productDetails.boxPrice;
+    const boxPrice = Number(productDetails?.boxPrice);
+    if (useBoxPrice && 
+        productDetails?.boxPrice !== null &&
+        productDetails?.boxPrice !== undefined &&
+        productDetails?.boxPrice !== "" &&
+        !isNaN(boxPrice) &&
+        boxPrice > 0) {
+      return boxPrice;
     }
     return productDetails?.price || 0;
   };
@@ -174,7 +192,14 @@ const ClientProduct = () => {
             Review our Refund & Exchange Policy before purchasing{" "}
             <a href="#">Learn more</a>
           </h5>
-          {productDetails?.boxPrice && productDetails?.piecesNumber && (
+          {productDetails?.boxPrice !== null &&
+           productDetails?.boxPrice !== undefined &&
+           productDetails?.boxPrice !== "" &&
+           Number(productDetails?.boxPrice) > 0 &&
+           productDetails?.piecesNumber !== null &&
+           productDetails?.piecesNumber !== undefined &&
+           productDetails?.piecesNumber !== "" &&
+           Number(productDetails?.piecesNumber) > 0 && (
             <h4
               onClick={handleBoxClick}
               // style={{
