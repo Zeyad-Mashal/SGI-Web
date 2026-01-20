@@ -10,8 +10,8 @@ const Categories = () => {
             <Image
               src={"/images/CarWashnew1.webp"}
               alt="category image"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               loading="lazy"
             />
           </a>
@@ -21,8 +21,8 @@ const Categories = () => {
             <Image
               src={"/images/Hotels2.webp"}
               alt="category image"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               loading="lazy"
             />
           </a>
@@ -32,8 +32,8 @@ const Categories = () => {
             <Image
               src={"/images/Laundry&Dryclean2.webp"}
               alt="category image"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               loading="lazy"
             />
           </a>
@@ -43,8 +43,8 @@ const Categories = () => {
             <Image
               src={"/images/Office&Pantry2.webp"}
               alt="category image"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               loading="lazy"
             />
           </a>
@@ -54,8 +54,8 @@ const Categories = () => {
             <Image
               src={"/images/Restaurant&Cafe2.webp"}
               alt="category image"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               loading="lazy"
             />
           </a>
@@ -65,8 +65,8 @@ const Categories = () => {
             <Image
               src={"/images/School&Nursery2.webp"}
               alt="category image"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               loading="lazy"
             />
           </a>

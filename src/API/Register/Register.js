@@ -1,5 +1,5 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/auth/register";
-const Register = async (formData, setError, setLoading) => {
+const Register = async (formData, setError, setLoading, onSuccess) => {
     setLoading(true)
     try {
         const response = await fetch(URL, {
@@ -15,7 +15,10 @@ const Register = async (formData, setError, setLoading) => {
         if (response.ok) {
             setLoading(false);
             // localStorage.setItem('user', JSON.stringify(result.user));
-            return window.location.href = "/login";
+            if (onSuccess) {
+                onSuccess();
+            }
+            return { success: true, data: result };
         } else {
             if (response.status == 400) {
                 setError(result.message);
@@ -28,10 +31,12 @@ const Register = async (formData, setError, setLoading) => {
                 setError(result.message);
                 setLoading(false)
             }
+            return { success: false, error: result.message };
         }
     } catch (error) {
         setError('An error occurred');
         setLoading(false)
+        return { success: false, error: 'An error occurred' };
     }
 }
 export default Register;

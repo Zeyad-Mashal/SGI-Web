@@ -9,6 +9,7 @@ import {
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import Register from "@/API/Register/Register";
+import SuccessModal from "@/app/components/SuccessModal/SuccessModal";
 const ClientRegister = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -20,6 +21,7 @@ const ClientRegister = () => {
   const [commercialFile, setCommercialFile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // File size validation - max 200 KB
   const MAX_FILE_SIZE = 200 * 1024; // 200 KB in bytes
@@ -96,7 +98,9 @@ const ClientRegister = () => {
       formData.append("commercialFile", commercialFile);
     }
 
-    Register(formData, setError, setLoading);
+    Register(formData, setError, setLoading, () => {
+      setShowSuccessModal(true);
+    });
   };
   return (
     <div className="register">
@@ -283,6 +287,10 @@ const ClientRegister = () => {
           </div>
         </div>
       </div>
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </div>
   );
 };

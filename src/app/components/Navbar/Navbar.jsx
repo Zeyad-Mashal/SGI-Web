@@ -25,6 +25,7 @@ import ar from "../../../translation/ar.json";
 import Search from "@/API/Search/Search";
 import GetCategories from "@/API/Categories/GetCategories";
 import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
+import LogoutModal from "@/app/components/LogoutModal/LogoutModal";
 const Navbar = () => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -32,6 +33,7 @@ const Navbar = () => {
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [activeMainCategory, setActiveMainCategory] = useState(null);
   const [subPanelVisible, setSubPanelVisible] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   // Initialize isArabic from localStorage immediately
   const [isArabic, setIsArabic] = useState(() => {
     if (typeof window !== "undefined") {
@@ -97,6 +99,14 @@ const Navbar = () => {
       setIsArabic(false);
     }
   }, []);
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("sgitoken");
+    localStorage.removeItem("userId");
+    setToken(null);
+    window.location.reload();
+  };
   // تغيير اللغه
   const toggleLang = () => {
     const newLang = lang === "en" ? "ar" : "en";
@@ -334,10 +344,18 @@ const Navbar = () => {
           </li>
         </ul>
         <div className="login_links">
-          <a href="/login">{translations.login}</a>
-          <span>
-            <a href="/register">{translations.signup}</a>
-          </span>
+          {token ? (
+            <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>
+              {translations.logout || "Logout"}
+            </button>
+          ) : (
+            <>
+              <a href="/login">{translations.login}</a>
+              <span>
+                <a href="/register">{translations.signup}</a>
+              </span>
+            </>
+          )}
         </div>
         <div className="our_shop">
           <a href="/shop">
@@ -534,10 +552,21 @@ const Navbar = () => {
           </div>
 
           <div className="mobile_actions">
-            <a href="/login">{translations.login}</a>
-            <a href="/register" className="signup_btn">
-              {translations.signup}
-            </a>
+            {token ? (
+              <button
+                className="logout-btn mobile-logout-btn"
+                onClick={() => setShowLogoutModal(true)}
+              >
+                {translations.logout || "Logout"}
+              </button>
+            ) : (
+              <>
+                <a href="/login">{translations.login}</a>
+                <a href="/register" className="signup_btn">
+                  {translations.signup}
+                </a>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -586,6 +615,11 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+      />
     </div>
   );
 };
