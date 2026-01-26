@@ -357,8 +357,8 @@ export default function Shop() {
                               : "/images/empty_product.png"
                           }
                           alt="product image"
-                          width={150}
-                          height={150}
+                          width={1000}
+                          height={1000}
                           loading="lazy"
                         />
                         <FontAwesomeIcon

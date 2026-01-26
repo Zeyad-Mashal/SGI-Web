@@ -29,8 +29,22 @@ const Brands = () => {
   const [allBrands, setAllBrands] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // العلامات التجارية المسموح بها فقط
+  const allowedBrands = ["Cleenol", "INDUQUIM", "SEITZ"];
+  
   const getAllBrands = () => {
-    GetAllBrands(setAllBrands, setError, setLoading);
+    GetAllBrands((brands) => {
+      // تصفية العلامات التجارية لعرض فقط المسموح بها
+      const filteredBrands = brands.filter((brand) => {
+        if (!brand.name) return false;
+        const brandName = brand.name.trim().toUpperCase();
+        return allowedBrands.some((allowedBrand) => 
+          brandName === allowedBrand.toUpperCase()
+        );
+      });
+      setAllBrands(filteredBrands);
+    }, setError, setLoading);
   };
 
   return (

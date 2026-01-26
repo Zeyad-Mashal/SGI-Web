@@ -219,8 +219,8 @@ const Navbar = () => {
             <Image
               src="/images/logo-black.png"
               alt="logo"
-              width={120}
-              height={120}
+              width={1000}
+              height={1000}
             />
           </a>
         </div>

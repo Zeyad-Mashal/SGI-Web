@@ -115,8 +115,8 @@ const Featured_Products = () => {
                       <Image
                         src={item.picUrls?.[0] || "/images/empty_product.png"}
                         alt="product image"
-                        width={150}
-                        height={150}
+                        width={1000}
+                        height={1000}
                         loading="lazy"
                       />
                       <FontAwesomeIcon

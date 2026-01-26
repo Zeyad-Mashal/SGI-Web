@@ -30,6 +30,9 @@
   align-items: center;
   margin: 25px 0;
 }
+.logo > a > img {
+  width: 130px;
+}
 .search {
   display: flex;
   justify-content: center;
