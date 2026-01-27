@@ -22,9 +22,8 @@ const ClientProduct = () => {
   const [qty, setQty] = useState(1);
   const [useBoxPrice, setUseBoxPrice] = useState(false);
 
-  const images = ["/images/p1.png", "/images/p2.png", "/images/p3.png"];
-
-  const [activeImg, setActiveImg] = useState(images[0]);
+  const [activeImg, setActiveImg] = useState(null);
+  const [imageLoading, setImageLoading] = useState(true);
   const updateQty = (value) => {
     const num = Math.max(0, Number(value));
     setQty(num);
@@ -123,6 +122,10 @@ const ClientProduct = () => {
   useEffect(() => {
     if (productDetails?.picUrls?.length > 0) {
       setActiveImg(productDetails.picUrls[0]);
+      setImageLoading(false); // إخفاء الـ loader فور وصول البيانات
+    } else {
+      setActiveImg(null);
+      setImageLoading(true);
     }
   }, [productDetails]);
 
@@ -140,25 +143,42 @@ const ClientProduct = () => {
           </button>
 
           {/* Main image */}
-          <Image
-            src={activeImg ? activeImg : "/images/empty_product.png"}
-            alt="product image"
-            loading="lazy"
-            width={390}
-            height={390}
-            className="main_image"
-          />
+          <div className="main_image_container">
+            {loading || (!activeImg && !productDetails?.picUrls?.length) ? (
+              <div className="image_loader">
+                <div className="loader_spinner"></div>
+                <p>Loading image...</p>
+              </div>
+            ) : activeImg ? (
+              <Image
+                src={activeImg}
+                alt="product image"
+                width={390}
+                height={390}
+                className="main_image"
+                priority
+              />
+            ) : null}
+          </div>
 
           {/* Small images */}
           <div className="product_subimgs">
-            {productDetails?.picUrls?.length > 0 &&
+            {loading ? (
+              <div className="subimages_loader">
+                <div className="loader_spinner_small"></div>
+                <div className="loader_spinner_small"></div>
+                <div className="loader_spinner_small"></div>
+              </div>
+            ) : productDetails?.picUrls?.length > 0 ? (
               productDetails.picUrls.map((img, index) => (
                 <div
                   key={index}
                   className={`subimg_box ${
                     activeImg === img ? "active_subimg" : ""
                   }`}
-                  onClick={() => setActiveImg(img)}
+                  onClick={() => {
+                    setActiveImg(img);
+                  }}
                 >
                   <Image
                     src={img}
@@ -168,7 +188,8 @@ const ClientProduct = () => {
                     loading="lazy"
                   />
                 </div>
-              ))}
+              ))
+            ) : null}
           </div>
         </div>
 

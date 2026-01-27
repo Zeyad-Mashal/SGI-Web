@@ -20,6 +20,96 @@
   width: 100%;
   border-radius: 16px;
 }
+
+/* Main Image Container and Loader */
+.main_image_container {
+  width: 100%;
+  height: 390px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  background-color: rgba(0, 0, 0, 0.02);
+  position: relative;
+  overflow: hidden;
+}
+
+.main_image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.image_loader_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  z-index: 2;
+}
+
+.image_loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+}
+
+.loader_spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid rgba(223, 144, 0, 1);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loader_spinner_small {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top: 3px solid rgba(223, 144, 0, 1);
+  border-radius: 16px;
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+}
+
+.image_loader p {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.subimages_loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .product_imgs > button {
   position: absolute;
   top: 35%;
@@ -396,6 +486,20 @@
   }
   .product_imgs > img {
     width: 100%;
+  }
+  .main_image_container {
+    height: 300px;
+  }
+  .loader_spinner {
+    width: 40px;
+    height: 40px;
+  }
+  .loader_spinner_small {
+    width: 80px;
+    height: 80px;
+  }
+  .image_loader p {
+    font-size: 0.8rem;
   }
   .product_subimgs,
   .product_subimgs > img {
