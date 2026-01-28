@@ -26,6 +26,8 @@ import Search from "@/API/Search/Search";
 import GetCategories from "@/API/Categories/GetCategories";
 import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
 import LogoutModal from "@/app/components/LogoutModal/LogoutModal";
+import { getCartItemCount } from "@/utils/cartUtils";
+
 const Navbar = () => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -44,10 +46,43 @@ const Navbar = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
     GetCategories(setCategories, setError, setLoading);
+    // تحديث عدد المنتجات في السلة
+    updateCartCount();
+    
+    // الاستماع لتغييرات localStorage من نفس النافذة
+    const handleStorageChange = (e) => {
+      if (e.key === 'cart' || !e.key) {
+        updateCartCount();
+      }
+    };
+    
+    // الاستماع لتغييرات localStorage من نوافذ أخرى
+    window.addEventListener('storage', handleStorageChange);
+    
+    // فحص السلة كل 500ms للتحديث الفوري (أسرع)
+    const interval = setInterval(updateCartCount, 500);
+    
+    // تحديث عند تغيير التركيز على النافذة
+    const handleFocus = () => {
+      updateCartCount();
+    };
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
   }, []);
+
+  const updateCartCount = () => {
+    const count = getCartItemCount();
+    setCartItemCount(count);
+  };
 
   const closeMegaMenu = () => {
     setMegaMenuOpen(false);
@@ -210,8 +245,11 @@ const Navbar = () => {
             </a>
           )}
 
-          <a href="/cart">
+          <a href="/cart" className="cart_link">
             <RiShoppingBag3Line />
+            {cartItemCount > 0 && (
+              <span className="cart_badge">{cartItemCount}</span>
+            )}
           </a>
         </div>
         <div className="logo">
@@ -310,8 +348,11 @@ const Navbar = () => {
             </a>
           )}
 
-          <a href="/cart">
+          <a href="/cart" className="cart_link">
             <RiShoppingBag3Line />
+            {cartItemCount > 0 && (
+              <span className="cart_badge">{cartItemCount}</span>
+            )}
           </a>
         </div>
       </div>

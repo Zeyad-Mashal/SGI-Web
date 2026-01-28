@@ -86,7 +86,7 @@ const Our_Products = () => {
               <span className="loader"></span>
             </div>
           ) : (
-            allProducts.slice(-8).map((item) => {
+            allProducts.slice(0, 8).map((item) => {
               return (
                 <div className="Our_Products_item" key={item._id}>
                   <a href={`/product/${item._id}`}>
@@ -120,14 +120,14 @@ const Our_Products = () => {
                       <p>{translations.featured}</p>
                     </div>
                     <h2>{item.name}</h2>
-                    <div className="Our_Products_stars">
+                    {/* <div className="Our_Products_stars">
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <p>{translations.reviews} (230)</p>
-                    </div>
+                    </div> */}
                     <div className="Our_Products_price">
                       <h3>AED {item.price}</h3>
                       <button

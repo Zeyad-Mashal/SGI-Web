@@ -55,6 +55,7 @@ export default function Shop() {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState(null);
   const [lang, setLang] = useState("en");
+  const [viewMode, setViewMode] = useState("grid"); // "grid" or "list"
   
   useEffect(() => {
     // Get language from localStorage
@@ -302,15 +303,21 @@ export default function Shop() {
             <p>
               <span>{pagination.totalProducts || allProducts.length}</span> products found
             </p>
-            <select>
+            {/* <select>
               <option value="Most Popular">Most Popular</option>
               <option value="Most Popular">Most Popular</option>
               <option value="Most Popular">Most Popular</option>
               <option value="Most Popular">Most Popular</option>
-            </select>
+            </select> */}
             <div className="shop_display">
-              <TbAlignBoxRightMiddle className="flex-display" />
-              <AiOutlineBars className="grid-display" />
+              <TbAlignBoxRightMiddle 
+                className={`flex-display ${viewMode === "list" ? "active" : ""}`}
+                onClick={() => setViewMode("list")}
+              />
+              <AiOutlineBars 
+                className={`grid-display ${viewMode === "grid" ? "active" : ""}`}
+                onClick={() => setViewMode("grid")}
+              />
             </div>
           </div>
 
@@ -347,63 +354,120 @@ export default function Shop() {
             ) : (
               allProducts.map((item) => {
                 return (
-                  <div className="Featured_card" key={item._id}>
-                    <a href={`/product/${item._id}`}>
-                      <div className="Featured_img">
-                        <Image
-                          src={
-                            item.picUrls && item.picUrls[0]
-                              ? item.picUrls[0]
-                              : "/images/empty_product.png"
-                          }
-                          alt="product image"
-                          width={1000}
-                          height={1000}
-                          loading="lazy"
-                        />
-                        <FontAwesomeIcon
-                          icon={isFavorited(item._id) ? faHeartSolid : faHeart}
-                          className={`heart-icon ${
-                            isFavorited(item._id) ? "favorited" : ""
-                          }`}
-                          onClick={(e) => handleFavoriteClick(e, item)}
-                          style={{
-                            color: isFavorited(item._id)
-                              ? "#ef4444"
-                              : "inherit",
-                            cursor: "pointer",
-                            transition: "all 0.3s ease",
-                            transform: isFavorited(item._id)
-                              ? "scale(1.2)"
-                              : "scale(1)",
-                          }}
-                        />
-                        <p>Featured</p>
-                      </div>
-                      <div className="Featured_stars">
-                        <FontAwesomeIcon icon={faStar} />
-                        <FontAwesomeIcon icon={faStar} />
-                        <FontAwesomeIcon icon={faStar} />
-                        <FontAwesomeIcon icon={faStar} />
-                        <FontAwesomeIcon icon={faStar} />
-                        <p>(230 reviews) (m.order 30 units)</p>
-                      </div>
-                      <h2>{item.name}</h2>
-                    </a>
+                  <div className={`Featured_card ${viewMode === "list" ? "list_view" : "grid_view"}`} key={item._id}>
+                    {viewMode === "list" ? (
+                      <>
+                        <a href={`/product/${item._id}`} className="list_view_link">
+                          <div className="Featured_img">
+                            <Image
+                              src={
+                                item.picUrls && item.picUrls[0]
+                                  ? item.picUrls[0]
+                                  : "/images/empty_product.png"
+                              }
+                              alt="product image"
+                              width={1000}
+                              height={1000}
+                              loading="lazy"
+                            />
+                            <FontAwesomeIcon
+                              icon={isFavorited(item._id) ? faHeartSolid : faHeart}
+                              className={`heart-icon ${
+                                isFavorited(item._id) ? "favorited" : ""
+                              }`}
+                              onClick={(e) => handleFavoriteClick(e, item)}
+                              style={{
+                                color: isFavorited(item._id)
+                                  ? "#ef4444"
+                                  : "inherit",
+                                cursor: "pointer",
+                                transition: "all 0.3s ease",
+                                transform: isFavorited(item._id)
+                                  ? "scale(1.2)"
+                                  : "scale(1)",
+                              }}
+                            />
+                          </div>
+                          <div className="list_view_content">
+                            <div className="list_view_info">
+                              <h2>{item.name}</h2>
+                              <div className="Featured_stars">
+                                <p>(m.order 30 units)</p>
+                              </div>
+                            </div>
+                            <div className="Featured_price">
+                              <h3>AED {item.price}</h3>
+                            </div>
+                          </div>
+                        </a>
+                        <div className="list_view_actions">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              addToCart(item, 1);
+                              showToast("Product added to cart!", "success");
+                            }}
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <a href={`/product/${item._id}`}>
+                          <div className="Featured_img">
+                            <Image
+                              src={
+                                item.picUrls && item.picUrls[0]
+                                  ? item.picUrls[0]
+                                  : "/images/empty_product.png"
+                              }
+                              alt="product image"
+                              width={1000}
+                              height={1000}
+                              loading="lazy"
+                            />
+                            <FontAwesomeIcon
+                              icon={isFavorited(item._id) ? faHeartSolid : faHeart}
+                              className={`heart-icon ${
+                                isFavorited(item._id) ? "favorited" : ""
+                              }`}
+                              onClick={(e) => handleFavoriteClick(e, item)}
+                              style={{
+                                color: isFavorited(item._id)
+                                  ? "#ef4444"
+                                  : "inherit",
+                                cursor: "pointer",
+                                transition: "all 0.3s ease",
+                                transform: isFavorited(item._id)
+                                  ? "scale(1.2)"
+                                  : "scale(1)",
+                              }}
+                            />
+                            <p>Featured</p>
+                          </div>
+                          <div className="Featured_stars">
+                            <p>(m.order 30 units)</p>
+                          </div>
+                          <h2>{item.name}</h2>
+                        </a>
 
-                    <div className="Featured_price">
-                      <h3>AED {item.price}</h3>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          addToCart(item, 1);
-                          showToast("Product added to cart!", "success");
-                        }}
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
+                        <div className="Featured_price">
+                          <h3>AED {item.price}</h3>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              addToCart(item, 1);
+                              showToast("Product added to cart!", "success");
+                            }}
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 );
               })

@@ -314,6 +314,17 @@
   background-color: white;
   padding: 5px;
   border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.shop_display > svg:hover {
+  background-color: rgba(223, 144, 0, 0.1);
+}
+
+.shop_display > svg.active {
+  background-color: #000;
+  color: white;
 }
 .shop_list {
   display: flex;
@@ -323,10 +334,27 @@
   width: 100%;
   flex-wrap: wrap;
 }
+
+/* Grid View - 4 cards per row */
+.shop_list .grid_view {
+  width: calc(25% - 0.75rem);
+  max-width: 300px;
+  min-width: 250px;
+}
+
+/* List View - Full width vertical layout */
+.shop_list .list_view {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  flex-direction: row;
+  min-height: 200px;
+  max-height: none;
+}
 .Featured_card {
   width: 100%;
   max-width: 300px;
-  min-height: 475px;
+  min-height: 500px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -336,6 +364,101 @@
   cursor: pointer;
   position: relative;
   background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.Featured_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* List View Styles */
+.Featured_card.list_view {
+  flex-direction: row;
+  min-height: 200px;
+  max-width: 100%;
+  gap: 20px;
+  padding: 20px;
+  align-items: center;
+}
+
+.Featured_card.list_view .Featured_img {
+  width: 180px;
+  height: 180px;
+  min-width: 180px;
+  flex-shrink: 0;
+  border-radius: 12px;
+}
+
+.Featured_card.list_view .list_view_link {
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.Featured_card.list_view .list_view_content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.Featured_card.list_view .list_view_info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.Featured_card.list_view h2 {
+  font-size: 1.3rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.Featured_card.list_view .Featured_stars {
+  margin-top: 0;
+  padding: 0;
+}
+
+.Featured_card.list_view .Featured_price {
+  margin-top: 0;
+  padding: 0;
+  border-top: none;
+  align-self: flex-start;
+}
+
+.Featured_card.list_view .Featured_price h3 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.Featured_card.list_view .list_view_actions {
+  display: flex;
+  align-items: center;
+  min-width: 150px;
+}
+
+.Featured_card.list_view .list_view_actions button {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.Featured_card.list_view .list_view_actions button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: translateY(-2px);
 }
 .Featured_card > a {
   width: 100%;
@@ -480,6 +603,19 @@
   }
 }
 
+/* Responsive Grid View */
+@media screen and (max-width: 1400px) {
+  .shop_list .grid_view {
+    width: calc(33.333% - 0.67rem);
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .shop_list .grid_view {
+    width: calc(50% - 0.5rem);
+  }
+}
+
 @media screen and (max-width: 991px) {
   .shop_filter {
     display: block; /* بدل none عشان الأنيميشن */
@@ -494,6 +630,25 @@
     transition: transform 0.4s ease;
     z-index: 999;
     overflow-y: auto;
+  }
+  .Featured_card.list_view {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .Featured_card.list_view .list_view_link {
+    flex-direction: column;
+  }
+
+  .Featured_card.list_view .Featured_img {
+    width: 100%;
+    height: 250px;
+    min-width: 100%;
+  }
+
+  .Featured_card.list_view .list_view_actions {
+    width: 100%;
+    margin-top: 15px;
   }
   .close_filter {
     display: flex;
@@ -533,24 +688,43 @@
     width: calc(50% - 0.25rem);
     max-width: none;
     min-width: 0;
-    min-height: 420px;
+    min-height: auto;
   }
-  
   .Featured_card .Featured_img {
-    height: 200px;
+    height: auto;
   }
   
   .Featured_card h2 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    margin: 6px 0 8px 0;
+    padding: 0 8px;
+    line-height: 1.3;
+  }
+  
+  .Featured_stars {
+    padding: 8px 8px 0 8px;
+    margin-top: 4px;
+  }
+  
+  .Featured_stars > p {
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+  
+  .Featured_price {
+    padding: 8px;
+    margin-top: auto;
   }
   
   .Featured_price > h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    margin-right: 5px;
   }
   
   .Featured_price > button {
-    padding: 5px 10px;
-    font-size: 0.8rem;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border-radius: 12px;
   }
 }
 

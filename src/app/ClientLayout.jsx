@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
+import WhatsAppButton from "./components/WhatsAppButton/WhatsAppButton";
 import { usePathname } from "next/navigation";
 import { ToastProvider } from "@/context/ToastContext";
 
@@ -38,6 +39,7 @@ export default function ClientLayout({ children }) {
       {!hideLayout && <Navbar />}
       {children}
       {!hideLayout && <Footer />}
+      <WhatsAppButton />
     </ToastProvider>
   );
 }

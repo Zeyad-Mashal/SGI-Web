@@ -150,14 +150,14 @@ const ClientProduct = () => {
                 <p>Loading image...</p>
               </div>
             ) : activeImg ? (
-              <Image
+          <Image
                 src={activeImg}
-                alt="product image"
-                width={390}
-                height={390}
-                className="main_image"
+            alt="product image"
+            width={390}
+            height={390}
+            className="main_image"
                 priority
-              />
+          />
             ) : null}
           </div>
 

@@ -114,6 +114,36 @@
   height: 100%;
   cursor: pointer;
 }
+
+/* Cart Badge Styles */
+.cart_link {
+  position: relative;
+  display: inline-block;
+}
+
+.cart_badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: rgba(239, 68, 68, 1);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  min-width: 20px;
+  padding: 0 2px;
+}
+
+.cart_badge:empty {
+  display: none;
+}
 .mega_menu_btn > span {
   cursor: pointer;
 }
@@ -848,6 +878,31 @@
   .mobile_menu_icon a svg {
     width: 20px;
     height: 20px;
+  }
+
+  /* Mobile Cart Badge */
+  .mobile_menu_icon .cart_link {
+    position: relative;
+  }
+
+  .mobile_menu_icon .cart_badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background-color: rgba(239, 68, 68, 1);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-width: 18px;
+    padding: 0 2px;
   }
 
   /* إظهار القائمة لما تكون مفتوحة */
