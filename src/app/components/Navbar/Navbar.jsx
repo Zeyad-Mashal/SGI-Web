@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
@@ -30,6 +30,7 @@ import { getCartItemCount } from "@/utils/cartUtils";
 
 const Navbar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
@@ -378,10 +379,16 @@ const Navbar = () => {
 
         <ul className="main_links">
           <li>
-            <a href="/">{translations.home}</a>
+            <a href="/" className={pathname === "/" ? "active" : ""}>{translations.home}</a>
           </li>
           <li>
-            <a href="/shop">{translations.shop}</a>
+            <a href="/shop" className={pathname === "/shop" ? "active" : ""}>{translations.shop}</a>
+          </li>
+          <li>
+            <a href="/returns" className={pathname === "/returns" ? "active" : ""}>{translations.returnsTitle || "Returns Policy"}</a>
+          </li>
+          <li>
+            <a href="/Privacy" className={pathname === "/Privacy" ? "active" : ""}>{translations.privacyTitle || "Privacy Policy"}</a>
           </li>
         </ul>
         <div className="login_links">
@@ -556,9 +563,10 @@ const Navbar = () => {
         </div>
 
         <div className="mobile_menu_links">
-          <a href="/">{translations.home}</a>
-          <a href="/shop">{translations.shop}</a>
-
+          <a href="/" className={pathname === "/" ? "active" : ""}>{translations.home}</a>
+          <a href="/shop" className={pathname === "/shop" ? "active" : ""}>{translations.shop}</a>
+          <a href="/returns" className={pathname === "/returns" ? "active" : ""}>{translations.returnsTitle || "Returns Policy"}</a>
+          <a href="/Privacy" className={pathname === "/Privacy" ? "active" : ""}>{translations.privacyTitle || "Privacy Policy"}</a>
           <div className="mobile_categories">
             <h3>{translations.categories}</h3>
             {categories.map((cat, index) => (

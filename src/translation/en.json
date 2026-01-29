@@ -68,5 +68,162 @@
     "privacypolicy" : "Privacy Policy",
     "copyright" : "Copyright",
     "allrightsreserved" : "© sgi Inc. All Rights Reserved.",
-    "footerdescription" : "We provide high-quality cleaning and hygiene solutions designed specifically for businesses and organizations. Our wide range of liquid detergents and professional cleaning products ."
+    "footerdescription" : "We provide high-quality cleaning and hygiene solutions designed specifically for businesses and organizations. Our wide range of liquid detergents and professional cleaning products .",
+    "termsTitle": "Terms & Conditions",
+    "privacyTitle": "Privacy Policy",
+    "terms": {
+        "whoWeAre": {
+            "title": "1 - Who We Are",
+            "content": "The MultiCart Zone platform is operated by Cleenol Middle East. License details and address: Dubai – United Arab Emirates — License No.: 661000"
+        },
+        "acceptance": {
+            "title": "2 - Acceptance of the Terms",
+            "content": "By accessing the Platform, creating an account, or making a purchase, you agree to these Terms. If you do not agree, please stop using the Platform."
+        },
+        "eligibility": {
+            "title": "3 - Eligibility & Account",
+            "content": "• You must be of legal age under the applicable laws of the United Arab Emirates to use the Platform and complete purchases.\n• You are responsible for the accuracy of your account information, the confidentiality of your password, and any activity carried out through your account.\n• We reserve the right to suspend or terminate an account if misuse or a breach of these Terms is suspected."
+        },
+        "platformUse": {
+            "title": "4 - Platform Use & Prohibited Conduct",
+            "content": "You undertake not to:\n• Use the Platform for any unlawful or fraudulent purpose.\n• Attempt to hack, disrupt, or bypass the Platform's security systems.\n• Publish content that is abusive, misleading, infringes third-party rights, or violates intellectual property rights.\n• Use automated tools to collect data or interfere with the Platform's operation without prior written permission."
+        },
+        "orders": {
+            "title": "5 - Orders, Prices & Payment",
+            "content": "• Prices are displayed in UAE Dirhams (AED) and may include/exclude fees and taxes as shown to you at checkout.\n• Submitting an order constitutes a purchase request; it is completed once confirmed through the Platform.\n• We reserve the right to cancel or reject an order in cases such as: an obvious pricing error, out-of-stock items, payment failure, incorrect information, or suspected fraud."
+        },
+        "shipping": {
+            "title": "6 - Shipping & Delivery",
+            "content": "Delivery times are estimates and may be affected by operational or logistical factors. You are responsible for providing a correct address and valid contact details. Inaccurate information may result in delayed delivery or inability to complete delivery."
+        },
+        "returns": {
+            "title": "7 - Returns, Exchanges & Refunds",
+            "content": "Returns/exchanges/refunds are subject to the return policy displayed on the Platform. Certain products may be excluded based on their nature or if they have been opened/used, in accordance with applicable laws."
+        },
+        "promotions": {
+            "title": "8 - Promotions & Vouchers",
+            "content": "Promotional offers and vouchers are subject to their own terms (validity period, excluded products, minimum spend). We reserve the right to cancel any promotional benefit if misuse or circumvention is suspected."
+        },
+        "reviews": {
+            "title": "9 - Reviews & User Content",
+            "content": "When you post a review/comment, you warrant that it is accurate, non-abusive, and does not infringe the rights of others. We may display such content on the Platform for operational and marketing purposes without financial obligation."
+        },
+        "intellectualProperty": {
+            "title": "10 - Intellectual Property",
+            "content": "All Platform content (including trademarks, design, text, images, and software) is owned by us or licensed to us. It may not be copied, reused, or published without prior written permission."
+        },
+        "thirdParty": {
+            "title": "11 - Third-Party Links & Services",
+            "content": "The Platform may contain links to or services provided by third parties (such as payment gateways, shipping services, or analytics tools). Such parties are governed by their own policies and terms, and we are not responsible for their content, practices, or any damages arising from your use of them outside our Platform."
+        },
+        "platformUseDesc": {
+            "title": "12 - Platform Use",
+            "content": "We strive to provide a stable and secure user experience and continuously improve our services. If you encounter any technical or operational issue, please contact us via the support channels listed on this page, and we will address it as soon as possible."
+        },
+        "amendments": {
+            "title": "13 - Amendments to the Terms",
+            "content": "We may update these Terms from time to time. The updated version becomes effective upon publication on the Platform, and your continued use constitutes acceptance."
+        },
+        "governingLaw": {
+            "title": "14 - Governing Law & Jurisdiction",
+            "content": "These Terms are governed by the laws of the United Arab Emirates. The competent courts within the UAE shall have jurisdiction over any dispute, unless the law requires otherwise."
+        },
+        "contact": {
+            "title": "15 - Contact",
+            "content": "• Email: info@multicart.ae\n• Phone/WhatsApp: +201205222331"
+        }
+    },
+    "privacy": {
+        "overview": {
+            "title": "1 - Overview",
+            "content": "Cleenol Middle East respects your privacy and is committed to protecting your personal data collected when you use the MultiCart Zone platform, whether collected directly from you, automatically, or through approved service providers."
+        },
+        "dataWeCollect": {
+            "title": "2 - Data We Collect",
+            "content": "We may collect (depending on your use of the Platform):\n• Identity and contact data: name, email address, phone number, shipping/billing address.\n• Order and transaction data: purchase details, payment status, refunds, delivery details.\n• Technical and usage data: IP address, device/browser type, operating system, browsing logs, cookies.\n• Marketing and communications preferences: preferences for receiving messages and your interactions with them."
+        },
+        "howWeCollect": {
+            "title": "3 - How We Collect Data",
+            "content": "• Directly from you: when you register, purchase, contact customer service, or enter delivery information.\n• Automatically: through usage logs, cookies, and similar technologies.\n• From service providers: such as payment, shipping, analytics, and anti-fraud providers, to the extent necessary to deliver the service."
+        },
+        "whyWeUse": {
+            "title": "4 - Why We Use Your Data",
+            "content": "We use your data to:\n• Create and manage accounts, fulfill orders, and provide after-sales services.\n• Process payments, conduct security verification, and prevent fraud.\n• Improve Platform performance, user experience, and analytics.\n• Send operational notifications related to orders or your account."
+        },
+        "dataSharing": {
+            "title": "5 - Data Sharing",
+            "content": "We may share your data, to the minimum extent necessary, with:\n• Service providers: payment, shipping, hosting, support, analytics (under our instructions).\n• Official authorities: where there is a legal obligation or a valid official request.\nWe confirm that we do not sell your personal data to any third party."
+        },
+        "cookies": {
+            "title": "6 - Cookies",
+            "content": "We use cookies to operate and improve the Platform and measure performance. You can disable cookies through your browser settings; however, this may affect certain Platform features."
+        },
+        "dataRetention": {
+            "title": "7 - Data Retention",
+            "content": "We retain your data for as long as necessary to provide services, comply with legal and regulatory requirements, resolve disputes, and prevent fraud. We then delete or anonymize it when it is no longer needed."
+        },
+        "informationSecurity": {
+            "title": "8 - Information Security",
+            "content": "We protect your data through appropriate technical and administrative security controls and review them periodically to ensure their continued effectiveness."
+        },
+        "yourRights": {
+            "title": "9 - Your Rights",
+            "content": "You may request:\n• Access to your data or a copy of it,\n• Correction of inaccurate data,\n• Deletion of data as permitted by law."
+        },
+        "policyUpdates": {
+            "title": "10 - Policy Updates",
+            "content": "We may update this Policy as needed. The updated version becomes effective upon publication on the Platform, together with an updated effective date."
+        },
+        "contact": {
+            "title": "11 - Contact",
+            "content": "• Email: info@multicart.ae\n• Phone/WhatsApp: +201205222331"
+        }
+    },
+    "returnsTitle": "Return, Exchange & Refund Policy",
+    "returns": {
+        "policyObjective": {
+            "title": "1 - Policy Objective",
+            "content": "We aim to provide a clear and fair shopping experience. This page explains when and how you can return a product, request an exchange, or request a refund."
+        },
+        "whenCanRequest": {
+            "title": "2 - When Can I Request a Return or Exchange?",
+            "content": "You may submit a return or exchange request within [3] days from the date you receive your order, provided that:\n• The product is unused and in its original condition.\n• The product is in its original packaging and includes all accessories (if any).\n• You provide the order number or proof of purchase from MultiCart Zone.\nIf the product is damaged upon delivery or differs from what you ordered, please report it within 48 hours of receipt."
+        },
+        "casesAccepted": {
+            "title": "3 - Cases in Which We Accept Returns/Exchanges",
+            "content": "We accept requests in the following cases (subject to verification):\n• You received an incorrect item (different from what was ordered).\n• The product has a manufacturing defect.\n• The product was damaged upon delivery due to shipping or packaging.\n• You wish to return the item within the allowed period while meeting the conditions (e.g., change of mind / not suitable) — as clarified by the fees outlined in this Policy."
+        },
+        "casesNotAccepted": {
+            "title": "4 - Cases in Which We Do Not Accept Returns/Exchanges",
+            "content": "Returns/exchanges cannot be accepted in the following cases (unless the item was damaged upon delivery or a confirmed manufacturing defect exists):\n• Products that have been opened or used if they fall under health/personal care or consumable categories where validity/safety is affected after opening.\n• Products missing original packaging or essential accessories.\n• Products damaged due to misuse or improper storage.\n• Products that have been tampered with, or where seals/serial numbers/protective labels (if any) have been removed.\n• Digital products or gift cards (if any) once issued/used."
+        },
+        "howToSubmit": {
+            "title": "5 - How Do I Submit a Return/Exchange Request?",
+            "content": "To submit a request:\n1. Prepare: order number + reason for the request + clear photos (especially for damage/defects).\n2. Contact us via: info@multicart.ae or WhatsApp/Phone.\n3. We will review your request and inform you of the next step within [24–48 business hours]."
+        },
+        "returnSteps": {
+            "title": "6 - Return Steps (After Request Approval)",
+            "content": "Once your return request is approved:\n• You will be provided with return instructions and the method for handing over the product.\n• The product must be returned as per the acceptance conditions (unused + original packaging + all contents).\n• Once the product reaches us/our inspection center, we will inspect it to confirm it meets the return conditions.\nNote: If the returned item arrives in a different condition (used/incomplete/without packaging), the return may be rejected and the item will be sent back to you."
+        },
+        "exchanges": {
+            "title": "7 - Exchanges (Replacement)",
+            "content": "• Exchanges are subject to stock availability.\n• If the same product is not available, you may choose to:\no Exchange it for another product of the same value, or\no Pay/receive the price difference after your approval, or\no Convert the request into a refund if you prefer.\n• Exchange timelines depend on the delivery area and shipping plan."
+        },
+        "feesShipping": {
+            "title": "8 - Fees & Shipping Costs",
+            "content": "• If the reason is our error, or the product is damaged/has a manufacturing defect upon delivery:\nMultiCart Zone will bear the return/exchange costs and no fees will be deducted from you.\n• If the reason is change of mind/not suitable (within the allowed period and in acceptable condition):\no The customer bears return and shipping fees, if applicable."
+        },
+        "refundProcess": {
+            "title": "9 - When and How Is the Refund Processed?",
+            "content": "After receiving the returned item, inspecting it, and approving the return:\n• Refunds will be processed to the original payment method whenever possible.\n• Within [7] business days from the date the return is approved.\n• The time for funds to appear in your account may vary depending on your bank/payment provider.\nCash on Delivery (if available)\nIf the order was paid via Cash on Delivery:\n• Refunds will be issued via [bank transfer/store credit/purchase voucher] as agreed with the customer."
+        },
+        "refundDelayed": {
+            "title": "10 - What If the Refund Is Delayed?",
+            "content": "If the amount does not appear after the stated timeframe:\n• Please contact us with your order number, and we will immediately verify the refund status with the payment provider/bank."
+        },
+        "contact": {
+            "title": "11 - Contact",
+            "content": "• Email: info@multicart.ae\n• WhatsApp/Phone: +201205222331"
+        }
+    }
 }

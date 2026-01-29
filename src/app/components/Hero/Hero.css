@@ -22,6 +22,17 @@
   padding: 3rem 3rem;
   border-radius: 0 16px 16px 0;
   color: black;
+  position: relative;
+}
+
+.hero_overlay {
+  display: none;
+}
+
+.hero_content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
 }
 .hero .hero_right {
   width: 50%;
@@ -51,6 +62,56 @@
   height: 50%;
   border-radius: 16px 0 0 16px;
 }
+.hero_content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.hero_content span {
+  color: black;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  width: 107px;
+  height: 30px;
+  border-radius: 16px;
+  text-align: center;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+.hero_content h1 {
+  font-size: 35px;
+  font-weight: bold;
+  line-height: 1.2;
+  width: 40%;
+  color: black;
+  margin: 0.4rem 0;
+}
+.hero_content p {
+  width: 40%;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: black;
+  margin: 0.4rem 0;
+}
+.hero_content a {
+  text-decoration: none;
+  background-color: rgba(215, 223, 43, 1);
+  padding: 10px;
+  border-radius: 24px;
+  font-weight: bold;
+  width: 160px;
+  height: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: black;
+  margin-top: 0.3rem;
+}
+
+/* Legacy support for old selectors */
 .hero_left span {
   color: black;
   background-color: rgba(255, 255, 255, 0.9);
@@ -135,7 +196,35 @@
     width: 100%;
     background-image: url("/images/Bannermobcopy.png");
     height: 400px;
+    padding: 2rem 1.5rem;
   }
+  
+  /* Overlay غامق للموبايل فقط */
+  .hero_overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+    z-index: 1;
+    border-radius: 0 16px 16px 0;
+  }
+  
+  .hero_content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
   .hero_right {
     display: none;
   }
@@ -144,6 +233,49 @@
     height: auto;
     border-radius: 0;
   }
+  
+  /* جعل النص أبيض في الموبايل */
+  .hero_content span {
+    font-size: 10px;
+    width: 80px;
+    height: 25px;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: black;
+    margin-bottom: 0.5rem;
+  }
+  .hero_content h1 {
+    font-size: 1.3rem;
+    width: 95%;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: 700;
+    margin: 0.5rem 0;
+  }
+  .hero_content p {
+    width: 90%;
+    font-size: 0.8rem;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    line-height: 1.4;
+    margin: 0.5rem 0;
+  }
+  .hero_content a {
+    text-decoration: none;
+    background-color: rgba(215, 223, 43, 1);
+    padding: 0.5rem;
+    width: 120px;
+    height: 30px;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    margin-top: 0.5rem;
+  }
+  
+  /* Legacy support */
   .hero_left span {
     font-size: 10px;
     width: 80px;
@@ -152,10 +284,14 @@
   .hero_left h1 {
     font-size: 1.3rem;
     width: 95%;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
   .hero_left p {
     width: 90%;
     font-size: 0.8rem;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   }
   .hero_left a {
     text-decoration: none;

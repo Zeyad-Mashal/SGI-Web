@@ -9,9 +9,11 @@ import "swiper/css/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import GetAllBrands from "@/API/Brands/GetAllBrands";
+import { useRouter } from "next/navigation";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 const Brands = () => {
+  const router = useRouter();
   const [translations, setTranslations] = useState(en);
   useEffect(() => {
     const lang = localStorage.getItem("lang") || "en";
@@ -97,7 +99,13 @@ const Brands = () => {
           >
             {allBrands.map((brand) => (
               <SwiperSlide key={brand._id}>
-                <div className="brand_card">
+                <div 
+                  className="brand_card"
+                  onClick={() => {
+                    router.push(`/shop?brand=${brand._id}`);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
                   <Image
                     src={brand.logo}
                     alt="brand image"

@@ -16,6 +16,7 @@ import { IoMdClose } from "react-icons/io";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import GetProducts from "@/API/Products/GetProducts";
 import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
+import GetProductsByBrand from "@/API/Brands/GetProductsByBrand";
 import GetCategories from "@/API/Categories/GetCategories";
 import Image from "next/image";
 import { addToCart } from "@/utils/cartUtils";
@@ -33,6 +34,7 @@ export default function Shop() {
   const router = useRouter();
   const pathname = usePathname();
   const categoryId = searchParams.get("category");
+  const brandId = searchParams.get("brand");
   const pageParam = searchParams.get("page");
   const currentPage = pageParam && !isNaN(pageParam) && parseInt(pageParam, 10) > 0 
     ? parseInt(pageParam, 10) 
@@ -69,8 +71,14 @@ export default function Shop() {
   }, []);
 
   useEffect(() => {
-    // Fetch products when categoryId or page changes
-    if (categoryId) {
+    // Fetch products when categoryId, brandId or page changes
+    if (brandId) {
+      getProductsByBrand(brandId, currentPage);
+      // Clear category filters when brand is selected
+      setSelectedCategoryId(null);
+      setSelectedSubCategoryId(null);
+      setExpandedCategory(null);
+    } else if (categoryId) {
       getProductsByCategory(categoryId, currentPage);
       // Find which category/subcategory is selected
       let foundMainCategory = null;
@@ -102,7 +110,7 @@ export default function Shop() {
       setSelectedSubCategoryId(null);
       setExpandedCategory(null);
     }
-  }, [categoryId, currentPage, categories]);
+  }, [categoryId, brandId, currentPage, categories]);
 
   // Debug: Log pagination state
   useEffect(() => {
@@ -136,6 +144,13 @@ export default function Shop() {
       setAllProducts(products);
       setOriginalProducts(products);
     }, setError, setLoading, categoryId, page, setPagination);
+  };
+
+  const getProductsByBrand = (brandId, page = 1) => {
+    GetProductsByBrand((products) => {
+      setAllProducts(products);
+      setOriginalProducts(products);
+    }, setError, setLoading, brandId, page, setPagination);
   };
 
   const handleCategoryClick = (categoryIndex) => {
@@ -174,7 +189,7 @@ export default function Shop() {
     setSelectedCategoryId(null);
     setSelectedSubCategoryId(null);
     setExpandedCategory(null);
-    // Remove category from URL and fetch all products
+    // Remove category and brand from URL and fetch all products
     router.push(pathname);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -211,7 +226,7 @@ export default function Shop() {
             </h2>
             
             {/* Clear Filter Button */}
-            {(selectedCategoryId || selectedSubCategoryId) && (
+            {(selectedCategoryId || selectedSubCategoryId || brandId) && (
               <button 
                 className="clear_filter_btn"
                 onClick={clearFilter}
@@ -332,7 +347,7 @@ export default function Shop() {
                 <span className="loader"></span>
                 <span className="loader"></span>
               </div>
-            ) : allProducts.length === 0 && (selectedCategoryId || selectedSubCategoryId) ? (
+            ) : allProducts.length === 0 && (selectedCategoryId || selectedSubCategoryId || brandId) ? (
               <div className="no_products_message">
                 <div className="no_products_icon">
                   <FiBox />
