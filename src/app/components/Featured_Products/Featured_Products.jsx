@@ -59,7 +59,14 @@ const Featured_Products = () => {
   const [error, setError] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
   const getFeaturedProduct = () => {
-    GetFeaturedProducts(setAllProducts, setError, setLoading);
+    GetFeaturedProducts((products) => {
+      // فلترة المنتجات لعرض فقط التي type = "featured"
+      const featuredProducts = products.filter((product) => {
+        const productType = product.type || product.Type || "";
+        return productType.toLowerCase() === "featured";
+      });
+      setAllProducts(featuredProducts);
+    }, setError, setLoading);
   };
   return (
     <div className="Featured_Products">
