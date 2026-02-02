@@ -1,4 +1,4 @@
-const URL = "https://sgi-dy1p.onrender.com/api/v1/products/get";
+const URL = "https://sgi-dy1p.onrender.com/api/v1/product/get";
 const GetProductsByBrand = async (setProductsByBrand, setError, setLoading, brandId, page = 1, setPagination) => {
     setLoading(true)
     const lang = localStorage.getItem("lang")
@@ -14,7 +14,9 @@ const GetProductsByBrand = async (setProductsByBrand, setError, setLoading, bran
         const result = await response.json();
 
         if (response.ok) {
-            setProductsByBrand(result.products || [])
+            // تأكد من أن products هو array حتى لو كان null أو undefined
+            const products = Array.isArray(result.products) ? result.products : [];
+            setProductsByBrand(products)
 
             if (setPagination) {
                 // Handle pagination data   

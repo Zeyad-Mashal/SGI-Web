@@ -156,6 +156,18 @@
   color: rgba(223, 144, 0, 1);
 }
 
+.no_subcategories_message {
+  padding: 15px 20px;
+  text-align: center;
+}
+
+.no_subcategories_message p {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+  margin: 0;
+  font-style: italic;
+}
+
 .clear_filter_btn {
   width: 100%;
   display: flex;

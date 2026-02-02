@@ -140,27 +140,61 @@ export default function Shop() {
   };
 
   const getProductsByCategory = (categoryId, page = 1) => {
+    // امسح المنتجات السابقة فوراً قبل جلب المنتجات الجديدة
+    setAllProducts([]);
+    setOriginalProducts([]);
+    
     GetProductSByCategory((products) => {
-      setAllProducts(products);
-      setOriginalProducts(products);
+      // تأكد من أن products هو array حتى لو كان فارغاً
+      const productsArray = Array.isArray(products) ? products : [];
+      setAllProducts(productsArray);
+      setOriginalProducts(productsArray);
     }, setError, setLoading, categoryId, page, setPagination);
   };
 
   const getProductsByBrand = (brandId, page = 1) => {
+    // امسح المنتجات السابقة فوراً قبل جلب المنتجات الجديدة
+    setAllProducts([]);
+    setOriginalProducts([]);
+    
     GetProductsByBrand((products) => {
-      setAllProducts(products);
-      setOriginalProducts(products);
+      // تأكد من أن products هو array حتى لو كان فارغاً
+      const productsArray = Array.isArray(products) ? products : [];
+      setAllProducts(productsArray);
+      setOriginalProducts(productsArray);
     }, setError, setLoading, brandId, page, setPagination);
   };
 
   const handleCategoryClick = (categoryIndex) => {
+    const category = categories[categoryIndex];
+    const hasSubCategories = category && category.subCategories && category.subCategories.length > 0;
+    
     if (expandedCategory === categoryIndex) {
+      // إذا كانت مفتوحة، أغلقها
       setExpandedCategory(null);
+      // Reset subcategory selection
+      setSelectedSubCategoryId(null);
+      // إذا كانت الـ category ليس لديها subcategories، امسح المنتجات
+      if (!hasSubCategories) {
+        setAllProducts([]);
+        setSelectedCategoryId(null);
+        // امسح الـ category من الـ URL
+        router.push(pathname);
+      }
     } else {
+      // افتح الـ category
       setExpandedCategory(categoryIndex);
+      // Reset subcategory selection when expanding main category
+      setSelectedSubCategoryId(null);
+      
+      // إذا كانت الـ category ليس لديها subcategories، امسح المنتجات وأظهر رسالة
+      if (!hasSubCategories) {
+        setAllProducts([]);
+        setSelectedCategoryId(null);
+        // امسح الـ category من الـ URL
+        router.push(pathname);
+      }
     }
-    // Reset subcategory selection when expanding/collapsing main category
-    setSelectedSubCategoryId(null);
   };
 
   const handleSubCategoryClick = (subCategoryId) => {
@@ -253,8 +287,10 @@ export default function Shop() {
                         className={`category_main_item ${isSelected ? "selected" : ""} ${isExpanded ? "expanded" : ""}`}
                         onClick={() => {
                           if (hasSubCategories) {
+                            // إذا كان لديها subcategories، افتح/أغلق القائمة
                             handleCategoryClick(index);
                           } else {
+                            // إذا لم يكن لديها subcategories، اختر الـ category مباشرة
                             handleMainCategoryClick(category._id);
                           }
                         }}
@@ -271,26 +307,39 @@ export default function Shop() {
                       {/* Subcategories */}
                       {hasSubCategories && isExpanded && (
                         <div className="subcategories_list">
-                          {category.subCategories.map((subCategory) => {
-                            const subCategoryName = subCategory.name?.[lang] || subCategory.name?.en || subCategory.name || "Unnamed Subcategory";
-                            const isSubSelected = selectedSubCategoryId === subCategory._id;
-                            
-                            return (
-                              <div
-                                key={subCategory._id}
-                                className={`subcategory_item ${isSubSelected ? "selected" : ""}`}
-                                onClick={() => handleSubCategoryClick(subCategory._id)}
-                              >
-                                {subCategoryName}
-                              </div>
-                            );
-                          })}
+                          {category.subCategories && category.subCategories.length > 0 ? (
+                            category.subCategories.map((subCategory) => {
+                              const subCategoryName = subCategory.name?.[lang] || subCategory.name?.en || subCategory.name || "Unnamed Subcategory";
+                              const isSubSelected = selectedSubCategoryId === subCategory._id;
+                              
+                              return (
+                                <div
+                                  key={subCategory._id}
+                                  className={`subcategory_item ${isSubSelected ? "selected" : ""}`}
+                                  onClick={() => handleSubCategoryClick(subCategory._id)}
+                                >
+                                  {subCategoryName}
+                                </div>
+                              );
+                            })
+                          ) : (
+                            <div className="no_subcategories_message">
+                              <p>No subcategories available</p>
+                            </div>
+                          )}
                         </div>
                       )}
-                    </div>
+                      
+                      {/* إذا كانت الـ category مفتوحة وليس لديها subcategories، امسح المنتجات */}
+                      {!hasSubCategories && isExpanded && (
+                        <div className="no_subcategories_message">
+                          <p>This category has no subcategories</p>
+                        </div>
+                      )}
+          </div>
                   );
                 })}
-              </div>
+          </div>
             ) : (
               <div className="no_categories">No categories available</div>
             )}
@@ -430,57 +479,57 @@ export default function Shop() {
                       </>
                     ) : (
                       <>
-                        <a href={`/product/${item._id}`}>
-                          <div className="Featured_img">
-                            <Image
-                              src={
-                                item.picUrls && item.picUrls[0]
-                                  ? item.picUrls[0]
-                                  : "/images/empty_product.png"
-                              }
-                              alt="product image"
+                    <a href={`/product/${item._id}`}>
+                      <div className="Featured_img">
+                        <Image
+                          src={
+                            item.picUrls && item.picUrls[0]
+                              ? item.picUrls[0]
+                              : "/images/empty_product.png"
+                          }
+                          alt="product image"
                               width={1000}
                               height={1000}
-                              loading="lazy"
-                            />
-                            <FontAwesomeIcon
-                              icon={isFavorited(item._id) ? faHeartSolid : faHeart}
-                              className={`heart-icon ${
-                                isFavorited(item._id) ? "favorited" : ""
-                              }`}
-                              onClick={(e) => handleFavoriteClick(e, item)}
-                              style={{
-                                color: isFavorited(item._id)
-                                  ? "#ef4444"
-                                  : "inherit",
-                                cursor: "pointer",
-                                transition: "all 0.3s ease",
-                                transform: isFavorited(item._id)
-                                  ? "scale(1.2)"
-                                  : "scale(1)",
-                              }}
-                            />
-                            <p>Featured</p>
-                          </div>
-                          <div className="Featured_stars">
+                          loading="lazy"
+                        />
+                        <FontAwesomeIcon
+                          icon={isFavorited(item._id) ? faHeartSolid : faHeart}
+                          className={`heart-icon ${
+                            isFavorited(item._id) ? "favorited" : ""
+                          }`}
+                          onClick={(e) => handleFavoriteClick(e, item)}
+                          style={{
+                            color: isFavorited(item._id)
+                              ? "#ef4444"
+                              : "inherit",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            transform: isFavorited(item._id)
+                              ? "scale(1.2)"
+                              : "scale(1)",
+                          }}
+                        />
+                        <p>Featured</p>
+                      </div>
+                      <div className="Featured_stars">
                             <p>(m.order 30 units)</p>
-                          </div>
-                          <h2>{item.name}</h2>
-                        </a>
+                      </div>
+                      <h2>{item.name}</h2>
+                    </a>
 
-                        <div className="Featured_price">
-                          <h3>AED {item.price}</h3>
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              addToCart(item, 1);
-                              showToast("Product added to cart!", "success");
-                            }}
-                          >
-                            Add to Cart
-                          </button>
-                        </div>
+                    <div className="Featured_price">
+                      <h3>AED {item.price}</h3>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          addToCart(item, 1);
+                          showToast("Product added to cart!", "success");
+                        }}
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                       </>
                     )}
                   </div>

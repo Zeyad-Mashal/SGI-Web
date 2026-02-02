@@ -14,7 +14,9 @@ const GetProductSByCategory = async (setProductsByCategory, setError, setLoading
         const result = await response.json();
 
         if (response.ok) {
-            setProductsByCategory(result.products)
+            // تأكد من أن products هو array حتى لو كان null أو undefined
+            const products = Array.isArray(result.products) ? result.products : [];
+            setProductsByCategory(products)
             if (setPagination) {
                 // Handle different possible pagination response structures
                 let paginationData = {
