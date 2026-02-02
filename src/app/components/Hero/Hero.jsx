@@ -22,6 +22,7 @@ const Hero = () => {
         <div className="hero_content">
           <span>{translations.b2bsolution}</span>
           <h1>{translations.premiumwholesalecleaninghygieneproducts}</h1>
+          <p className="direct_supply_text">{translations.directsupplyfrommanufacturer}</p>
           <p>
             {translations.professionalgradecleaningsuppliestrustedbythousands}
           </p>
