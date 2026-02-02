@@ -33,7 +33,7 @@ const Brands = () => {
   const [error, setError] = useState(null);
   
   // العلامات التجارية المسموح بها فقط
-  const allowedBrands = ["Cleenol", "INDUQUIM", "SEITZ"];
+  const allowedBrands = ["Cleenol", "INDUQUIM", "SEITZ", "THERMO","WRGHTS", "RULOPK", "SPELCO"];
   
   const getAllBrands = () => {
     GetAllBrands((brands) => {

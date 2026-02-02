@@ -653,7 +653,7 @@ const Navbar = () => {
                     />
                     <div className="search_item_info">
                       <p>{item.name}</p>
-                      <p>{item.price} AED</p>
+                      <p>{item.price} {translations.aed}</p>
                     </div>
                   </a>
                 </div>

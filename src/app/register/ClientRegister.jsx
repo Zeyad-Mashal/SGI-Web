@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./register.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +10,9 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import Register from "@/API/Register/Register";
 import SuccessModal from "@/app/components/SuccessModal/SuccessModal";
+import en from "../../translation/en.json";
+import ar from "../../translation/ar.json";
+
 const ClientRegister = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,13 +25,45 @@ const ClientRegister = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [lang, setLang] = useState("en");
+  const [translations, setTranslations] = useState(en);
+
+  useEffect(() => {
+    // Get language from localStorage
+    const savedLang = localStorage.getItem("lang") || "en";
+    setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
+
+    // Listen for language changes
+    const handleStorageChange = () => {
+      const newLang = localStorage.getItem("lang") || "en";
+      setLang(newLang);
+      setTranslations(newLang === "ar" ? ar : en);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also check periodically for language changes
+    const interval = setInterval(() => {
+      const currentLang = localStorage.getItem("lang") || "en";
+      if (currentLang !== lang) {
+        setLang(currentLang);
+        setTranslations(currentLang === "ar" ? ar : en);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [lang]);
 
   // File size validation - max 200 KB
   const MAX_FILE_SIZE = 200 * 1024; // 200 KB in bytes
 
   const validateFileSize = (file) => {
     if (file && file.size > MAX_FILE_SIZE) {
-      setError(`File size exceeds 200 KB. Please choose a smaller file.`);
+      setError(translations.fileSizeExceeds);
       return false;
     }
     return true;
@@ -69,15 +104,15 @@ const ClientRegister = () => {
   const handleRegister = () => {
     // Validation
     if (!name.trim()) {
-      setError("Please enter company name");
+      setError(translations.pleaseEnterCompanyName);
       return;
     }
     if (!email.trim()) {
-      setError("Please enter email");
+      setError(translations.pleaseEnterEmail);
       return;
     }
     if (!phone.trim()) {
-      setError("Please enter phone number");
+      setError(translations.pleaseEnterPhoneNumber);
       return;
     }
 
@@ -140,20 +175,20 @@ const ClientRegister = () => {
                 <FontAwesomeIcon icon={faInstagram} className="icon" />
               </a>
             </div>
-            <h3>high-quality cleaning and hygiene solutions</h3>
+            <h3>{translations.highQualityCleaningSolutions}</h3>
           </div>
         </div>
         <div className="register-form">
-          <h1>Create an account</h1>
+          <h1>{translations.createAnAccount}</h1>
           <p>
-            Already have an account? <a href="/login">Sign In</a>
+            {translations.alreadyHaveAccount} <a href="/login">{translations.signIn}</a>
           </p>
-          <a href="/">Go To Home Page</a>
+          <a href="/">{translations.goToHomePage}</a>
 
           <div className="form-content">
             <label>
               <h3>
-                Company Name<span>*</span>
+                {translations.companyName}<span>*</span>
               </h3>
               <input
                 type="text"
@@ -163,7 +198,7 @@ const ClientRegister = () => {
             </label>
             <label>
               <h3>
-                Email<span>*</span>
+                {translations.email}<span>*</span>
               </h3>
               <input
                 type="text"
@@ -173,19 +208,19 @@ const ClientRegister = () => {
             </label>
             <label>
               <h3>
-                Phone Number<span>*</span>
+                {translations.phoneNumber}<span>*</span>
               </h3>
               <input
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="05 XXX XXXX"
+                placeholder={translations.phonePlaceholder}
               />
             </label>
             <div className="form-optional wrap">
               <label>
                 <h3>
-                  Tax Registration Number<span>( optional )</span>
+                  {translations.taxRegistrationNumber}<span>{translations.optional}</span>
                 </h3>
                 <input
                   type="text"
@@ -195,7 +230,7 @@ const ClientRegister = () => {
               </label>
               <label>
                 <h3>
-                  Tax Number<span>( optional )</span>
+                  {translations.taxNumber}<span>{translations.optional}</span>
                 </h3>
                 <input
                   type="text"
@@ -207,7 +242,7 @@ const ClientRegister = () => {
             <div className="form-optional wrap">
               <label>
                 <h3>
-                  VAT File <span>( optional )</span>
+                  {translations.vatFile} <span>{translations.optional}</span>
                 </h3>
                 <input
                   type="file"
@@ -228,7 +263,7 @@ const ClientRegister = () => {
               </label>
               <label>
                 <h3>
-                  Commercial File <span>( optional )</span>
+                  {translations.commercialFile} <span>{translations.optional}</span>
                 </h3>
                 <input
                   type="file"
@@ -249,7 +284,7 @@ const ClientRegister = () => {
               </label>
               <label>
                 <h3>
-                  Expiry Date<span>( optional )</span>
+                  {translations.expiryDate}<span>{translations.optional}</span>
                 </h3>
                 <input
                   type="date"
@@ -260,7 +295,7 @@ const ClientRegister = () => {
             </div>
             <div className="register-terms">
               <input type="checkbox" />
-              <h4>Agree to the Terms & Condition</h4>
+              <h4>{translations.agreeToTerms}</h4>
             </div>
             {error && (
               <div
@@ -282,7 +317,7 @@ const ClientRegister = () => {
               </div>
             )}
             <button onClick={handleRegister}>
-              {loading ? "Creating..." : "Create an account"}
+              {loading ? translations.creating : translations.createAnAccount}
             </button>
           </div>
         </div>

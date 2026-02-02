@@ -24,9 +24,13 @@ import CreateOrder from "@/API/Orders/CreateOrder";
 import CreatePO from "@/API/PO/CreatePO";
 import { useToast } from "@/context/ToastContext";
 import Trader from "@/API/Trader/Trader";
+import en from "../../translation/en.json";
+import ar from "../../translation/ar.json";
 
 const ClientProfile = () => {
   const { showToast } = useToast();
+  const [lang, setLang] = useState("en");
+  const [translations, setTranslations] = useState(en);
   const [recentOrders, setRecentOrders] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -52,6 +56,11 @@ const ClientProfile = () => {
   const [traderDetails, setTraderDetails] = useState(null);
   const [traderStats, setTraderStats] = useState(null);
   useEffect(() => {
+    // Get language from localStorage
+    const savedLang = localStorage.getItem("lang") || "en";
+    setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
+    
     const id = localStorage.getItem("userId");
     setUserId(id || "");
     if (id) {
@@ -60,7 +69,30 @@ const ClientProfile = () => {
       getPOAddresses();
     }
     getTraderDetails();
-  }, []);
+
+    // Listen for language changes
+    const handleStorageChange = () => {
+      const newLang = localStorage.getItem("lang") || "en";
+      setLang(newLang);
+      setTranslations(newLang === "ar" ? ar : en);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also check periodically for language changes
+    const interval = setInterval(() => {
+      const currentLang = localStorage.getItem("lang") || "en";
+      if (currentLang !== lang) {
+        setLang(currentLang);
+        setTranslations(currentLang === "ar" ? ar : en);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [lang]);
   const getTraderDetails = () => {
     Trader(setTraderDetails, setTraderStats, setError, setLoading);
   };
@@ -184,7 +216,7 @@ const ClientProfile = () => {
       // Open PO modal
       setIsPOModalOpen(true);
     } else {
-      showToast("Purchase order image not found", "error");
+      showToast(translations.purchaseOrderImageNotFound, "error");
     }
   };
 
@@ -234,18 +266,18 @@ const ClientProfile = () => {
   const handleSubmitReorder = async () => {
     // Validation
     if (!reorderCity.trim()) {
-      setReorderError("Please enter city");
+      setReorderError(translations.pleaseEnterCity);
       return;
     }
     if (
       reorderSelectedAddressIndex === null ||
       !reorderAddresses[reorderSelectedAddressIndex]
     ) {
-      setReorderError("Please select a delivery address");
+      setReorderError(translations.pleaseSelectDeliveryAddress);
       return;
     }
     if (reorderItems.length === 0) {
-      setReorderError("No items to reorder");
+      setReorderError(translations.noItemsToReorder);
       return;
     }
 
@@ -286,7 +318,7 @@ const ClientProfile = () => {
     );
 
     if (result) {
-      setReorderSuccess("Order placed successfully!");
+      setReorderSuccess(translations.orderPlacedSuccessfully);
       // Refresh orders list
       if (userId) {
         GetRecentOrders(setRecentOrders, setError, setLoading);
@@ -324,12 +356,12 @@ const ClientProfile = () => {
 
     const allowed = ["image/jpeg", "image/png", "application/pdf"];
     if (!allowed.includes(file.type)) {
-      alert("Invalid file type. Please upload JPG, PNG, or PDF.");
+      alert(translations.invalidFileType);
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      alert("File too large. Maximum size is 10MB.");
+      alert(translations.fileTooLarge);
       return;
     }
 
@@ -352,7 +384,7 @@ const ClientProfile = () => {
     );
 
     if (linkExists) {
-      alert("This link has already been added.");
+      alert(translations.linkAlreadyAdded);
       setPurchaseOrderLink("");
       return;
     }
@@ -415,34 +447,34 @@ const ClientProfile = () => {
   const handleSubmitPO = async () => {
     // Validation
     if (!poUserName.trim()) {
-      setPoError("Please enter your name");
+      setPoError(translations.pleaseEnterYourName);
       return;
     }
     if (!poPhone.trim()) {
-      setPoError("Please enter your phone number");
+      setPoError(translations.pleaseEnterYourPhoneNumber);
       return;
     }
     if (!poEmail.trim()) {
-      setPoError("Please enter your email");
+      setPoError(translations.pleaseEnterYourEmail);
       return;
     }
     if (!poCity.trim()) {
-      setPoError("Please enter city");
+      setPoError(translations.pleaseEnterCity);
       return;
     }
     if (
       poSelectedAddressIndex === null ||
       !poAddresses[poSelectedAddressIndex]
     ) {
-      setPoError("Please select a delivery address");
+      setPoError(translations.pleaseSelectDeliveryAddress);
       return;
     }
     if (!currentPOItem) {
-      setPoError("No purchase order item selected");
+      setPoError(translations.noPurchaseOrderItemSelected);
       return;
     }
     if (!poTotalAmount || parseFloat(poTotalAmount) <= 0) {
-      setPoError("Please enter a valid total amount");
+      setPoError(translations.pleaseEnterValidTotalAmount);
       return;
     }
 
@@ -492,14 +524,14 @@ const ClientProfile = () => {
         // Close modal immediately
         closePOModal();
         // Show success toast
-        showToast("Purchase order submitted successfully!", "success");
+        showToast(translations.purchaseOrderSubmittedSuccessfully, "success");
         // Refresh orders list
         if (userId) {
           GetRecentOrders(setRecentOrders, setError, setLoading);
         }
       }
     } catch (error) {
-      setPoError("An error occurred while submitting the purchase order");
+      setPoError(translations.errorOccurredSubmittingPO);
       setPoLoading(false);
     }
   };
@@ -546,15 +578,15 @@ const ClientProfile = () => {
               <BsBoxSeam />
               <div className="bottom_item_content">
                 <h3>{traderStats?.totalOrders}</h3>
-                <p>Total Orders</p>
+                <p>{translations.totalOrders}</p>
               </div>
             </div>
             <div className="profile_bottom_item">
               <MdOutlineAttachMoney />
 
               <div className="bottom_item_content">
-                <h3>{traderStats?.totalPaid.toFixed(0)} AED</h3>
-                <p>Total Spent</p>
+                <h3>{traderStats?.totalPaid.toFixed(0)} {translations.aed}</h3>
+                <p>{translations.totalSpent}</p>
               </div>
             </div>
             {/* <div className="profile_bottom_item">
@@ -571,7 +603,7 @@ const ClientProfile = () => {
           <div className="RecentOrders_title">
             <h2>
               <RiFilePaper2Line />
-              RecentOrders
+              {translations.recentOrders}
             </h2>
             <button
               onClick={() => setIsAllOrdersModalOpen(true)}
@@ -584,14 +616,14 @@ const ClientProfile = () => {
                 fontSize: "inherit",
               }}
             >
-              View All
+              {translations.viewAll}
             </button>
           </div>
 
           {/* Purchase Order Upload Section */}
           <div className="purchase_order_section">
-            <h3>Upload a purchase order</h3>
-            <p>Select a document to complete your order easily</p>
+            <h3>{translations.uploadPurchaseOrder}</h3>
+            <p>{translations.selectDocumentToComplete}</p>
 
             <div
               className="upload_box"
@@ -604,10 +636,10 @@ const ClientProfile = () => {
             >
               <div className="upload_content">
                 <span className="upload_icon">⤴️</span>
-                <p>Select a file or drag and drop here</p>
-                <small>JPG, PNG or PDF — Max size 1MB</small>
+                <p>{translations.selectFileOrDragDrop}</p>
+                <small>{translations.jpgPngPdfMaxSize}</small>
                 <label className="upload_button">
-                  SELECT FILE
+                  {translations.selectFile}
                   <input
                     type="file"
                     accept=".jpg,.jpeg,.png,.pdf"
@@ -625,7 +657,7 @@ const ClientProfile = () => {
             <div className="link_input_box">
               <input
                 type="text"
-                placeholder="Or paste a purchase order link"
+                placeholder={translations.orPastePurchaseOrderLink}
                 value={purchaseOrderLink}
                 onChange={(e) => setPurchaseOrderLink(e.target.value)}
                 onKeyPress={(e) => {
@@ -639,7 +671,7 @@ const ClientProfile = () => {
                 onClick={handleLinkAdd}
                 disabled={!purchaseOrderLink.trim()}
               >
-                Add Link
+                {translations.addLink}
               </button>
             </div>
 
@@ -677,7 +709,7 @@ const ClientProfile = () => {
             {/* LINKS LIST PREVIEW */}
             {purchaseOrderImages.some((item) => item.isLink) && (
               <div className="uploaded_links_list">
-                <h4>Uploaded Links</h4>
+                <h4>{translations.uploadedLinks}</h4>
                 <ul>
                   {purchaseOrderImages.map((item, index) =>
                     item.isLink ? (
@@ -705,11 +737,11 @@ const ClientProfile = () => {
 
           <div className="RecentOrders_list">
             {loading ? (
-              <p>Loading orders...</p>
+              <p>{translations.loadingOrders}</p>
             ) : error ? (
               <p style={{ color: "red" }}>{error}</p>
             ) : recentOrders.length === 0 ? (
-              <p>No recent orders</p>
+              <p>{translations.noRecentOrders}</p>
             ) : (
               recentOrders.slice(0, 5).map((order, index) => {
                 const itemCount = order.cartItems?.length || 0;
@@ -730,8 +762,7 @@ const ClientProfile = () => {
                             : `Order #${index + 1}`}
                         </h3>
                         <p>
-                          {orderDate} • {itemCount} item
-                          {itemCount !== 1 ? "s" : ""}
+                          {orderDate} • {itemCount} {itemCount !== 1 ? translations.itemsPlural : translations.item}
                         </p>
                         <span
                           className="order_status_badge"
@@ -747,12 +778,12 @@ const ClientProfile = () => {
                             display: "inline-block",
                           }}
                         >
-                          {order.orderStatus || "New"}
+                          {order.orderStatus || translations.new}
                         </span>
                       </div>
                     </div>
                     <div className="RecentOrders_item_right">
-                      <h3>AED {order.totalAmount?.toFixed(2) || "0.00"}</h3>
+                      <h3>{translations.aed} {order.totalAmount?.toFixed(2) || "0.00"}</h3>
                     </div>
                   </div>
                 );
@@ -795,10 +826,10 @@ const ClientProfile = () => {
           >
             <div className="order_modal_header">
               <h2>
-                Order Details -{" "}
+                {translations.orderDetails} -{" "}
                 {selectedOrder.order_id
                   ? `ORD-${selectedOrder.order_id}`
-                  : "Order"}
+                  : translations.order}
               </h2>
               <button className="close_modal_btn" onClick={closeModal}>
                 <IoClose size={24} />
@@ -811,7 +842,7 @@ const ClientProfile = () => {
                 <div className="order_info_item">
                   <FaCalendarAlt />
                   <div>
-                    <p className="info_label">Order Date</p>
+                    <p className="info_label">{translations.orderDate}</p>
                     <p className="info_value">
                       {formatDateTime(selectedOrder.orderDate)}
                     </p>
@@ -837,13 +868,13 @@ const ClientProfile = () => {
                         marginRight: "8px",
                       }}
                     ></span>
-                    {selectedOrder.orderStatus || "New"}
+                    {selectedOrder.orderStatus || translations.new}
                   </div>
                 </div>
                 <div className="order_info_item">
                   <FaCreditCard />
                   <div>
-                    <p className="info_label">Payment Method</p>
+                    <p className="info_label">{translations.paymentMethod}</p>
                     <p className="info_value">
                       {selectedOrder.paymentWay || "N/A"}
                     </p>
@@ -852,9 +883,9 @@ const ClientProfile = () => {
                 <div className="order_info_item">
                   <MdOutlineAttachMoney />
                   <div>
-                    <p className="info_label">Total Amount</p>
+                    <p className="info_label">{translations.totalAmount}</p>
                     <p className="info_value" style={{ fontWeight: "bold" }}>
-                      AED {selectedOrder.totalAmount?.toFixed(2) || "0.00"}
+                      {translations.aed} {selectedOrder.totalAmount?.toFixed(2) || "0.00"}
                     </p>
                   </div>
                 </div>
@@ -862,22 +893,22 @@ const ClientProfile = () => {
 
               {/* Customer Info Section */}
               <div className="order_section">
-                <h3>Customer Information</h3>
+                <h3>{translations.customerInformation}</h3>
                 <div className="order_details_grid">
                   <div className="detail_item">
-                    <p className="detail_label">Name</p>
+                    <p className="detail_label">{translations.name}</p>
                     <p className="detail_value">
                       {selectedOrder.userName || "N/A"}
                     </p>
                   </div>
                   <div className="detail_item">
-                    <p className="detail_label">Phone</p>
+                    <p className="detail_label">{translations.phone}</p>
                     <p className="detail_value">
                       {selectedOrder.userPhone || "N/A"}
                     </p>
                   </div>
                   <div className="detail_item">
-                    <p className="detail_label">City</p>
+                    <p className="detail_label">{translations.city}</p>
                     <p className="detail_value">
                       {selectedOrder.city || "N/A"}
                     </p>
@@ -885,7 +916,7 @@ const ClientProfile = () => {
                   <div className="detail_item full_width">
                     <p className="detail_label">
                       <FaMapMarkerAlt style={{ marginRight: "8px" }} />
-                      Address
+                      {translations.address}
                     </p>
                     <p className="detail_value">
                       {selectedOrder.address ||
@@ -902,8 +933,7 @@ const ClientProfile = () => {
                 selectedOrder.cartItems.length > 0 && (
                   <div className="order_section">
                     <h3>
-                      Products ({selectedOrder.cartItems.length} item
-                      {selectedOrder.cartItems.length !== 1 ? "s" : ""})
+                      {translations.products} ({selectedOrder.cartItems.length} {selectedOrder.cartItems.length !== 1 ? translations.itemsPlural : translations.item})
                     </h3>
                     <div className="products_list">
                       {selectedOrder.cartItems.map((item, idx) => (
@@ -938,24 +968,24 @@ const ClientProfile = () => {
                             )}
                           </div>
                           <div className="product_info">
-                            <h4>{item.name || "Product"}</h4>
+                            <h4>{item.name || translations.product}</h4>
                             <div className="product_details">
                               <p>
-                                <span className="detail_label">SKU:</span>{" "}
+                                <span className="detail_label">{translations.sku}</span>{" "}
                                 {item.sku || "N/A"}
                               </p>
                               <p>
-                                <span className="detail_label">Quantity:</span>{" "}
+                                <span className="detail_label">{translations.quantity}:</span>{" "}
                                 {item.quantity || 1}
                               </p>
                               <p>
-                                <span className="detail_label">Price:</span> AED{" "}
+                                <span className="detail_label">{translations.price}:</span> {translations.aed}{" "}
                                 {item.price?.toFixed(2) || "0.00"}
                               </p>
                               <p className="product_total">
-                                <span className="detail_label">Total:</span>{" "}
+                                <span className="detail_label">{translations.total}:</span>{" "}
                                 <strong>
-                                  AED{" "}
+                                  {translations.aed}{" "}
                                   {(
                                     (item.price || 0) * (item.quantity || 1)
                                   ).toFixed(2)}
@@ -1002,7 +1032,7 @@ const ClientProfile = () => {
                     className="reorder_btn"
                     onClick={() => handleReorder(selectedOrder)}
                   >
-                    <FaRedo /> Reorder
+                    <FaRedo /> {translations.reorder}
                   </button>
                 </div>
               )}
@@ -1019,7 +1049,7 @@ const ClientProfile = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="order_modal_header">
-              <h2>Reorder Items</h2>
+              <h2>{translations.reorderItems}</h2>
               <button className="close_modal_btn" onClick={closeReorderModal}>
                 <IoClose size={24} />
               </button>
@@ -1036,7 +1066,7 @@ const ClientProfile = () => {
 
               {/* Products with Editable Quantities */}
               <div className="order_section">
-                <h3>Products</h3>
+                <h3>{translations.products}</h3>
                 <div className="products_list">
                   {reorderItems.map((item, index) => (
                     <div
@@ -1062,18 +1092,18 @@ const ClientProfile = () => {
                         )}
                       </div>
                       <div className="product_info">
-                        <h4>{item.name || "Product"}</h4>
+                        <h4>{item.name || translations.product}</h4>
                         <div className="product_details">
                           <p>
-                            <span className="detail_label">SKU:</span>{" "}
+                            <span className="detail_label">{translations.sku}</span>{" "}
                             {item.sku || "N/A"}
                           </p>
                           <p>
-                            <span className="detail_label">Price:</span> AED{" "}
+                            <span className="detail_label">{translations.price}:</span> {translations.aed}{" "}
                             {item.price?.toFixed(2) || "0.00"}
                           </p>
                           <div className="quantity_selector">
-                            <span className="detail_label">Quantity:</span>
+                            <span className="detail_label">{translations.quantity}:</span>
                             <div className="quantity_controls">
                               <button
                                 onClick={() =>
@@ -1103,9 +1133,9 @@ const ClientProfile = () => {
                             </div>
                           </div>
                           <p className="product_total">
-                            <span className="detail_label">Total:</span>{" "}
+                            <span className="detail_label">{translations.total}:</span>{" "}
                             <strong>
-                              AED{" "}
+                              {translations.aed}{" "}
                               {(
                                 (item.price || 0) * (item.quantity || 1)
                               ).toFixed(2)}
@@ -1120,13 +1150,13 @@ const ClientProfile = () => {
 
               {/* Address Selection */}
               <div className="order_section">
-                <h3>Delivery Address</h3>
+                <h3>{translations.deliveryAddress}</h3>
                 <div className="checkout_personal_info">
                   <div className="checkout_personal_info_item">
-                    <h3>City:</h3>
+                    <h3>{translations.city}</h3>
                     <input
                       type="text"
-                      placeholder="City"
+                      placeholder={translations.city}
                       value={reorderCity}
                       onChange={(e) => setReorderCity(e.target.value)}
                       required
@@ -1137,11 +1167,11 @@ const ClientProfile = () => {
                 {/* Add New Address */}
                 {userId && (
                   <div className="add_address_section">
-                    <h3>Add New Address:</h3>
+                    <h3>{translations.addNewAddress}</h3>
                     <div className="add_address_group">
                       <input
                         type="text"
-                        placeholder="Enter Address to Save"
+                        placeholder={translations.enterAddressToSave}
                         value={reorderNewAddress}
                         onChange={(e) => setReorderNewAddress(e.target.value)}
                       />
@@ -1158,7 +1188,7 @@ const ClientProfile = () => {
                 {/* Address List */}
                 {userId && reorderAddresses.length > 0 && (
                   <div style={{ width: "100%", marginTop: "1rem" }}>
-                    <h3>Select Delivery Address:</h3>
+                    <h3>{translations.selectDeliveryAddress}</h3>
                     <div className="addresses_list">
                       {reorderAddresses.map((address, index) => (
                         <div
@@ -1203,20 +1233,20 @@ const ClientProfile = () => {
 
                 {userId && reorderAddresses.length === 0 && (
                   <p className="no_address">
-                    No saved addresses. Please add an address above to continue.
+                    {translations.noSavedAddresses}
                   </p>
                 )}
 
                 {!userId && (
                   <p className="no_address" style={{ color: "red" }}>
-                    Please log in to select a delivery address.
+                    {translations.pleaseLoginToSelectAddress}
                   </p>
                 )}
               </div>
 
               {/* Payment Method */}
               <div className="order_section">
-                <h3>Payment Method</h3>
+                <h3>{translations.paymentMethod}</h3>
                 <div className="checkout_personal_info">
                   <div className="checkout_personal_info_item">
                     <select
@@ -1229,9 +1259,9 @@ const ClientProfile = () => {
                         borderRadius: "8px",
                       }}
                     >
-                      <option value="Cash on Delivery">Cash on Delivery</option>
-                      <option value="Credit Card">Credit Card</option>
-                      <option value="Debit Card">Debit Card</option>
+                      <option value="Cash on Delivery">{translations.cashOnDelivery}</option>
+                      <option value="Credit Card">{translations.creditCard}</option>
+                      <option value="Debit Card">{translations.debitCard}</option>
                     </select>
                   </div>
                 </div>
@@ -1239,7 +1269,7 @@ const ClientProfile = () => {
 
               {/* Order Summary */}
               <div className="order_section">
-                <h3>Order Summary</h3>
+                <h3>{translations.orderSummary}</h3>
                 <div
                   style={{
                     background: "#f8f9fb",
@@ -1255,8 +1285,8 @@ const ClientProfile = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    <h3>Total Amount:</h3>
-                    <p>AED {reorderTotalAmount.toFixed(2)}</p>
+                    <h3>{translations.totalAmount}</h3>
+                    <p>{translations.aed} {reorderTotalAmount.toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -1267,7 +1297,7 @@ const ClientProfile = () => {
                 disabled={reorderLoading}
                 className="submit_reorder_btn"
               >
-                {reorderLoading ? "Placing Order..." : "Place Reorder"}
+                {reorderLoading ? translations.placingOrder : translations.placeReorder}
               </button>
             </div>
           </div>
@@ -1285,7 +1315,7 @@ const ClientProfile = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="order_modal_header">
-              <h2>All Orders ({recentOrders.length})</h2>
+              <h2>{translations.allOrders} ({recentOrders.length})</h2>
               <button
                 className="close_modal_btn"
                 onClick={() => setIsAllOrdersModalOpen(false)}
@@ -1297,7 +1327,7 @@ const ClientProfile = () => {
             <div className="order_modal_body">
               {loading ? (
                 <p style={{ textAlign: "center", padding: "2rem" }}>
-                  Loading orders...
+                  {translations.loadingOrders}
                 </p>
               ) : error ? (
                 <p
@@ -1307,7 +1337,7 @@ const ClientProfile = () => {
                 </p>
               ) : recentOrders.length === 0 ? (
                 <p style={{ textAlign: "center", padding: "2rem" }}>
-                  No orders found
+                  {translations.noOrdersFound}
                 </p>
               ) : (
                 <div className="all_orders_list">
@@ -1330,11 +1360,10 @@ const ClientProfile = () => {
                             <h3>
                               {order.order_id
                                 ? `ORD-${order.order_id}`
-                                : `Order #${index + 1}`}
+                                : `${translations.order} #${index + 1}`}
                             </h3>
                             <p>
-                              {orderDate} • {itemCount} item
-                              {itemCount !== 1 ? "s" : ""}
+                              {orderDate} • {itemCount} {itemCount !== 1 ? translations.itemsPlural : translations.item}
                             </p>
                             <div className="all_orders_item_details">
                               <span>
@@ -1344,7 +1373,7 @@ const ClientProfile = () => {
                                 <FaCreditCard /> {order.paymentWay || "N/A"}
                               </span>
                               <span>
-                                <MdOutlineAttachMoney /> AED{" "}
+                                <MdOutlineAttachMoney /> {translations.aed}{" "}
                                 {order.totalAmount?.toFixed(2) || "0.00"}
                               </span>
                             </div>
@@ -1364,7 +1393,7 @@ const ClientProfile = () => {
                               marginBottom: "8px",
                             }}
                           >
-                            {order.orderStatus || "New"}
+                            {order.orderStatus || translations.new}
                           </div>
                           {((order.cartItems && order.cartItems.length > 0) ||
                             order.isPurchase) && (
@@ -1376,7 +1405,7 @@ const ClientProfile = () => {
                                 setIsAllOrdersModalOpen(false);
                               }}
                             >
-                              <FaRedo /> Reorder
+                              <FaRedo /> {translations.reorder}
                             </button>
                           )}
                         </div>
@@ -1398,7 +1427,7 @@ const ClientProfile = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="order_modal_header">
-              <h2>Purchase Order Details</h2>
+              <h2>{translations.purchaseOrderDetails}</h2>
               <button className="close_modal_btn" onClick={closePOModal}>
                 <IoClose size={24} />
               </button>
@@ -1411,11 +1440,11 @@ const ClientProfile = () => {
 
               {/* Preview of uploaded item */}
               <div className="order_section">
-                <h3>Purchase Order</h3>
+                <h3>{translations.purchaseOrder}</h3>
                 <div className="po_preview_container">
                   {currentPOItem.isLink ? (
                     <div className="po_link_preview">
-                      <span>🔗 Link</span>
+                      <span>🔗 {translations.link}</span>
                       <a
                         href={currentPOItem.url}
                         target="_blank"
@@ -1441,33 +1470,33 @@ const ClientProfile = () => {
 
               {/* Personal Information */}
               <div className="order_section">
-                <h3>Personal Information</h3>
+                <h3>{translations.personalInformation}</h3>
                 <div className="checkout_personal_info">
                   <div className="checkout_personal_info_item">
-                    <h3>Name:</h3>
+                    <h3>{translations.name}:</h3>
                     <input
                       type="text"
-                      placeholder="Enter your name"
+                      placeholder={translations.enterYourName}
                       value={poUserName}
                       onChange={(e) => setPoUserName(e.target.value)}
                       required
                     />
                   </div>
                   <div className="checkout_personal_info_item">
-                    <h3>Phone:</h3>
+                    <h3>{translations.phone}:</h3>
                     <input
                       type="tel"
-                      placeholder="Enter your phone number"
+                      placeholder={translations.enterYourPhoneNumber}
                       value={poPhone}
                       onChange={(e) => setPoPhone(e.target.value)}
                       required
                     />
                   </div>
                   <div className="checkout_personal_info_item">
-                    <h3>Email:</h3>
+                    <h3>{translations.email}:</h3>
                     <input
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder={translations.enterYourEmail}
                       value={poEmail}
                       onChange={(e) => setPoEmail(e.target.value)}
                       required
@@ -1478,13 +1507,13 @@ const ClientProfile = () => {
 
               {/* Address Selection */}
               <div className="order_section">
-                <h3>Delivery Address</h3>
+                <h3>{translations.deliveryAddress}</h3>
                 <div className="checkout_personal_info">
                   <div className="checkout_personal_info_item">
-                    <h3>City:</h3>
+                    <h3>{translations.city}</h3>
                     <input
                       type="text"
-                      placeholder="City"
+                      placeholder={translations.city}
                       value={poCity}
                       onChange={(e) => setPoCity(e.target.value)}
                       required
@@ -1495,11 +1524,11 @@ const ClientProfile = () => {
                 {/* Add New Address */}
                 {userId && (
                   <div className="add_address_section">
-                    <h3>Add New Address:</h3>
+                    <h3>{translations.addNewAddress}</h3>
                     <div className="add_address_group">
                       <input
                         type="text"
-                        placeholder="Enter Address to Save"
+                        placeholder={translations.enterAddressToSave}
                         value={poNewAddress}
                         onChange={(e) => setPoNewAddress(e.target.value)}
                       />
@@ -1516,7 +1545,7 @@ const ClientProfile = () => {
                 {/* Address List */}
                 {userId && poAddresses.length > 0 && (
                   <div style={{ width: "100%", marginTop: "1rem" }}>
-                    <h3>Select Delivery Address:</h3>
+                    <h3>{translations.selectDeliveryAddress}</h3>
                     <div className="addresses_list">
                       {poAddresses.map((address, index) => (
                         <div
@@ -1561,20 +1590,20 @@ const ClientProfile = () => {
 
                 {userId && poAddresses.length === 0 && (
                   <p className="no_address">
-                    No saved addresses. Please add an address above to continue.
+                    {translations.noSavedAddresses}
                   </p>
                 )}
 
                 {!userId && (
                   <p className="no_address" style={{ color: "red" }}>
-                    Please log in to select a delivery address.
+                    {translations.pleaseLoginToSelectAddress}
                   </p>
                 )}
               </div>
 
               {/* Payment Method */}
               <div className="order_section">
-                <h3>Payment Method</h3>
+                <h3>{translations.paymentMethod}</h3>
                 <div className="checkout_personal_info">
                   <div className="checkout_personal_info_item">
                     <select
@@ -1587,9 +1616,9 @@ const ClientProfile = () => {
                         borderRadius: "8px",
                       }}
                     >
-                      <option value="Cash on Delivery">Cash on Delivery</option>
-                      <option value="Credit Card">Credit Card</option>
-                      <option value="Debit Card">Debit Card</option>
+                      <option value="Cash on Delivery">{translations.cashOnDelivery}</option>
+                      <option value="Credit Card">{translations.creditCard}</option>
+                      <option value="Debit Card">{translations.debitCard}</option>
                     </select>
                   </div>
                 </div>
@@ -1597,13 +1626,13 @@ const ClientProfile = () => {
 
               {/* Total Amount */}
               <div className="order_section">
-                <h3>Total Amount</h3>
+                <h3>{translations.totalAmount}</h3>
                 <div className="checkout_personal_info">
                   <div className="checkout_personal_info_item">
-                    <h3>Amount (AED):</h3>
+                    <h3>{translations.amountAED}</h3>
                     <input
                       type="number"
-                      placeholder="Enter total amount"
+                      placeholder={translations.enterTotalAmount}
                       value={poTotalAmount}
                       onChange={(e) => setPoTotalAmount(e.target.value)}
                       min="0"
@@ -1636,7 +1665,7 @@ const ClientProfile = () => {
                   className="submit_reorder_btn"
                   style={{ flex: 1 }}
                 >
-                  {poLoading ? "Sending..." : "Send PO"}
+                  {poLoading ? translations.sending : translations.sendPO}
                 </button>
                 <button
                   onClick={closePOModal}
@@ -1647,7 +1676,7 @@ const ClientProfile = () => {
                     background: "#6c757d",
                   }}
                 >
-                  Cancel
+                  {translations.cancel}
                 </button>
               </div>
             </div>

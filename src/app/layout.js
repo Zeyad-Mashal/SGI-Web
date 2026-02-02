@@ -11,7 +11,7 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-  });
+});
 
 // Use custom favicon from public/images/logo-ico.ico
 export const metadata = {

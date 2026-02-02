@@ -159,23 +159,15 @@ const ClientCheckout = () => {
   const handleSubmitOrder = async () => {
     // Validation
     if (!firstName.trim() || !lastName.trim()) {
-      setError(
-        lang === "ar"
-          ? "يرجى إدخال الاسم الكامل"
-          : "Please enter your full name"
-      );
+      setError(translations.pleaseEnterFullName);
       return;
     }
     if (!userPhone.trim()) {
-      setError(
-        lang === "ar"
-          ? "يرجى إدخال رقم الهاتف"
-          : "Please enter your phone number"
-      );
+      setError(translations.pleaseEnterPhone);
       return;
     }
     if (!city.trim()) {
-      setError(lang === "ar" ? "يرجى اختيار المدينة" : "Please select a city");
+      setError(translations.pleaseSelectCity);
       return;
     }
 
@@ -184,29 +176,21 @@ const ClientCheckout = () => {
     if (id) {
       // Logged-in user: must select an address
       if (selectedAddressIndex === null || !addresses[selectedAddressIndex]) {
-        setError(
-          lang === "ar"
-            ? "يرجى اختيار عنوان التوصيل"
-            : "Please select a delivery address"
-        );
+        setError(translations.pleaseSelectDeliveryAddress);
         return;
       }
       deliveryAddress = addresses[selectedAddressIndex];
     } else {
       // Non-logged-in user: must write an address
       if (!writtenAddress.trim()) {
-        setError(
-          lang === "ar"
-            ? "يرجى إدخال عنوان التوصيل"
-            : "Please enter your delivery address"
-        );
+        setError(translations.pleaseEnterDeliveryAddress);
         return;
       }
       deliveryAddress = writtenAddress.trim();
     }
 
     if (cartItems.length === 0) {
-      setError(lang === "ar" ? "سلة التسوق فارغة" : "Your cart is empty");
+      setError(translations.yourCartIsEmpty);
       return;
     }
 
@@ -238,9 +222,7 @@ const ClientCheckout = () => {
     const result = await CreateOrder(orderData, setError, setLoading, () => {});
 
     if (result) {
-      setSuccess(
-        lang === "ar" ? "تم تقديم الطلب بنجاح!" : "Order placed successfully!"
-      );
+      setSuccess(translations.orderPlacedSuccessfully);
       // Clear cart
       clearCart();
       // Clear saved coupon
@@ -254,7 +236,7 @@ const ClientCheckout = () => {
 
   return (
     <div className="checkout">
-      <h1>Checkout</h1>
+      <h1>{translations.checkout}</h1>
 
       {error && (
         <div
@@ -286,14 +268,14 @@ const ClientCheckout = () => {
 
       <div className="checkout_container">
         {/* ------------------ Personal Info ------------------ */}
-        <h2>Personal information:</h2>
+        <h2>{translations.personalInformation}</h2>
 
         <div className="checkout_personal_info">
           <div className="checkout_personal_info_item">
-            <h3>First Name:</h3>
+            <h3>{translations.firstName}</h3>
             <input
               type="text"
-              placeholder="First Name"
+              placeholder={translations.firstName}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
@@ -301,10 +283,10 @@ const ClientCheckout = () => {
           </div>
 
           <div className="checkout_personal_info_item">
-            <h3>Last Name:</h3>
+            <h3>{translations.lastName}</h3>
             <input
               type="text"
-              placeholder="Last Name"
+              placeholder={translations.lastName}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
@@ -312,20 +294,20 @@ const ClientCheckout = () => {
           </div>
 
           <div className="checkout_personal_info_item">
-            <h3>Email:</h3>
+            <h3>{translations.email}</h3>
             <input
               type="email"
-              placeholder="Email"
+              placeholder={translations.email}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div className="checkout_personal_info_item">
-            <h3>Phone:</h3>
+            <h3>{translations.phone}</h3>
             <input
               type="text"
-              placeholder="Phone"
+              placeholder={translations.phone}
               value={userPhone}
               onChange={(e) => setUserPhone(e.target.value)}
               required
@@ -336,10 +318,10 @@ const ClientCheckout = () => {
         <hr />
 
         {/* ------------------ Payment Method ------------------ */}
-        <h2>Payment Method:</h2>
+        <h2>{translations.paymentMethod}</h2>
         <div className="checkout_personal_info">
           <div className="checkout_personal_info_item">
-            <h3>Select Payment Method:</h3>
+            <h3>{translations.selectPaymentMethod}</h3>
             <select
               value={paymentWay}
               onChange={(e) => setPaymentWay(e.target.value)}
@@ -350,9 +332,9 @@ const ClientCheckout = () => {
                 borderRadius: "8px",
               }}
             >
-              <option value="Cash on Delivery">Cash on Delivery</option>
-              <option value="Credit Card">Credit Card</option>
-              <option value="Debit Card">Debit Card</option>
+              <option value="Cash on Delivery">{translations.cashOnDelivery}</option>
+              <option value="Credit Card">{translations.creditCard}</option>
+              <option value="Debit Card">{translations.debitCard}</option>
             </select>
           </div>
         </div>
@@ -360,12 +342,12 @@ const ClientCheckout = () => {
         <hr />
 
         {/* ------------------ Delivery Details ------------------ */}
-        <h2>{lang === "ar" ? "تفاصيل التوصيل:" : "Delivery Details:"}</h2>
+        <h2>{translations.deliveryDetails}</h2>
 
         <div className="checkout_delivery_info">
           {/* City Field - Dropdown */}
           <div style={{ width: "100%", marginBottom: "1rem" }}>
-            <h3>{lang === "ar" ? "المدينة:" : "City:"}</h3>
+            <h3>{translations.city}</h3>
             <div className="checkout_personal_info">
               <div className="checkout_personal_info_item">
                 <select
@@ -380,7 +362,7 @@ const ClientCheckout = () => {
                   required
                 >
                   <option value="">
-                    {lang === "ar" ? "اختر المدينة" : "Select City"}
+                    {translations.selectCity}
                   </option>
                   {UAE_CITIES.map((cityOption) => (
                     <option key={cityOption.value} value={cityOption.value}>
@@ -395,15 +377,11 @@ const ClientCheckout = () => {
           {/* Address Input for Non-Logged-In Users */}
           {!id && (
             <div style={{ width: "100%", marginBottom: "1rem" }}>
-              <h3>{lang === "ar" ? "عنوان التوصيل:" : "Delivery Address:"}</h3>
+              <h3>{translations.deliveryAddress}</h3>
               <div className="checkout_personal_info">
                 <div className="checkout_personal_info_item">
                   <textarea
-                    placeholder={
-                      lang === "ar"
-                        ? "أدخل عنوان التوصيل الكامل (مثل: الشارع، المبنى، رقم الشقة)"
-                        : "Enter your complete delivery address (e.g., Street, Building, Apartment Number)"
-                    }
+                    placeholder={translations.enterDeliveryAddress}
                     value={writtenAddress}
                     onChange={(e) => setWrittenAddress(e.target.value)}
                     style={{
@@ -424,12 +402,12 @@ const ClientCheckout = () => {
           {/* ------------------ Add New Address (for saving) ------------------ */}
           {id && (
             <div className="add_address_section">
-              <h3>Add New Address:</h3>
+              <h3>{translations.addNewAddress}</h3>
 
               <div className="add_address_group">
                 <input
                   type="text"
-                  placeholder="Enter Address to Save (e.g., ElSeyof, 45 Kastania Street)"
+                  placeholder={translations.enterAddressToSave}
                   value={newAddress}
                   onChange={(e) => setNewAddress(e.target.value)}
                 />
@@ -444,7 +422,7 @@ const ClientCheckout = () => {
           {/* ------------------ Address List ------------------ */}
           {id && addresses.length > 0 && (
             <div style={{ width: "100%", marginTop: "1rem" }}>
-              <h3>Select Delivery Address:</h3>
+              <h3>{translations.selectDeliveryAddress}</h3>
               <div className="addresses_list">
                 {addresses.map((address, index) => (
                   <div
@@ -499,7 +477,7 @@ const ClientCheckout = () => {
 
           {id && addresses.length === 0 && (
             <p className="no_address">
-              No saved addresses. Please add an address above to continue.
+              {translations.noSavedAddresses}
             </p>
           )}
         </div>
@@ -507,7 +485,7 @@ const ClientCheckout = () => {
         <hr />
 
         {/* ------------------ Order Summary ------------------ */}
-        <h2>Order Summary:</h2>
+        <h2>{translations.orderSummary}</h2>
         <div style={{ width: "100%", marginBottom: "2rem" }}>
           <div
             style={{
@@ -523,8 +501,8 @@ const ClientCheckout = () => {
                 marginBottom: "0.5rem",
               }}
             >
-              <h3>Items:</h3>
-              <p>{cartItems.length} item(s)</p>
+              <h3>{translations.items}</h3>
+              <p>{cartItems.length} {translations.itemsPlural}</p>
             </div>
             {cartItems.map((item) => (
               <div
@@ -539,7 +517,7 @@ const ClientCheckout = () => {
                 <p>
                   {item.name} x {item.quantity}
                 </p>
-                <p>AED {(item.price * item.quantity).toFixed(2)}</p>
+                <p>{translations.aed} {(item.price * item.quantity).toFixed(2)}</p>
               </div>
             ))}
 
@@ -553,8 +531,8 @@ const ClientCheckout = () => {
                 marginBottom: "0.5rem",
               }}
             >
-              <p>Order Price:</p>
-              <p>AED {subtotal.toFixed(2)}</p>
+              <p>{translations.orderPrice}</p>
+              <p>{translations.aed} {subtotal.toFixed(2)}</p>
             </div>
 
             {/* Tax - 8% of Order Price */}
@@ -565,8 +543,8 @@ const ClientCheckout = () => {
                 marginBottom: "0.5rem",
               }}
             >
-              <p>Tax (8%):</p>
-              <p>AED {tax.toFixed(2)}</p>
+              <p>{translations.tax8}</p>
+              <p>{translations.aed} {tax.toFixed(2)}</p>
             </div>
 
             {/* Discount (if applicable) */}
@@ -579,8 +557,8 @@ const ClientCheckout = () => {
                   color: "#4caf50",
                 }}
               >
-                <p>Discount:</p>
-                <p>- AED {discount.toFixed(2)}</p>
+                <p>{translations.discount}</p>
+                <p>- {translations.aed} {discount.toFixed(2)}</p>
               </div>
             )}
 
@@ -595,8 +573,8 @@ const ClientCheckout = () => {
                 fontWeight: "bold",
               }}
             >
-              <h3>Total Amount:</h3>
-              <p>AED {totalAmount.toFixed(2)}</p>
+              <h3>{translations.totalAmount}</h3>
+              <p>{translations.aed} {totalAmount.toFixed(2)}</p>
             </div>
           </div>
         </div>
@@ -618,7 +596,7 @@ const ClientCheckout = () => {
             marginBottom: "2rem",
           }}
         >
-          {loading ? "Placing Order..." : "Place Order"}
+          {loading ? translations.placingOrder : translations.placeOrder}
         </button>
       </div>
     </div>

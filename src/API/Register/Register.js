@@ -34,9 +34,11 @@ const Register = async (formData, setError, setLoading, onSuccess) => {
             return { success: false, error: result.message };
         }
     } catch (error) {
-        setError('An error occurred');
+        const lang = localStorage.getItem("lang") || "en";
+        const errorMessage = lang === "ar" ? "حدث خطأ" : "An error occurred";
+        setError(errorMessage);
         setLoading(false)
-        return { success: false, error: 'An error occurred' };
+        return { success: false, error: errorMessage };
     }
 }
 export default Register;

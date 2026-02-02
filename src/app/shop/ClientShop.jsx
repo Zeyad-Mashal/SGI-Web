@@ -27,6 +27,8 @@ import {
   getFavorites,
 } from "@/utils/favoriteUtils";
 import { faChevronDown, faChevronRight, faTimes } from "@fortawesome/free-solid-svg-icons";
+import en from "@/translation/en.json";
+import ar from "@/translation/ar.json";
 
 export default function Shop() {
   const { showToast } = useToast();
@@ -58,17 +60,42 @@ export default function Shop() {
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState(null);
   const [lang, setLang] = useState("en");
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "list"
+  const [translations, setTranslations] = useState(en);
   
   useEffect(() => {
     // Get language from localStorage
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
     
     // Fetch categories
     GetCategories(setCategories, setError, setCategoriesLoading);
     
     setFavorites(getFavorites());
-  }, []);
+
+    // Listen for language changes
+    const handleStorageChange = () => {
+      const newLang = localStorage.getItem("lang") || "en";
+      setLang(newLang);
+      setTranslations(newLang === "ar" ? ar : en);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also check periodically for language changes (in case it's changed in the same window)
+    const interval = setInterval(() => {
+      const currentLang = localStorage.getItem("lang") || "en";
+      if (currentLang !== lang) {
+        setLang(currentLang);
+        setTranslations(currentLang === "ar" ? ar : en);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [lang]);
 
   useEffect(() => {
     // Fetch products when categoryId, brandId or page changes
@@ -126,9 +153,9 @@ export default function Shop() {
     const updatedFavorites = toggleFavorite(item);
     setFavorites(updatedFavorites);
     if (wasFavorited) {
-      showToast("Removed from favorites", "info");
+      showToast(translations.removedFromFavorites, "info");
     } else {
-      showToast("Added to favorites!", "success");
+      showToast(translations.addedToFavorites, "success");
     }
   };
   
@@ -256,7 +283,7 @@ export default function Shop() {
           {/* Category Filter */}
           <div className="filter_top">
             <h2>
-              <MdOutlineSettingsInputComponent /> Categories
+              <MdOutlineSettingsInputComponent /> {translations.categories}
             </h2>
             
             {/* Clear Filter Button */}
@@ -266,17 +293,17 @@ export default function Shop() {
                 onClick={clearFilter}
               >
                 <FontAwesomeIcon icon={faTimes} />
-                Clear Filter
+                {translations.clearFilter}
               </button>
             )}
 
             {/* Categories List */}
             {categoriesLoading ? (
-              <div className="category_loading">Loading categories...</div>
+              <div className="category_loading">{translations.loadingCategories}</div>
             ) : categories.length > 0 ? (
               <div className="categories_list">
                 {categories.map((category, index) => {
-                  const categoryName = category.name?.[lang] || category.name?.en || category.name || "Unnamed Category";
+                  const categoryName = category.name?.[lang] || category.name?.en || category.name || translations.unnamedCategory;
                   const hasSubCategories = category.subCategories && category.subCategories.length > 0;
                   const isExpanded = expandedCategory === index;
                   const isSelected = selectedCategoryId === category._id;
@@ -309,7 +336,7 @@ export default function Shop() {
                         <div className="subcategories_list">
                           {category.subCategories && category.subCategories.length > 0 ? (
                             category.subCategories.map((subCategory) => {
-                              const subCategoryName = subCategory.name?.[lang] || subCategory.name?.en || subCategory.name || "Unnamed Subcategory";
+                              const subCategoryName = subCategory.name?.[lang] || subCategory.name?.en || subCategory.name || translations.unnamedSubcategory;
                               const isSubSelected = selectedSubCategoryId === subCategory._id;
                               
                               return (
@@ -324,7 +351,7 @@ export default function Shop() {
                             })
                           ) : (
                             <div className="no_subcategories_message">
-                              <p>No subcategories available</p>
+                              <p>{translations.noSubcategoriesAvailable}</p>
                             </div>
                           )}
                         </div>
@@ -333,7 +360,7 @@ export default function Shop() {
                       {/* إذا كانت الـ category مفتوحة وليس لديها subcategories، امسح المنتجات */}
                       {!hasSubCategories && isExpanded && (
                         <div className="no_subcategories_message">
-                          <p>This category has no subcategories</p>
+                          <p>{translations.thisCategoryHasNoSubcategories}</p>
                         </div>
                       )}
           </div>
@@ -341,7 +368,7 @@ export default function Shop() {
                 })}
           </div>
             ) : (
-              <div className="no_categories">No categories available</div>
+              <div className="no_categories">{translations.noCategoriesAvailable}</div>
             )}
           </div>
         </div>
@@ -361,11 +388,11 @@ export default function Shop() {
               }}
             >
               <FiFilter />
-              Filters
+              {translations.filters}
             </h3>
 
             <p>
-              <span>{pagination.totalProducts || allProducts.length}</span> products found
+              <span>{pagination.totalProducts || allProducts.length}</span> {translations.productsFound}
             </p>
             {/* <select>
               <option value="Most Popular">Most Popular</option>
@@ -401,10 +428,10 @@ export default function Shop() {
                 <div className="no_products_icon">
                   <FiBox />
                 </div>
-                <h3>This filter has no products</h3>
-                <p>Try selecting a different category or clear the filter to see all products.</p>
+                <h3>{translations.thisFilterHasNoProducts}</h3>
+                <p>{translations.trySelectingDifferentCategory}</p>
                 <button className="clear_filter_btn_inline" onClick={clearFilter}>
-                  Clear Filter
+                  {translations.clearFilter}
                 </button>
               </div>
             ) : allProducts.length === 0 ? (
@@ -412,8 +439,8 @@ export default function Shop() {
                 <div className="no_products_icon">
                   <FiBox />
                 </div>
-                <h3>No products found</h3>
-                <p>There are currently no products available.</p>
+                <h3>{translations.noProductsFound}</h3>
+                <p>{translations.noProductsAvailable}</p>
               </div>
             ) : (
               allProducts.map((item) => {
@@ -456,11 +483,11 @@ export default function Shop() {
                             <div className="list_view_info">
                               <h2>{item.name}</h2>
                               <div className="Featured_stars">
-                                <p>(m.order 30 units)</p>
+                                <p>{translations.minimumOrder}</p>
                               </div>
                             </div>
                             <div className="Featured_price">
-                              <h3>AED {item.price}</h3>
+                              <h3>{translations.aed} {item.price}</h3>
                             </div>
                           </div>
                         </a>
@@ -470,10 +497,10 @@ export default function Shop() {
                               e.preventDefault();
                               e.stopPropagation();
                               addToCart(item, 1);
-                              showToast("Product added to cart!", "success");
+                              showToast(translations.productAddedToCart, "success");
                             }}
                           >
-                            Add to Cart
+                            {translations.addtocart}
                           </button>
                         </div>
                       </>
@@ -509,25 +536,25 @@ export default function Shop() {
                               : "scale(1)",
                           }}
                         />
-                        <p>Featured</p>
+                        <p>{translations.featured}</p>
                       </div>
                       <div className="Featured_stars">
-                            <p>(m.order 30 units)</p>
+                            <p>{translations.minimumOrder}</p>
                       </div>
                       <h2>{item.name}</h2>
                     </a>
 
                     <div className="Featured_price">
-                      <h3>AED {item.price}</h3>
+                      <h3>{translations.aed} {item.price}</h3>
                       <button
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           addToCart(item, 1);
-                          showToast("Product added to cart!", "success");
+                          showToast(translations.productAddedToCart, "success");
                         }}
                       >
-                        Add to Cart
+                        {translations.addtocart}
                       </button>
                     </div>
                       </>
@@ -547,7 +574,7 @@ export default function Shop() {
                 disabled={currentPage === 1 || loading}
               >
                 <FaChevronLeft />
-                Previous
+                {translations.previous}
               </button>
               
               <div className="pagination_numbers">
@@ -591,7 +618,7 @@ export default function Shop() {
                   currentPage === pagination.totalPages || loading
                 }
               >
-                Next
+                {translations.next}
                 <FaChevronRight />
               </button>
             </div>

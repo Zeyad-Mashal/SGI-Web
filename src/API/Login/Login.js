@@ -31,7 +31,9 @@ const Login = async (data, setError, setLoading) => {
             }
         }
     } catch (error) {
-        setError('An error occurred');
+        const lang = localStorage.getItem("lang") || "en";
+        const errorMessage = lang === "ar" ? "حدث خطأ" : "An error occurred";
+        setError(errorMessage);
         setLoading(false)
     }
 }

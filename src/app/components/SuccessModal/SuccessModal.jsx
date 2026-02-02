@@ -1,10 +1,44 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "./SuccessModal.css";
+import en from "../../../translation/en.json";
+import ar from "../../../translation/ar.json";
 
 const SuccessModal = ({ isOpen, onClose }) => {
   const router = useRouter();
+  const [lang, setLang] = useState("en");
+  const [translations, setTranslations] = useState(en);
+
+  useEffect(() => {
+    // Get language from localStorage
+    const savedLang = localStorage.getItem("lang") || "en";
+    setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
+
+    // Listen for language changes
+    const handleStorageChange = () => {
+      const newLang = localStorage.getItem("lang") || "en";
+      setLang(newLang);
+      setTranslations(newLang === "ar" ? ar : en);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also check periodically for language changes
+    const interval = setInterval(() => {
+      const currentLang = localStorage.getItem("lang") || "en";
+      if (currentLang !== lang) {
+        setLang(currentLang);
+        setTranslations(currentLang === "ar" ? ar : en);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [lang]);
 
   useEffect(() => {
     if (isOpen) {
@@ -48,12 +82,12 @@ const SuccessModal = ({ isOpen, onClose }) => {
             />
           </svg>
         </div>
-        <h2 className="success-modal-title">Your Request set Successfully</h2>
+        <h2 className="success-modal-title">{translations.yourRequestSetSuccessfully}</h2>
         <p className="success-modal-message">
-          We take it into consideration, wait for review
+          {translations.weTakeItIntoConsideration}
         </p>
         <button className="success-modal-button" onClick={handleGoHome}>
-          Go to Home
+          {translations.goToHome}
         </button>
       </div>
     </div>

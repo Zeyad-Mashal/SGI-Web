@@ -15,12 +15,17 @@ import {
   isFavorited,
   getFavorites,
 } from "@/utils/favoriteUtils";
+import en from "@/translation/en.json";
+import ar from "@/translation/ar.json";
+
 const ClientProduct = () => {
   const { showToast } = useToast();
   const [favorites, setFavorites] = useState([]);
   const { id } = useParams();
   const [qty, setQty] = useState(1);
   const [useBoxPrice, setUseBoxPrice] = useState(false);
+  const [lang, setLang] = useState("en");
+  const [translations, setTranslations] = useState(en);
 
   const [activeImg, setActiveImg] = useState(null);
   const [imageLoading, setImageLoading] = useState(true);
@@ -47,12 +52,12 @@ const ClientProduct = () => {
         // Switch back to unit pricing
         setUseBoxPrice(false);
         setQty(1);
-        showToast("Switched to unit pricing", "info");
+        showToast(translations.switchedToUnitPricing, "info");
       } else {
         // Switch to box pricing - quantity represents number of boxes
         setUseBoxPrice(true);
         setQty(1); // Start with 1 box, user can increase
-        showToast("Box pricing applied!", "success");
+        showToast(translations.boxPricingApplied, "success");
       }
     }
   };
@@ -94,9 +99,37 @@ const ClientProduct = () => {
   const [productDetails, setProductDetails] = useState([]);
 
   useEffect(() => {
+    // Get language from localStorage
+    const savedLang = localStorage.getItem("lang") || "en";
+    setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
+    
     getProductDetails();
     setFavorites(getFavorites());
-  }, []);
+
+    // Listen for language changes
+    const handleStorageChange = () => {
+      const newLang = localStorage.getItem("lang") || "en";
+      setLang(newLang);
+      setTranslations(newLang === "ar" ? ar : en);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also check periodically for language changes
+    const interval = setInterval(() => {
+      const currentLang = localStorage.getItem("lang") || "en";
+      if (currentLang !== lang) {
+        setLang(currentLang);
+        setTranslations(currentLang === "ar" ? ar : en);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [lang]);
 
   useEffect(() => {
     setFavorites(getFavorites());
@@ -108,9 +141,9 @@ const ClientProduct = () => {
       const updatedFavorites = toggleFavorite(productDetails);
       setFavorites(updatedFavorites);
       if (wasFavorited) {
-        showToast("Removed from favorites", "info");
+        showToast(translations.removedFromFavorites, "info");
       } else {
-        showToast("Added to favorites!", "success");
+        showToast(translations.addedToFavorites, "success");
       }
     }
   };
@@ -147,7 +180,7 @@ const ClientProduct = () => {
             {loading || (!activeImg && !productDetails?.picUrls?.length) ? (
               <div className="image_loader">
                 <div className="loader_spinner"></div>
-                <p>Loading image...</p>
+                <p>{translations.loadingImage}</p>
               </div>
             ) : activeImg ? (
           <Image
@@ -202,16 +235,16 @@ const ClientProduct = () => {
             <FaStar />
             <FaStar />
             <FaStar />
-            <span>(4.5 Rating) 150+ Reviews</span>
+            <span>(4.5 {translations.rating}) 150+ {translations.reviews}</span>
           </p>
           <h3>
-            AED {getCurrentPrice()}{" "}
-            <span>{useBoxPrice ? "per box" : "per unit"}</span>
+            {translations.aed} {getCurrentPrice()}{" "}
+            <span>{useBoxPrice ? translations.perBox : translations.perUnit}</span>
           </h3>
-          <h4>Minimum Order: 30 units / case</h4>
+          <h4>{translations.minimumOrder}</h4>
           <h5>
-            Review our Refund & Exchange Policy before purchasing{" "}
-            <a href="#">Learn more</a>
+            {translations.reviewRefundPolicy}{" "}
+            <a href="#">{translations.learnMore}</a>
           </h5>
           {productDetails?.boxPrice !== null &&
            productDetails?.boxPrice !== undefined &&
@@ -232,14 +265,14 @@ const ClientProduct = () => {
               // }}
               className="boxItem"
             >
-              Review Box Available{" "}
-              {useBoxPrice && `(${productDetails.piecesNumber} pieces per box)`}{" "}
+              {translations.reviewBoxAvailable}{" "}
+              {useBoxPrice && `(${productDetails.piecesNumber} ${translations.piecesPerBox})`}{" "}
               {useBoxPrice && "✓"}
             </h4>
           )}
 
           <div className="Quantity">
-            <h3>Quantity {useBoxPrice ? "(Boxes)" : "(Units)"}</h3>
+            <h3>{translations.quantity} {useBoxPrice ? `(${translations.boxes})` : `(${translations.units})`}</h3>
             <div className="Quantity_counter">
               <div className="counter">
                 <button onClick={() => updateQty(Math.max(1, qty - 1))}>
@@ -255,7 +288,7 @@ const ClientProduct = () => {
 
               <div className="total">
                 <h2>
-                  Total: <span>AED {(qty * getCurrentPrice()).toFixed(2)}</span>
+                  {translations.total} <span>{translations.aed} {(qty * getCurrentPrice()).toFixed(2)}</span>
                 </h2>
                 {useBoxPrice && productDetails?.piecesNumber && (
                   <p
@@ -265,8 +298,8 @@ const ClientProduct = () => {
                       marginTop: "0.5rem",
                     }}
                   >
-                    ({qty} box(es) × {productDetails.piecesNumber} pieces ={" "}
-                    {qty * productDetails.piecesNumber} total pieces)
+                    ({qty} {translations.boxesPlural} × {productDetails.piecesNumber} {translations.pieces} ={" "}
+                    {qty * productDetails.piecesNumber} {translations.totalPieces})
                   </p>
                 )}
               </div>
@@ -291,15 +324,15 @@ const ClientProduct = () => {
                   };
                   addToCart(productToAdd, qty);
                   const message = useBoxPrice
-                    ? `${qty} box(es) added to cart! (${
+                    ? `${qty} ${translations.boxesPlural} ${translations.addedToCartWithBoxes} (${
                         qty * productDetails.piecesNumber
-                      } pieces)`
-                    : "Product added to cart!";
+                      } ${translations.pieces})`
+                    : translations.productAddedToCart;
                   showToast(message, "success");
                 }
               }}
             >
-              <RiShoppingBag3Line /> Add To Cart
+              <RiShoppingBag3Line /> {translations.addtocart}
             </button>
             {productDetails && productDetails._id && (
               <div
@@ -335,7 +368,7 @@ const ClientProduct = () => {
             className={activeTab === "description" ? "active" : ""}
             onClick={() => setActiveTab("description")}
           >
-            Description
+            {translations.description}
           </button>
 
           {/* <button
@@ -349,20 +382,20 @@ const ClientProduct = () => {
             className={activeTab === "reviews" ? "active" : ""}
             onClick={() => setActiveTab("reviews")}
           >
-            Reviews
+            {translations.reviews}
           </button>
         </div>
 
         <div className="product_desc_content">
           {activeTab === "description" && (
             <div className="product_desc_description">
-              <h2>Product Description</h2>
+              <h2>{translations.productDescription}</h2>
               <p>{productDetails.description}</p>
-              <h2>Major Product Uses:</h2>
+              <h2>{translations.majorProductUses}</h2>
               <ul>
                 <li>{productDetails.uses}</li>
               </ul>
-              <h2>Ideal For:</h2>
+              <h2>{translations.idealFor}</h2>
               <ul>
                 <li>{productDetails.features}</li>
               </ul>
@@ -383,8 +416,8 @@ const ClientProduct = () => {
 
           {activeTab === "reviews" && (
             <div className="product_desc_description">
-              <h2>Reviews</h2>
-              <p>No reviews yet. Be the first to review this product!</p>
+              <h2>{translations.reviews}</h2>
+              <p>{translations.noReviewsYet}</p>
             </div>
           )}
         </div>

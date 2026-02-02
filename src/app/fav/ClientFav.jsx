@@ -16,17 +16,49 @@ import {
 } from "@/utils/favoriteUtils";
 import { addToCart } from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
+import en from "@/translation/en.json";
+import ar from "@/translation/ar.json";
 
 const ClientFav = () => {
   const router = useRouter();
   const { showToast } = useToast();
   const [favorites, setFavorites] = useState([]);
   const [mounted, setMounted] = useState(false);
+  const [lang, setLang] = useState("en");
+  const [translations, setTranslations] = useState(en);
 
   useEffect(() => {
+    // Get language from localStorage
+    const savedLang = localStorage.getItem("lang") || "en";
+    setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
+    
     setMounted(true);
     loadFavorites();
-  }, []);
+
+    // Listen for language changes
+    const handleStorageChange = () => {
+      const newLang = localStorage.getItem("lang") || "en";
+      setLang(newLang);
+      setTranslations(newLang === "ar" ? ar : en);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also check periodically for language changes
+    const interval = setInterval(() => {
+      const currentLang = localStorage.getItem("lang") || "en";
+      if (currentLang !== lang) {
+        setLang(currentLang);
+        setTranslations(currentLang === "ar" ? ar : en);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [lang]);
 
   const loadFavorites = () => {
     const favs = getFavorites();
@@ -140,7 +172,7 @@ const ClientFav = () => {
                     <h2>{item.name}</h2>
                     <div className="left_price">
                       <p>
-                        AED {item.price} <span>per unit</span>
+                        {translations.aed} {item.price} <span>{translations.perUnit}</span>
                       </p>
                       <h4>
                         <MdErrorOutline />

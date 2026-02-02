@@ -43,12 +43,12 @@
 .brands_swiper {
   width: 100%;
   margin-top: 1rem;
-  direction: ltr;
+  direction: rtl;
 }
 
 .brand_card {
   width: 100%;
-  max-width: 240px;
+  max-width: 1040px;
   height: 150px;
   display: flex;
   justify-content: center;
@@ -58,6 +58,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 15px;
+  overflow: hidden;
+
 }
 
 .brand_card img {

@@ -20,6 +20,8 @@ import {
 } from "@/utils/cartUtils";
 import { useRouter } from "next/navigation";
 import ApplayCoupon from "@/API/Coupon/ApplayCoupon";
+import en from "@/translation/en.json";
+import ar from "@/translation/ar.json";
 
 const ClientCart = () => {
   const router = useRouter();
@@ -35,12 +37,42 @@ const ClientCart = () => {
   const [loading, setLoading] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(null);
+  const [lang, setLang] = useState("en");
+  const [translations, setTranslations] = useState(en);
 
   // ---------------------- 1) On Mount ----------------------
   useEffect(() => {
+    // Get language from localStorage
+    const savedLang = localStorage.getItem("lang") || "en";
+    setLang(savedLang);
+    setTranslations(savedLang === "ar" ? ar : en);
+    
     setMounted(true);
     loadCart();
-  }, []);
+
+    // Listen for language changes
+    const handleStorageChange = () => {
+      const newLang = localStorage.getItem("lang") || "en";
+      setLang(newLang);
+      setTranslations(newLang === "ar" ? ar : en);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also check periodically for language changes
+    const interval = setInterval(() => {
+      const currentLang = localStorage.getItem("lang") || "en";
+      if (currentLang !== lang) {
+        setLang(currentLang);
+        setTranslations(currentLang === "ar" ? ar : en);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [lang]);
 
   // ---------------------- 2) Update totals ----------------------
   useEffect(() => {
@@ -159,7 +191,7 @@ const ClientCart = () => {
       {/* -------------- Loading -------------- */}
       {!mounted ? (
         <div className="cart_container">
-          <p>Loading...</p>
+          <p>{translations.loading}</p>
         </div>
       ) : (
         <>
@@ -174,50 +206,49 @@ const ClientCart = () => {
                 height={90}
               />
 
-              <h1>Your Cart Is Empty</h1>
+              <h1>{translations.yourCartIsEmpty}</h1>
               <p>
-                Start adding wholesale cleaning supplies to your cart and save
-                big on bulk orders!
+                {translations.startAddingWholesale}
               </p>
 
               <div className="empty_content">
                 <p>
-                  <BsBox2 /> Bulk Pricing
+                  <BsBox2 /> {translations.bulkPricing}
                 </p>
                 <p>
-                  <LiaShippingFastSolid /> Free Shipping $500+
+                  <LiaShippingFastSolid /> {translations.freeShipping500}
                 </p>
                 <p>
-                  <BsPatchCheck /> Quality Assured
+                  <BsPatchCheck /> {translations.qualityAssured}
                 </p>
               </div>
 
               <button onClick={() => router.push("/shop")}>
-                Browse Products
+                {translations.browseProducts}
               </button>
             </div>
           ) : (
             /* -------------- Cart Content -------------- */
             <div className="cart_container">
               <div className="cart_content">
-                <h1>Shopping Cart</h1>
-                <p>Review your wholesale order before checkout</p>
+                <h1>{translations.shoppingCart}</h1>
+                <p>{translations.reviewWholesaleOrder}</p>
 
                 <div className="cart_content_info">
                   {/* LEFT SIDE */}
                   <div className="cart_left">
                     <div className="cart_count">
                       <div className="cart_count_left">
-                        <h3>Cart Items ({cartItems.length})</h3>
+                        <h3>{translations.cartItems} ({cartItems.length})</h3>
                         <p>
-                          All prices include volume discounts where applicable
+                          {translations.allPricesIncludeDiscounts}
                         </p>
                       </div>
                       <div
                         className="cart_count_right"
                         onClick={handleClearCart}
                       >
-                        <RiDeleteBin6Line /> Clear Cart
+                        <RiDeleteBin6Line /> {translations.clearCart}
                       </div>
                     </div>
 
@@ -242,7 +273,7 @@ const ClientCart = () => {
                                 <h2>{item.name}</h2>
                                 <span>
                                   {(() => {
-                                    if (!item.categories?.length) return "Product";
+                                    if (!item.categories?.length) return translations.product;
                                     const category = item.categories[0];
                                     // Handle both object format {_id, name: {en, ar}} and string format
                                     if (typeof category === 'string') {
@@ -251,19 +282,19 @@ const ClientCart = () => {
                                     if (category?.name) {
                                       // Check if name is an object with lang keys
                                       if (typeof category.name === 'object' && category.name !== null) {
-                                        const lang = localStorage.getItem("lang") || "en";
-                                        return category.name[lang] || category.name.en || "Product";
+                                        const currentLang = localStorage.getItem("lang") || "en";
+                                        return category.name[currentLang] || category.name.en || translations.product;
                                       }
                                       return String(category.name);
                                     }
-                                    return "Product";
+                                    return translations.product;
                                   })()}
                                 </span>
                                 <p>
-                                  AED {item.price} <span>{item.isBoxPricing ? "per box" : "per unit"}</span>
+                                  {translations.aed} {item.price} <span>{item.isBoxPricing ? translations.perBox : translations.perUnit}</span>
                                   {item.isBoxPricing && item.piecesPerBox && (
                                     <span style={{ fontSize: "0.85em", color: "#666", marginLeft: "0.5rem" }}>
-                                      ({item.piecesPerBox} pieces/box)
+                                      ({item.piecesPerBox} {translations.piecesPerBox})
                                     </span>
                                   )}
                                 </p>
@@ -307,14 +338,14 @@ const ClientCart = () => {
                                 </div>
 
                                 <p>
-                                  <MdErrorOutline /> Min. Order: 30 Units
+                                  <MdErrorOutline /> {translations.minOrder30Units}
                                 </p>
 
                                 <div className="total">
                                   <h2>
-                                    Item Total{" "}
+                                    {translations.itemTotal}{" "}
                                     <span>
-                                      AED{" "}
+                                      {translations.aed}{" "}
                                       {(item.price * item.quantity).toFixed(2)}
                                     </span>
                                   </h2>
@@ -331,7 +362,7 @@ const ClientCart = () => {
                   <div className="cart_right">
                     <div className="cart_right_promo">
                       <h3>
-                        <GoGift /> Promo Code
+                        <GoGift /> {translations.promoCode}
                       </h3>
 
                       <div className="promo_input">
@@ -342,14 +373,14 @@ const ClientCart = () => {
                         />
 
                         <button onClick={handleApplyCoupon}>
-                          {loading ? "Applying..." : "Apply"}
+                          {loading ? translations.applying : translations.apply}
                         </button>
                       </div>
 
-                      <p>Try Bulk10 for 10% off</p>
+                      <p>{translations.tryBulk10}</p>
                       {error && <p style={{ color: "red" }}>{error}</p>}
                       {discount && (
-                        <p style={{ color: "green" }}>Discount: {discount}%</p>
+                        <p style={{ color: "green" }}>{translations.discount} {discount}%</p>
                       )}
 
                       {discount && (
@@ -357,44 +388,44 @@ const ClientCart = () => {
                           onClick={removeCoupon}
                           className="remove_coupon_btn"
                         >
-                          Remove Coupon
+                          {translations.removeCoupon}
                         </button>
                       )}
                     </div>
 
                     <div className="cart_right_summry">
-                      <h3>Order Summary</h3>
+                      <h3>{translations.orderSummary}</h3>
 
                       <div className="summry">
                         <h4>
-                          Subtotal (
+                          {translations.subtotal} (
                           {cartItems.reduce(
                             (sum, item) => sum + item.quantity,
                             0
                           )}{" "}
-                          items)
+                          {translations.items})
                         </h4>
-                        <p>AED {subtotal.toFixed(2)}</p>
+                        <p>{translations.aed} {subtotal.toFixed(2)}</p>
                       </div>
 
                       <div className="summry">
-                        <h4>Shipping</h4>
+                        <h4>{translations.shipping}</h4>
                         <p>
-                          {subtotal >= 500 ? "Free" : "Calculated at checkout"}
+                          {subtotal >= 500 ? translations.free : translations.calculatedAtCheckout}
                         </p>
                       </div>
 
                       <div className="summry">
-                        <h4>Tax (8%)</h4>
-                        <p>AED {tax.toFixed(2)}</p>
+                        <h4>{translations.tax8}</h4>
+                        <p>{translations.aed} {tax.toFixed(2)}</p>
                       </div>
 
                       <hr />
 
                       <div className="summry">
-                        <h4>Total</h4>
+                        <h4>{translations.total}</h4>
                         <p>
-                          AED{" "}
+                          {translations.aed}{" "}
                           {totalAfterDiscount
                             ? totalAfterDiscount.toFixed(2)
                             : total.toFixed(2)}
@@ -402,18 +433,17 @@ const ClientCart = () => {
                       </div>
 
                       <button onClick={() => router.push("/checkout")}>
-                        Proceed to checkout <FaArrowRight />
+                        {translations.proceedToCheckout} <FaArrowRight />
                       </button>
 
                       <p>
-                        <BsBox2 /> Bulk packaging available
+                        <BsBox2 /> {translations.bulkPackagingAvailable}
                       </p>
                       <p>
-                        <LiaShippingFastSolid /> Fast delivery (2-3 business
-                        days)
+                        <LiaShippingFastSolid /> {translations.fastDelivery}
                       </p>
                       <p>
-                        <BsPatchCheck /> Secure Checkout Process
+                        <BsPatchCheck /> {translations.secureCheckoutProcess}
                       </p>
                     </div>
                   </div>
