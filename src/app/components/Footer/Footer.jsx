@@ -37,9 +37,9 @@ const Footer = () => {
         <div className="footer_company">
           <h3>{translations.company}</h3>
           <ul>
-            <li>{translations.home}</li>
-            <li>{translations.shop}</li>
-            <li>{translations.aboutus}</li>
+            <li><a href="/">{translations.home}</a></li>
+            <li><a href="/shop">{translations.shop}</a></li>
+            <li><a href="/">{translations.aboutus}</a></li>
           </ul>
         </div>
         <div className="footer_company">
@@ -53,8 +53,8 @@ const Footer = () => {
           <ul>
             <li>{translations.helpcenter}</li>
             <li>{translations.faqs}</li>
-            <li>{translations.termsofservice}</li>
-            <li>{translations.privacypolicy}</li>
+            <li><a href="/returns">{translations.termsofservice}</a></li>
+            <li><a href="/Privacy">{translations.privacypolicy}</a></li>
           </ul>
         </div>
       </div>
