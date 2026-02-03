@@ -43,7 +43,7 @@
 .brands_swiper {
   width: 100%;
   margin-top: 1rem;
-  direction: rtl;
+  direction: ltr;
 }
 
 .brand_card {
