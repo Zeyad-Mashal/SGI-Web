@@ -102,9 +102,9 @@ const ClientCheckout = () => {
     setCartItems(cart);
 
     // Calculate total amount
-    // Tax is always 8% of the order price (subtotal)
+    // Tax is always 5% of the order price (subtotal)
     const calculatedSubtotal = getCartTotal();
-    const calculatedTax = calculatedSubtotal * 0.08; // 8% of order price
+    const calculatedTax = calculatedSubtotal * 0.05; // 5% of order price
     const totalBeforeDiscount = calculatedSubtotal + calculatedTax; // Subtotal + Tax
 
     setSubtotal(calculatedSubtotal);
@@ -543,7 +543,7 @@ const ClientCheckout = () => {
                 marginBottom: "0.5rem",
               }}
             >
-              <p>{translations.tax8}</p>
+              <p>{translations.tax5}</p>
               <p>{translations.aed} {tax.toFixed(2)}</p>
             </div>
 

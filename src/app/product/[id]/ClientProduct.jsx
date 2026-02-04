@@ -229,22 +229,22 @@ const ClientProduct = () => {
         <div className="product_content">
           {/* <span>{productDetails?.categories[0]}</span> */}
           <h1>{productDetails.name}</h1>
-          <p>
+          {/* <p>
             <FaStar />
             <FaStar />
             <FaStar />
             <FaStar />
             <FaStar />
             <span>(4.5 {translations.rating}) 150+ {translations.reviews}</span>
-          </p>
+          </p> */}
           <h3>
             {translations.aed} {getCurrentPrice()}{" "}
             <span>{useBoxPrice ? translations.perBox : translations.perUnit}</span>
           </h3>
-          <h4>{translations.minimumOrder}</h4>
+          {/* <h4>{translations.minimumOrder}</h4> */}
           <h5>
             {translations.reviewRefundPolicy}{" "}
-            <a href="#">{translations.learnMore}</a>
+            <a href="/returns">{translations.learnMore}</a>
           </h5>
           {productDetails?.boxPrice !== null &&
            productDetails?.boxPrice !== undefined &&

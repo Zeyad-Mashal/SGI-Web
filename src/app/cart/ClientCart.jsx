@@ -79,7 +79,7 @@ const ClientCart = () => {
     if (!mounted) return;
 
     const currentSubtotal = getCartTotal();
-    const currentTax = currentSubtotal * 0.08;
+    const currentTax = currentSubtotal * 0.05;
     const currentTotal = currentSubtotal + currentTax;
 
     setSubtotal(currentSubtotal);
@@ -98,7 +98,7 @@ const ClientCart = () => {
       setDiscount(discount);
 
       const currentSubtotal = getCartTotal();
-      const currentTax = currentSubtotal * 0.08;
+      const currentTax = currentSubtotal * 0.05;
       const beforeDiscountTotal = currentSubtotal + currentTax;
 
       const discountAmount = beforeDiscountTotal * (discount / 100);
@@ -160,7 +160,7 @@ const ClientCart = () => {
 
     if (result && result.discount) {
       const currentSubtotal = getCartTotal();
-      const currentTax = currentSubtotal * 0.08;
+      const currentTax = currentSubtotal * 0.05;
       const beforeDiscountTotal = currentSubtotal + currentTax;
 
       const discountAmount = beforeDiscountTotal * (result.discount / 100);
@@ -416,7 +416,7 @@ const ClientCart = () => {
                       </div>
 
                       <div className="summry">
-                        <h4>{translations.tax8}</h4>
+                        <h4>{translations.tax5}</h4>
                         <p>{translations.aed} {tax.toFixed(2)}</p>
                       </div>
 
