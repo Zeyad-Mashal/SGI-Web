@@ -54,6 +54,7 @@ const ClientCheckout = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
+  const [shipping, setShipping] = useState(0);
   const [tax, setTax] = useState(0);
   const [discount, setDiscount] = useState(0);
 
@@ -85,6 +86,20 @@ const ClientCheckout = () => {
     GetAddress(setAddresses, setError, setLoading);
   };
 
+  // Calculate shipping based on order value
+  const calculateShipping = (orderValue) => {
+    if (orderValue >= 1 && orderValue <= 99) {
+      return 30;
+    } else if (orderValue >= 100 && orderValue <= 199) {
+      return 20;
+    } else if (orderValue >= 200 && orderValue <= 299) {
+      return 10;
+    } else if (orderValue >= 300) {
+      return 0;
+    }
+    return 0; // Default case
+  };
+
   useEffect(() => {
     // Check for token (logged in status)
     const token = localStorage.getItem("sgitoken");
@@ -102,19 +117,21 @@ const ClientCheckout = () => {
     setCartItems(cart);
 
     // Calculate total amount
-    // Tax is always 5% of the order price (subtotal)
     const calculatedSubtotal = getCartTotal();
-    const calculatedTax = calculatedSubtotal * 0.05; // 5% of order price
-    const totalBeforeDiscount = calculatedSubtotal + calculatedTax; // Subtotal + Tax
+    const calculatedShipping = calculateShipping(calculatedSubtotal);
+    // Tax is 5% of (subtotal + shipping)
+    const calculatedTax = (calculatedSubtotal + calculatedShipping) * 0.05;
+    const totalBeforeDiscount = calculatedSubtotal + calculatedShipping + calculatedTax; // Subtotal + Shipping + Tax
 
     setSubtotal(calculatedSubtotal);
+    setShipping(calculatedShipping);
     setTax(calculatedTax);
 
     // Check for saved coupon discount
     const savedCoupon = localStorage.getItem("savedCoupon");
     if (savedCoupon) {
       const { discount: discountPercent } = JSON.parse(savedCoupon);
-      // Discount is applied to the total (subtotal + tax)
+      // Discount is applied to the total (subtotal + shipping + tax)
       const discountAmount = totalBeforeDiscount * (discountPercent / 100);
       setDiscount(discountAmount);
       setTotalAmount(totalBeforeDiscount - discountAmount);
@@ -535,7 +552,19 @@ const ClientCheckout = () => {
               <p>{translations.aed} {subtotal.toFixed(2)}</p>
             </div>
 
-            {/* Tax - 8% of Order Price */}
+            {/* Shipping */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "0.5rem",
+              }}
+            >
+              <p>{translations.shipping || "Shipping"}</p>
+              <p>{translations.aed} {shipping.toFixed(2)}</p>
+            </div>
+
+            {/* Tax - 5% of (Order Price + Shipping) */}
             <div
               style={{
                 display: "flex",

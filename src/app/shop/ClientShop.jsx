@@ -97,6 +97,15 @@ export default function Shop() {
     };
   }, [lang]);
 
+  // Hide filter when brand is selected, show it otherwise
+  useEffect(() => {
+    if (brandId) {
+      setShowDesktopFilter(false);
+    } else {
+      setShowDesktopFilter(true);
+    }
+  }, [brandId]);
+
   useEffect(() => {
     // Fetch products when categoryId, brandId or page changes
     if (brandId) {
@@ -376,20 +385,22 @@ export default function Shop() {
         {/* SHOP CONTENT */}
         <div className="shop_content">
           <div className="shop_filter_top">
-            <h3
-              onClick={() => {
-                if (window.innerWidth <= 991) {
-                  // موبايل
-                  setShowFilter(!showFilter);
-                } else {
-                  // ديسكتوب
-                  setShowDesktopFilter(!showDesktopFilter);
-                }
-              }}
-            >
-              <FiFilter />
-              {translations.filters}
-            </h3>
+            {!brandId && (
+              <h3
+                onClick={() => {
+                  if (window.innerWidth <= 991) {
+                    // موبايل
+                    setShowFilter(!showFilter);
+                  } else {
+                    // ديسكتوب
+                    setShowDesktopFilter(!showDesktopFilter);
+                  }
+                }}
+              >
+                <FiFilter />
+                {translations.filters}
+              </h3>
+            )}
 
             <p>
               <span>{pagination.totalProducts || allProducts.length}</span> {translations.productsFound}
