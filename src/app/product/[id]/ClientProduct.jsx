@@ -393,11 +393,31 @@ const ClientProduct = () => {
               <p>{productDetails.description}</p>
               <h2>{translations.majorProductUses}</h2>
               <ul>
-                <li>{productDetails.uses}</li>
+                <li><pre style={{
+                    fontFamily: 'inherit',
+                    fontSize: 'inherit',
+                    color: 'inherit',
+                    margin: 0,
+                    padding: 0,
+                    whiteSpace: 'pre-wrap',
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word'
+                  }}>{productDetails.uses}</pre></li>
               </ul>
               <h2>{translations.idealFor}</h2>
               <ul>
-                <li>{productDetails.features}</li>
+                <li>
+                  <pre style={{
+                    fontFamily: 'inherit',
+                    fontSize: 'inherit',
+                    color: 'inherit',
+                    margin: 0,
+                    padding: 0,
+                    whiteSpace: 'pre-wrap',
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word'
+                  }}>{productDetails.features}</pre>
+                </li>
               </ul>
             </div>
           )}
