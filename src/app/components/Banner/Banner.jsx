@@ -53,7 +53,7 @@ const Banner = () => {
             <button className="banner_btn2">{translations.contactus}</button>
           </div>
         </div>
-        <div className="banner_left">
+        {/* <div className="banner_left">
           <div className="banner_left_free">
             <p>{translations.freeshipping}</p>
             <h3>+500$</h3>
@@ -115,7 +115,7 @@ const Banner = () => {
             <p>{translations.save}</p>
             <h3>40%</h3>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
