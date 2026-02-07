@@ -366,7 +366,7 @@
 .Featured_card {
   width: 100%;
   max-width: 300px;
-  min-height: 500px;
+  min-height: 430px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;

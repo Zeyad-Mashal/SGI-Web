@@ -493,9 +493,9 @@ export default function Shop() {
                           <div className="list_view_content">
                             <div className="list_view_info">
                               <h2>{item.name}</h2>
-                              <div className="Featured_stars">
+                              {/* <div className="Featured_stars">
                                 <p>{translations.minimumOrder}</p>
-                              </div>
+                              </div> */}
                             </div>
                             <div className="Featured_price">
                               <h3>{translations.aed} {item.price}</h3>
@@ -549,9 +549,9 @@ export default function Shop() {
                         />
                         <p>{translations.featured}</p>
                       </div>
-                      <div className="Featured_stars">
+                      {/* <div className="Featured_stars">
                             <p>{translations.minimumOrder}</p>
-                      </div>
+                      </div> */}
                       <h2>{item.name}</h2>
                     </a>
 

@@ -146,14 +146,14 @@ const Featured_Products = () => {
 
                     <h2>{item.name}</h2>
 
-                    <div className="Featured_stars">
+                    {/* <div className="Featured_stars">
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <FontAwesomeIcon icon={faStar} />
                       <p>{translations.reviews} (230)</p>
-                    </div>
+                    </div> */}
                   </a>
 
                   <div className="Featured_price">
