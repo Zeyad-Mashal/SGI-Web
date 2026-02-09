@@ -236,6 +236,10 @@ export default function Shop() {
   const handleSubCategoryClick = (subCategoryId) => {
     setSelectedSubCategoryId(subCategoryId);
     setSelectedCategoryId(null);
+    // Close filter on mobile
+    if (window.innerWidth <= 991) {
+      setShowFilter(false);
+    }
     // Update URL and fetch products
     const params = new URLSearchParams();
     params.set("category", subCategoryId);
@@ -247,6 +251,10 @@ export default function Shop() {
   const handleMainCategoryClick = (categoryId) => {
     setSelectedCategoryId(categoryId);
     setSelectedSubCategoryId(null);
+    // Close filter on mobile
+    if (window.innerWidth <= 991) {
+      setShowFilter(false);
+    }
     // Update URL and fetch products
     const params = new URLSearchParams();
     params.set("category", categoryId);
