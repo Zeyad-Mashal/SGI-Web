@@ -26,7 +26,7 @@ import {
   isFavorited,
   getFavorites,
 } from "@/utils/favoriteUtils";
-import { faChevronDown, faChevronRight, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronRight, faTimes, faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
 
@@ -255,6 +255,13 @@ export default function Shop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleMainCategoryArrowClick = (categoryId, e) => {
+    // Stop event propagation to prevent opening sub panel
+    e.stopPropagation();
+    // Navigate to shop page with main category ID
+    handleMainCategoryClick(categoryId);
+  };
+
   const clearFilter = () => {
     setSelectedCategoryId(null);
     setSelectedSubCategoryId(null);
@@ -332,12 +339,12 @@ export default function Shop() {
                         }}
                       >
                         <span className="category_name">{categoryName}</span>
-                        {hasSubCategories && (
-                          <FontAwesomeIcon 
-                            icon={isExpanded ? faChevronDown : faChevronRight} 
-                            className="category_chevron"
-                          />
-                        )}
+                        <FontAwesomeIcon 
+                          icon={lang === "ar" ? faArrowLeft : faArrowRight} 
+                          onClick={(e) => handleMainCategoryArrowClick(category._id, e)}
+                          style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                          className="main_category_arrow"
+                        />
                       </div>
                       
                       {/* Subcategories */}

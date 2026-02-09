@@ -108,6 +108,15 @@ const Navbar = () => {
     router.push(`/shop?category=${subCategoryId}`);
   };
 
+  const handleMainCategoryClick = (categoryId, e) => {
+    // Stop event propagation to prevent opening sub panel
+    e.stopPropagation();
+    // Close the mega menu
+    closeMegaMenu();
+    // Navigate to shop page with main category ID
+    router.push(`/shop?category=${categoryId}`);
+  };
+
   const toggleCategory = (index) => {
     setActiveCategory(activeCategory === index ? null : index);
   };
@@ -478,7 +487,12 @@ const Navbar = () => {
                         onClick={() => openSubPanel(index)}
                       >
                         <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
-                        <FontAwesomeIcon icon={faChevronDown} rotation={270} />
+                        <FontAwesomeIcon 
+                          icon={isArabic ? faArrowLeft : faArrowRight} 
+                          onClick={(e) => handleMainCategoryClick(cat._id, e)}
+                          style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                          className="main_category_arrow"
+                        />
                       </button>
                     ))}
                   </div>
@@ -496,7 +510,12 @@ const Navbar = () => {
                         onClick={() => openSubPanel(index)}
                       >
                         <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
-                        <FontAwesomeIcon icon={faChevronDown} rotation={270} />
+                        <FontAwesomeIcon 
+                          icon={isArabic ? faArrowLeft : faArrowRight} 
+                          onClick={(e) => handleMainCategoryClick(cat._id, e)}
+                          style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                          className="main_category_arrow"
+                        />
                       </button>
                     ))}
                   </div>
@@ -576,7 +595,16 @@ const Navbar = () => {
                   onClick={() => toggleCategory(index)}
                 >
                   <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
-                  <FontAwesomeIcon icon={faChevronDown} />
+                  <FontAwesomeIcon 
+                    icon={isArabic ? faArrowLeft : faArrowRight} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMainCategoryClick(cat._id, e);
+                      setMenuOpen(false);
+                    }}
+                    style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                    className="main_category_arrow"
+                  />
                 </div>
                 {activeCategory === index &&
                   cat.subCategories &&

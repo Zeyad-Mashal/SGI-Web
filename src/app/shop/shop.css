@@ -118,6 +118,23 @@
   transition: transform 0.3s ease;
 }
 
+.main_category_arrow {
+  transition: transform 0.2s ease, color 0.2s ease;
+  color: rgba(215, 223, 43, 1);
+  font-weight: bold;
+  padding: 4px;
+  border-radius: 4px;
+}
+.main_category_arrow:hover {
+  transform: translateX(3px);
+  color: rgba(0, 125, 78, 1);
+  background-color: rgba(215, 223, 43, 0.2);
+}
+[dir="rtl"] .main_category_arrow:hover,
+.shop_filter[dir="rtl"] .main_category_arrow:hover {
+  transform: translateX(-3px);
+}
+
 .category_main_item.expanded .category_chevron {
   transform: rotate(90deg);
 }
