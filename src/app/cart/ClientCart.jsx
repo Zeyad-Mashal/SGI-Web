@@ -377,7 +377,7 @@ const ClientCart = () => {
                         </button>
                       </div>
 
-                      <p>{translations.tryBulk10}</p>
+                      {/* <p>{translations.tryBulk10}</p> */}
                       {error && <p style={{ color: "red" }}>{error}</p>}
                       {discount && (
                         <p style={{ color: "green" }}>{translations.discount} {discount}%</p>
