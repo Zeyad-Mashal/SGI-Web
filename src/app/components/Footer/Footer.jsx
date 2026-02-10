@@ -39,20 +39,20 @@ const Footer = () => {
           <ul>
             <li><a href="/">{translations.home}</a></li>
             <li><a href="/shop">{translations.shop}</a></li>
-            <li><a href="/">{translations.aboutus}</a></li>
+            {/* <li><a href="/">{translations.aboutus}</a></li> */}
           </ul>
         </div>
         <div className="footer_company">
           <h3>{translations.support}</h3>
           <ul>
-            <li>{translations.contactus}</li>
+            <li><a href="tel:+971565088475" target="_blank">{translations.contactus}</a></li>
           </ul>
         </div>
         <div className="footer_company">
           <h3>{translations.resources}</h3>
           <ul>
-            <li>{translations.helpcenter}</li>
-            <li>{translations.faqs}</li>
+            {/* <li>{translations.helpcenter}</li>
+            <li>{translations.faqs}</li> */}
             <li><a href="/returns">{translations.termsofservice}</a></li>
             <li><a href="/Privacy">{translations.privacypolicy}</a></li>
           </ul>
