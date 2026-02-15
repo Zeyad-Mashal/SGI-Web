@@ -77,12 +77,12 @@ const Categories = () => {
 
   // Static images array
   const staticImages = [
-    { src: "/images/exterior.webp", name: "CarWashnew1.webp" },
-    { src: "/images/polisher.webp", name: "Hotels2.webp" },
-    { src: "/images/wd.webp", name: "Laundry&Dryclean2.webp" },
-    { src: "/images/wrs.webp", name: "Office&Pantry2.webp" },
-    { src: "/images/gcd.webp", name: "School&Nursery2.webp" },
-    { src: "/images/d-s-d.webp", name: "Restaurant&Cafe2.webp" },
+    { src: "/images/01.webp", name: "CarWashnew1.webp" },
+    { src: "/images/02.webp", name: "Hotels2.webp" },
+    { src: "/images/03.webp", name: "Laundry&Dryclean2.webp" },
+    { src: "/images/06.webp", name: "Office&Pantry2.webp" },
+    { src: "/images/04.webp", name: "School&Nursery2.webp" },
+    { src: "/images/05.webp", name: "Restaurant&Cafe2.webp" },
   ];
 
   return (

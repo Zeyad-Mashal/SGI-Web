@@ -50,7 +50,9 @@ const Banner = () => {
             <button className="banner_btn1">
               <a href="/shop">{translations.shopnow}</a>
             </button>
-            <button className="banner_btn2">{translations.contactus}</button>
+            <button className="banner_btn2">
+              <a href="https://wa.me/+971565088475" target="_blank">{translations.contactus}</a>
+            </button>
           </div>
         </div>
         {/* <div className="banner_left">

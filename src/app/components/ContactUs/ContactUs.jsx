@@ -26,10 +26,10 @@ const ContactUs = () => {
             <AiOutlineMail />
 
             <h3>{translations.email}</h3>
-            <p>{translations.office} : hello@skyline.co</p>
+            <p>{translations.office} : no-reply@multicart.ae</p>
             <div className="ContactUs_item_btn">
               <button>
-                <a href="mailto:hello@skyline.co" target="_blanck">
+                <a href="mailto:no-reply@multicart.ae" target="_blanck">
                   {translations.contactus}
                 </a>
               </button>
@@ -39,10 +39,10 @@ const ContactUs = () => {
           <div className="ContactUs_item">
             <FiPhone />
             <h3>{translations.phone}</h3>
-            <p>{translations.office} : +91 8932-1151-22</p>
+            <p>{translations.office} : +971565088475</p>
             <div className="ContactUs_item_btn">
               <button>
-                <a href="tel:+201205222331" target="_blanck">
+                <a href="tel:+971565088475" target="_blanck">
                   {translations.contactus}
                 </a>
               </button>
@@ -53,7 +53,7 @@ const ContactUs = () => {
             <SlLocationPin />
 
             <h3>{translations.location}</h3>
-            <p>{translations.office} : 123 Maple Street, Springfield</p>
+            <p>{translations.office} : Dubai, UAE</p>
             <div className="ContactUs_item_btn">
               <button>
                 <a
