@@ -313,6 +313,7 @@
   gap: 1rem;
   width: 100%;
   padding: 3rem;
+  margin-top: -3rem;
 }
 .product_desc_btns {
   display: flex;

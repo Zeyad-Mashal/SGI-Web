@@ -53,29 +53,29 @@ const Navbar = () => {
     GetCategories(setCategories, setError, setLoading);
     // تحديث عدد المنتجات في السلة
     updateCartCount();
-    
+
     // الاستماع لتغييرات localStorage من نفس النافذة
     const handleStorageChange = (e) => {
-      if (e.key === 'cart' || !e.key) {
+      if (e.key === "cart" || !e.key) {
         updateCartCount();
       }
     };
-    
+
     // الاستماع لتغييرات localStorage من نوافذ أخرى
-    window.addEventListener('storage', handleStorageChange);
-    
+    window.addEventListener("storage", handleStorageChange);
+
     // فحص السلة كل 500ms للتحديث الفوري (أسرع)
     const interval = setInterval(updateCartCount, 500);
-    
+
     // تحديث عند تغيير التركيز على النافذة
     const handleFocus = () => {
       updateCartCount();
     };
-    window.addEventListener('focus', handleFocus);
-    
+    window.addEventListener("focus", handleFocus);
+
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("focus", handleFocus);
       clearInterval(interval);
     };
   }, []);
@@ -192,7 +192,7 @@ const Navbar = () => {
       setSearchedProducts,
       setError,
       setLoading,
-      value
+      value,
     );
 
     if (response && response.products) {
@@ -341,8 +341,8 @@ const Navbar = () => {
           <div>
             <p>{translations.callus}</p>
             <span>
-              <a href="tel:1-800-555-1234" target="_blanck">
-                1-800-555-1234
+              <a href="tel:+971565088475" target="_blanck">
+                +971 565088475
               </a>
             </span>
           </div>
@@ -388,21 +388,38 @@ const Navbar = () => {
 
         <ul className="main_links">
           <li>
-            <a href="/" className={pathname === "/" ? "active" : ""}>{translations.home}</a>
+            <a href="/" className={pathname === "/" ? "active" : ""}>
+              {translations.home}
+            </a>
           </li>
           <li>
-            <a href="/shop" className={pathname === "/shop" ? "active" : ""}>{translations.shop}</a>
+            <a href="/shop" className={pathname === "/shop" ? "active" : ""}>
+              {translations.shop}
+            </a>
           </li>
           <li>
-            <a href="/returns" className={pathname === "/returns" ? "active" : ""}>{translations.returnsTitle || "Returns Policy"}</a>
+            <a
+              href="/returns"
+              className={pathname === "/returns" ? "active" : ""}
+            >
+              {translations.returnsTitle || "Returns Policy"}
+            </a>
           </li>
           <li>
-            <a href="/Privacy" className={pathname === "/Privacy" ? "active" : ""}>{translations.privacyTitle || "Privacy Policy"}</a>
+            <a
+              href="/Privacy"
+              className={pathname === "/Privacy" ? "active" : ""}
+            >
+              {translations.privacyTitle || "Privacy Policy"}
+            </a>
           </li>
         </ul>
         <div className="login_links">
           {token ? (
-            <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>
+            <button
+              className="logout-btn"
+              onClick={() => setShowLogoutModal(true)}
+            >
               {translations.logout || "Logout"}
             </button>
           ) : (
@@ -468,7 +485,7 @@ const Navbar = () => {
                             >
                               {subCat.name?.[lang] || subCat.name?.en || ""}
                             </li>
-                          )
+                          ),
                         )
                       ) : (
                         <li className="mega_placeholder">
@@ -487,10 +504,14 @@ const Navbar = () => {
                         onClick={() => openSubPanel(index)}
                       >
                         <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
-                        <FontAwesomeIcon 
-                          icon={isArabic ? faArrowLeft : faArrowRight} 
+                        <FontAwesomeIcon
+                          icon={isArabic ? faArrowLeft : faArrowRight}
                           onClick={(e) => handleMainCategoryClick(cat._id, e)}
-                          style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                          }}
                           className="main_category_arrow"
                         />
                       </button>
@@ -510,10 +531,14 @@ const Navbar = () => {
                         onClick={() => openSubPanel(index)}
                       >
                         <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
-                        <FontAwesomeIcon 
-                          icon={isArabic ? faArrowLeft : faArrowRight} 
+                        <FontAwesomeIcon
+                          icon={isArabic ? faArrowLeft : faArrowRight}
                           onClick={(e) => handleMainCategoryClick(cat._id, e)}
-                          style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                          }}
                           className="main_category_arrow"
                         />
                       </button>
@@ -548,7 +573,7 @@ const Navbar = () => {
                             >
                               {subCat.name?.[lang] || subCat.name?.en || ""}
                             </li>
-                          )
+                          ),
                         )
                       ) : (
                         <li className="mega_placeholder">
@@ -582,10 +607,24 @@ const Navbar = () => {
         </div>
 
         <div className="mobile_menu_links">
-          <a href="/" className={pathname === "/" ? "active" : ""}>{translations.home}</a>
-          <a href="/shop" className={pathname === "/shop" ? "active" : ""}>{translations.shop}</a>
-          <a href="/returns" className={pathname === "/returns" ? "active" : ""}>{translations.returnsTitle || "Returns Policy"}</a>
-          <a href="/Privacy" className={pathname === "/Privacy" ? "active" : ""}>{translations.privacyTitle || "Privacy Policy"}</a>
+          <a href="/" className={pathname === "/" ? "active" : ""}>
+            {translations.home}
+          </a>
+          <a href="/shop" className={pathname === "/shop" ? "active" : ""}>
+            {translations.shop}
+          </a>
+          <a
+            href="/returns"
+            className={pathname === "/returns" ? "active" : ""}
+          >
+            {translations.returnsTitle || "Returns Policy"}
+          </a>
+          <a
+            href="/Privacy"
+            className={pathname === "/Privacy" ? "active" : ""}
+          >
+            {translations.privacyTitle || "Privacy Policy"}
+          </a>
           <div className="mobile_categories">
             <h3>{translations.categories}</h3>
             {categories.map((cat, index) => (
@@ -595,14 +634,18 @@ const Navbar = () => {
                   onClick={() => toggleCategory(index)}
                 >
                   <span>{cat.name?.[lang] || cat.name?.en || ""}</span>
-                  <FontAwesomeIcon 
-                    icon={isArabic ? faArrowLeft : faArrowRight} 
+                  <FontAwesomeIcon
+                    icon={isArabic ? faArrowLeft : faArrowRight}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleMainCategoryClick(cat._id, e);
                       setMenuOpen(false);
                     }}
-                    style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                    style={{
+                      cursor: "pointer",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                    }}
                     className="main_category_arrow"
                   />
                 </div>
@@ -681,7 +724,9 @@ const Navbar = () => {
                     />
                     <div className="search_item_info">
                       <p>{item.name}</p>
-                      <p>{item.price} {translations.aed}</p>
+                      <p>
+                        {item.price} {translations.aed}
+                      </p>
                     </div>
                   </a>
                 </div>
