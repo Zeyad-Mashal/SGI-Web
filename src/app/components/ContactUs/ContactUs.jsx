@@ -26,10 +26,10 @@ const ContactUs = () => {
             <AiOutlineMail />
 
             <h3>{translations.email}</h3>
-            <p>{translations.office} : no-reply@multicart.ae</p>
+            <p>{translations.office} : support@multicart.ae</p>
             <div className="ContactUs_item_btn">
               <button>
-                <a href="mailto:no-reply@multicart.ae" target="_blanck">
+                <a href="mailto:support@multicart.ae" target="_blanck">
                   {translations.contactus}
                 </a>
               </button>
@@ -53,11 +53,11 @@ const ContactUs = () => {
             <SlLocationPin />
 
             <h3>{translations.location}</h3>
-            <p>{translations.office} : Dubai, UAE</p>
+            <p>{translations.office} : Dubai -Jebel Ali Industrial 1</p>
             <div className="ContactUs_item_btn">
               <button>
                 <a
-                  href="https://maps.app.goo.gl/9hJnb1rssfoAHoYPA"
+                  href="https://maps.app.goo.gl/putZRzLaNBiSHEP38"
                   target="_blanck"
                 >
                   {translations.contactus}
