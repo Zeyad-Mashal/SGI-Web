@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { FiBox, FiFilter } from "react-icons/fi";
@@ -148,6 +148,42 @@ export default function Shop() {
     }
   }, [categoryId, brandId, currentPage, categories]);
 
+  // رفع الشاشة لأول الصفحة من فوق (بدون أخطاء)
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+    if (typeof document !== "undefined") {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+  };
+
+  // عند تغيير رقم الصفحة: نرفع الشاشة فوراً وبعد التحديث
+  useEffect(() => {
+    scrollToTop();
+    const t1 = setTimeout(scrollToTop, 0);
+    const t2 = setTimeout(scrollToTop, 100);
+    const t3 = setTimeout(scrollToTop, 300);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [currentPage]);
+
+  // بعد ما الداتا الجديدة تتحمّل والـ DOM يتحدّث: نرجع الشاشة لفوق عشان ما تعلقش في النص
+  const wasLoadingRef = useRef(loading);
+  useEffect(() => {
+    if (wasLoadingRef.current && !loading) {
+      scrollToTop();
+      requestAnimationFrame(() => scrollToTop());
+      requestAnimationFrame(() => requestAnimationFrame(() => scrollToTop()));
+      const delays = [50, 150, 350, 600, 1000];
+      const timers = delays.map((ms) => setTimeout(scrollToTop, ms));
+      return () => timers.forEach(clearTimeout);
+    }
+    wasLoadingRef.current = loading;
+  }, [loading]);
+
   // Debug: Log pagination state
   useEffect(() => {
     console.log('Pagination state:', pagination);
@@ -283,10 +319,10 @@ export default function Shop() {
     if (newPage < 1 || (pagination.totalPages && newPage > pagination.totalPages)) {
       return;
     }
+    scrollToTop();
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", newPage.toString());
-    router.push(`${pathname}?${params.toString()}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
   return (
     <div className="shop">
