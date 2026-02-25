@@ -49,6 +49,22 @@
   margin-top: 1rem;
 }
 
+/* RTL: اتجاه العنوان في النسخة العربية */
+[dir="rtl"] .Our_Products .Our_Products_header_title {
+  text-align: right;
+}
+[dir="rtl"] .Our_Products .Our_Products_header_title > span {
+  margin-left: 0;
+  margin-right: 30px;
+}
+[dir="rtl"] .Our_Products .Our_Products_header_title > span::before {
+  left: auto;
+  right: -30px;
+}
+[dir="rtl"] .Our_Products .Our_Products_header_title > h1 {
+  text-align: right;
+}
+
 .Our_Products_list {
   width: 100%;
   margin-top: 1rem;
