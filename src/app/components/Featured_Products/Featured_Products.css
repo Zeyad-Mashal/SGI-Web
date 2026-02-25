@@ -42,6 +42,22 @@
   margin-top: 1rem;
 }
 
+/* RTL: section title right-aligned */
+[dir="rtl"] .Featured_Products .Featured_Products_header_title {
+  text-align: right;
+}
+[dir="rtl"] .Featured_Products .Featured_Products_header_title > span {
+  margin-left: 0;
+  margin-right: 30px;
+}
+[dir="rtl"] .Featured_Products .Featured_Products_header_title > span::before {
+  left: auto;
+  right: -30px;
+}
+[dir="rtl"] .Featured_Products .Featured_Products_header_title > h1 {
+  text-align: right;
+}
+
 .Featured_Products_swiper {
   width: 100%;
   margin-top: 1rem;
@@ -131,6 +147,28 @@
   font-weight: bold;
   margin-right: 10px;
 }
+
+/* RTL: product card text and price alignment */
+[dir="rtl"] .Featured_card h2 {
+  text-align: center;
+}
+[dir="rtl"] .Featured_stars,
+[dir="rtl"] .Featured_price {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+[dir="rtl"] .Featured_price > h3 {
+  margin-right: 0;
+  margin-left: 10px;
+}
+[dir="rtl"] .Featured_stars > svg {
+  margin-right: 0;
+  margin-left: 5px;
+}
+[dir="rtl"] .Featured_stars > p {
+  margin-left: 0;
+  margin-right: 10px;
+}
 .Featured_price > button {
   padding: 5px 15px;
   background-color: black;
@@ -162,12 +200,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  overflow: visible;
 }
 
+/* Keep arrows in LTR order and visible in RTL (Arabic) */
 .Featured_Products_nav_buttons {
   display: flex;
   gap: 10px;
   margin-top: 2rem;
+  direction: ltr;
+  flex-shrink: 0;
+}
+[dir="rtl"] .Featured_Products_nav_buttons {
+  direction: ltr;
 }
 
 .nav_btn {
@@ -199,19 +244,32 @@
 .loader_container > .loader {
   width: 250px;
   height: 265px;
-  background: linear-gradient(0.25turn, transparent, #fff, transparent),
+  background:
+    linear-gradient(0.25turn, transparent, #fff, transparent),
     linear-gradient(#ddd, #ddd), linear-gradient(#ddd, #ddd),
     linear-gradient(#ddd, #ddd);
   background-color: #fff;
   background-repeat: no-repeat;
-  background-size: 215px 220px, 215px 130px, 100px 15px, 150px 15px;
-  background-position: -215px 0, 0 0, 15px 150px, 15px 180px;
+  background-size:
+    215px 220px,
+    215px 130px,
+    100px 15px,
+    150px 15px;
+  background-position:
+    -215px 0,
+    0 0,
+    15px 150px,
+    15px 180px;
   animation: loading 1.5s infinite;
 }
 
 @keyframes loading {
   to {
-    background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
+    background-position:
+      215px 0,
+      0 0,
+      15px 150px,
+      15px 180px;
   }
 }
 @media screen and (min-width: 1401px) {

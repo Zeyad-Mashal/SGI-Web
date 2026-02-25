@@ -59,6 +59,15 @@
   text-align: justify;
 }
 
+.privacy_item p a {
+  color: rgba(7, 101, 133, 1);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.privacy_item p a:hover {
+  color: rgba(5, 80, 105, 1);
+}
+
 @media screen and (max-width: 768px) {
   .privacy {
     padding: 1rem 0.5rem;
@@ -94,4 +103,3 @@
     line-height: 1.6;
   }
 }
-

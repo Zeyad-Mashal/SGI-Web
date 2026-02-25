@@ -31,22 +31,42 @@ const Brands = () => {
   const [allBrands, setAllBrands] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  // العلامات التجارية المسموح بها فقط
-  const allowedBrands = ["Cleenol", "INDUQUIM", "SEITZ"];
-  
+
+  // العلامات التجارية المسموح بها (نفس الثلاثة في الإنجليزي والعربي)
+  const allowedBrandsEn = ["Cleenol", "INDUQUIM", "SEITZ"];
+  const allowedBrandsAr = ["كلينول", "إندوكيم", "سيتز"]; // أسماء عربية لنفس العلامات إن وردت من الـ API
+
   const getAllBrands = () => {
-    GetAllBrands((brands) => {
-      // تصفية العلامات التجارية لعرض فقط المسموح بها
-      const filteredBrands = brands.filter((brand) => {
-        if (!brand.name) return false;
-        const brandName = brand.name.trim().toUpperCase();
-        return allowedBrands.some((allowedBrand) => 
-          brandName === allowedBrand.toUpperCase()
-        );
-      });
-      setAllBrands(filteredBrands);
-    }, setError, setLoading);
+    GetAllBrands(
+      (brands) => {
+        if (!Array.isArray(brands)) {
+          setAllBrands([]);
+          return;
+        }
+        const allowedSet = new Set([
+          ...allowedBrandsEn.map((n) => n.trim().toUpperCase()),
+          ...allowedBrandsAr.map((n) => n.trim()),
+        ]);
+        // تصفية: نطابق أي شكل من الاسم (en أو ar أو string)
+        const filteredBrands = brands.filter((brand) => {
+          if (!brand.name) return false;
+          const names = [
+            typeof brand.name === "string" ? brand.name : null,
+            brand.name?.en,
+            brand.name?.ar,
+          ].filter(Boolean);
+          const match = names.some((n) => {
+            const normalized = String(n).trim();
+            const upper = normalized.toUpperCase();
+            return allowedSet.has(upper) || allowedSet.has(normalized);
+          });
+          return match;
+        });
+        setAllBrands(filteredBrands.length > 0 ? filteredBrands : brands);
+      },
+      setError,
+      setLoading,
+    );
   };
 
   return (
@@ -97,9 +117,9 @@ const Brands = () => {
             }}
             className="brands_swiper"
           >
-            {allBrands.map((brand) => (
+            {(allBrands || []).map((brand) => (
               <SwiperSlide key={brand._id}>
-                <div 
+                <div
                   className="brand_card"
                   onClick={() => {
                     router.push(`/shop?brand=${brand._id}`);
@@ -113,7 +133,11 @@ const Brands = () => {
                     width={224}
                     height={60}
                   />
-                  <span>{brand.name}</span>
+                  <span>
+                    {typeof brand.name === "string"
+                      ? brand.name
+                      : brand.name?.en || brand.name?.ar || ""}
+                  </span>
                 </div>
               </SwiperSlide>
             ))}

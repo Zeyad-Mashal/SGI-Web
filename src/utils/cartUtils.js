@@ -31,8 +31,10 @@ export const addToCart = (product, quantity = 1) => {
         // If product already exists with same pricing mode, update quantity
         // Otherwise, add as new item (different pricing mode)
         const existingItem = cart[existingItemIndex];
-        if (existingItem.isBoxPricing === product.isBoxPricing && 
-            existingItem.piecesPerBox === product.piecesPerBox) {
+        const samePricingMode =
+            (existingItem.isBoxPricing ?? false) === (product.isBoxPricing ?? false) &&
+            (existingItem.piecesPerBox ?? null) === (product.piecesPerBox ?? null);
+        if (samePricingMode) {
             cart[existingItemIndex].quantity += quantity;
         } else {
             // Different pricing mode, add as separate item

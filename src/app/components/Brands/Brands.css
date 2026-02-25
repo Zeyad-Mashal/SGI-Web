@@ -14,6 +14,7 @@
   align-items: flex-start;
   flex-direction: column;
   position: relative;
+  overflow: visible;
 }
 .Brands .brands_header_title > span {
   font-size: 1.2rem;
@@ -38,6 +39,22 @@
   font-size: 2rem;
   font-weight: bold;
   margin-top: 1rem;
+}
+
+/* RTL: section title right-aligned */
+[dir="rtl"] .Brands .brands_header_title {
+  text-align: right;
+}
+[dir="rtl"] .Brands .brands_header_title > span {
+  margin-left: 0;
+  margin-right: 30px;
+}
+[dir="rtl"] .Brands .brands_header_title > span::before {
+  left: auto;
+  right: -30px;
+}
+[dir="rtl"] .Brands .brands_header_title > h1 {
+  text-align: right;
 }
 
 .brands_swiper {
@@ -93,12 +110,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  overflow: visible;
 }
 
+/* Keep arrows in LTR order and visible in RTL (Arabic) */
 .brands_nav_buttons {
   display: flex;
   gap: 10px;
   margin-top: 2rem;
+  direction: ltr;
+  flex-shrink: 0;
+}
+[dir="rtl"] .brands_nav_buttons {
+  direction: ltr;
 }
 
 .nav_btn {

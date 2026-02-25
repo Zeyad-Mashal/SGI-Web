@@ -129,7 +129,9 @@ const Our_Products = () => {
                       <p>{translations.reviews} (230)</p>
                     </div> */}
                     <div className="Our_Products_price">
-                      <h3>{translations.aed} {item.price}</h3>
+                      <h3>
+                        {translations.aed} {item.price}
+                      </h3>
                       <button
                         onClick={(e) => {
                           e.preventDefault();

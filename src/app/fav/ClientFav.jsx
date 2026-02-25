@@ -32,7 +32,7 @@ const ClientFav = () => {
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
     setTranslations(savedLang === "ar" ? ar : en);
-    
+
     setMounted(true);
     loadFavorites();
 
@@ -44,7 +44,7 @@ const ClientFav = () => {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    
+
     // Also check periodically for language changes
     const interval = setInterval(() => {
       const currentLang = localStorage.getItem("lang") || "en";
@@ -83,6 +83,19 @@ const ClientFav = () => {
   const handleAddToCart = (item) => {
     addToCart(item, 1);
     showToast("Product added to cart!", "success");
+  };
+
+  // استخراج نص للعرض من قيمة قد تكون string أو object (مثل { _id, name } أو { en, ar })
+  const getDisplayName = (val) => {
+    if (val == null) return "";
+    if (typeof val === "string") return val;
+    if (typeof val === "object" && val.name != null)
+      return typeof val.name === "string"
+        ? val.name
+        : val.name[lang] || val.name.en || val.name.ar || "";
+    if (typeof val === "object" && (val.en != null || val.ar != null))
+      return val[lang] || val.en || val.ar || "";
+    return String(val);
   };
 
   if (!mounted) {
@@ -158,7 +171,7 @@ const ClientFav = () => {
                       ? item.picUrls[0]
                       : "/images/empty_product.png"
                   }
-                  alt={item.name}
+                  alt={getDisplayName(item.name)}
                   width={120}
                   height={120}
                 />
@@ -166,18 +179,15 @@ const ClientFav = () => {
                   <div className="fav_content_left">
                     <span>
                       {item.categories && item.categories.length > 0
-                        ? item.categories[0]
+                        ? getDisplayName(item.categories[0])
                         : "Product"}
                     </span>
-                    <h2>{item.name}</h2>
+                    <h2>{getDisplayName(item.name)}</h2>
                     <div className="left_price">
                       <p>
-                        {translations.aed} {item.price} <span>{translations.perUnit}</span>
+                        {translations.aed} {item.price}{" "}
+                        <span>{translations.perUnit}</span>
                       </p>
-                      <h4>
-                        <MdErrorOutline />
-                        Min. Order : 30 Units
-                      </h4>
                     </div>
                   </div>
                   <div className="fav_item_right">

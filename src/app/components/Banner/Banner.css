@@ -95,11 +95,22 @@
 }
 .banner_btns > .banner_btn2 {
   color: white;
-  border: 1px solid white;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
   cursor: pointer;
   padding: 5px 15px;
   border-radius: 16px;
   width: 150px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.banner_btns > .banner_btn2:hover {
+  background: rgba(0, 0, 0, 0.6);
+  border-color: white;
+}
+.banner_btns > .banner_btn2 a {
+  color: inherit;
+  text-decoration: none;
 }
 .banner_left {
   width: 50%;
@@ -286,18 +297,18 @@
 }
 @media screen and (max-width: 789px) {
   .sgi-home-banner {
-    height: 1000px;
+    height: 500px;
     flex-direction: column;
     padding: 1rem;
   }
   .sgi-home-banner_container {
-    height: 1000px;
+    height: 500px;
     flex-direction: column;
     padding: 1rem;
     gap: 1rem;
   }
   .overlay {
-    height: 1000px;
+    height: 500px;
   }
   .banner_right {
     width: 100%;

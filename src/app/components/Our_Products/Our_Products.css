@@ -237,19 +237,32 @@
 .loader_container > .loader {
   width: 250px;
   height: 265px;
-  background: linear-gradient(0.25turn, transparent, #fff, transparent),
+  background:
+    linear-gradient(0.25turn, transparent, #fff, transparent),
     linear-gradient(#ddd, #ddd), linear-gradient(#ddd, #ddd),
     linear-gradient(#ddd, #ddd);
   background-color: #fff;
   background-repeat: no-repeat;
-  background-size: 215px 220px, 215px 130px, 100px 15px, 150px 15px;
-  background-position: -215px 0, 0 0, 15px 150px, 15px 180px;
+  background-size:
+    215px 220px,
+    215px 130px,
+    100px 15px,
+    150px 15px;
+  background-position:
+    -215px 0,
+    0 0,
+    15px 150px,
+    15px 180px;
   animation: loading 1.5s infinite;
 }
 
 @keyframes loading {
   to {
-    background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
+    background-position:
+      215px 0,
+      0 0,
+      15px 150px,
+      15px 180px;
   }
 }
 @media screen and (min-width: 1401px) {
@@ -323,15 +336,26 @@
     top: 30px;
     right: 10px;
   }
+  .Our_Products_price {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 5px;
+  }
   .Our_Products_price > button {
     font-size: 10px;
-    padding: 4px 10px;
+    padding: 6px 10px;
+    width: 90%;
+    display: block;
   }
   .Our_Products_price > h3 {
     font-size: 0.8rem;
+    width: 100%;
+    display: block;
   }
   .Our_Products_item h2 {
     font-size: 0.6rem;
+    text-align: center;
   }
   .Our_Products_stars > svg {
     font-size: 0.5rem;

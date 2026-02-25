@@ -37,17 +37,19 @@ const ClientProduct = () => {
   const handleBoxClick = () => {
     const boxPrice = Number(productDetails?.boxPrice);
     const piecesNumber = Number(productDetails?.piecesNumber);
-    
-    if (productDetails?.boxPrice !== null &&
-        productDetails?.boxPrice !== undefined &&
-        productDetails?.boxPrice !== "" &&
-        !isNaN(boxPrice) &&
-        boxPrice > 0 &&
-        productDetails?.piecesNumber !== null &&
-        productDetails?.piecesNumber !== undefined &&
-        productDetails?.piecesNumber !== "" &&
-        !isNaN(piecesNumber) &&
-        piecesNumber > 0) {
+
+    if (
+      productDetails?.boxPrice !== null &&
+      productDetails?.boxPrice !== undefined &&
+      productDetails?.boxPrice !== "" &&
+      !isNaN(boxPrice) &&
+      boxPrice > 0 &&
+      productDetails?.piecesNumber !== null &&
+      productDetails?.piecesNumber !== undefined &&
+      productDetails?.piecesNumber !== "" &&
+      !isNaN(piecesNumber) &&
+      piecesNumber > 0
+    ) {
       if (useBoxPrice) {
         // Switch back to unit pricing
         setUseBoxPrice(false);
@@ -65,12 +67,14 @@ const ClientProduct = () => {
   // Get current price (box price if selected, otherwise regular price)
   const getCurrentPrice = () => {
     const boxPrice = Number(productDetails?.boxPrice);
-    if (useBoxPrice && 
-        productDetails?.boxPrice !== null &&
-        productDetails?.boxPrice !== undefined &&
-        productDetails?.boxPrice !== "" &&
-        !isNaN(boxPrice) &&
-        boxPrice > 0) {
+    if (
+      useBoxPrice &&
+      productDetails?.boxPrice !== null &&
+      productDetails?.boxPrice !== undefined &&
+      productDetails?.boxPrice !== "" &&
+      !isNaN(boxPrice) &&
+      boxPrice > 0
+    ) {
       return boxPrice;
     }
     return productDetails?.price || 0;
@@ -103,7 +107,7 @@ const ClientProduct = () => {
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
     setTranslations(savedLang === "ar" ? ar : en);
-    
+
     getProductDetails();
     setFavorites(getFavorites());
 
@@ -115,7 +119,7 @@ const ClientProduct = () => {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    
+
     // Also check periodically for language changes
     const interval = setInterval(() => {
       const currentLang = localStorage.getItem("lang") || "en";
@@ -183,14 +187,14 @@ const ClientProduct = () => {
                 <p>{translations.loadingImage}</p>
               </div>
             ) : activeImg ? (
-          <Image
+              <Image
                 src={activeImg}
-            alt="product image"
-            width={390}
-            height={390}
-            className="main_image"
+                alt="product image"
+                width={390}
+                height={390}
+                className="main_image"
                 priority
-          />
+              />
             ) : null}
           </div>
 
@@ -239,7 +243,9 @@ const ClientProduct = () => {
           </p> */}
           <h3>
             {translations.aed} {getCurrentPrice()}{" "}
-            <span>{useBoxPrice ? translations.perBox : translations.perUnit}</span>
+            <span>
+              {useBoxPrice ? translations.perBox : translations.perUnit}
+            </span>
           </h3>
           {/* <h4>{translations.minimumOrder}</h4> */}
           <h5>
@@ -247,32 +253,38 @@ const ClientProduct = () => {
             <a href="/returns">{translations.learnMore}</a>
           </h5>
           {productDetails?.boxPrice !== null &&
-           productDetails?.boxPrice !== undefined &&
-           productDetails?.boxPrice !== "" &&
-           Number(productDetails?.boxPrice) > 0 &&
-           productDetails?.piecesNumber !== null &&
-           productDetails?.piecesNumber !== undefined &&
-           productDetails?.piecesNumber !== "" &&
-           Number(productDetails?.piecesNumber) > 0 && (
-            <h4
-              onClick={handleBoxClick}
-              // style={{
-              //   cursor: "pointer",
-              //   color: useBoxPrice ? "#4caf50" : "inherit",
-              //   fontWeight: useBoxPrice ? "bold" : "normal",
-              //   textDecoration: useBoxPrice ? "underline" : "none",
-              //   userSelect: "none",
-              // }}
-              className="boxItem"
-            >
-              {translations.reviewBoxAvailable}{" "}
-              {useBoxPrice && `(${productDetails.piecesNumber} ${translations.piecesPerBox})`}{" "}
-              {useBoxPrice && "✓"}
-            </h4>
-          )}
+            productDetails?.boxPrice !== undefined &&
+            productDetails?.boxPrice !== "" &&
+            Number(productDetails?.boxPrice) > 0 &&
+            productDetails?.piecesNumber !== null &&
+            productDetails?.piecesNumber !== undefined &&
+            productDetails?.piecesNumber !== "" &&
+            Number(productDetails?.piecesNumber) > 0 && (
+              <h4
+                onClick={handleBoxClick}
+                // style={{
+                //   cursor: "pointer",
+                //   color: useBoxPrice ? "#4caf50" : "inherit",
+                //   fontWeight: useBoxPrice ? "bold" : "normal",
+                //   textDecoration: useBoxPrice ? "underline" : "none",
+                //   userSelect: "none",
+                // }}
+                className="boxItem"
+              >
+                {translations.reviewBoxAvailable}{" "}
+                {useBoxPrice &&
+                  `(${productDetails.piecesNumber} ${translations.piecesPerBox})`}{" "}
+                {useBoxPrice && "✓"}
+              </h4>
+            )}
 
           <div className="Quantity">
-            <h3>{translations.quantity} {useBoxPrice ? `(${translations.boxes})` : `(${translations.units})`}</h3>
+            <h3>
+              {translations.quantity}{" "}
+              {useBoxPrice
+                ? `(${translations.boxes})`
+                : `(${translations.units})`}
+            </h3>
             <div className="Quantity_counter">
               <div className="counter">
                 <button onClick={() => updateQty(Math.max(1, qty - 1))}>
@@ -288,7 +300,10 @@ const ClientProduct = () => {
 
               <div className="total">
                 <h2>
-                  {translations.total} <span>{translations.aed} {(qty * getCurrentPrice()).toFixed(2)}</span>
+                  {translations.total}
+                  <span>
+                    {(qty * getCurrentPrice()).toFixed(2)} {translations.aed}
+                  </span>{" "}
                 </h2>
                 {useBoxPrice && productDetails?.piecesNumber && (
                   <p
@@ -298,8 +313,10 @@ const ClientProduct = () => {
                       marginTop: "0.5rem",
                     }}
                   >
-                    ({qty} {translations.boxesPlural} × {productDetails.piecesNumber} {translations.pieces} ={" "}
-                    {qty * productDetails.piecesNumber} {translations.totalPieces})
+                    ({qty} {translations.boxesPlural} ×{" "}
+                    {productDetails.piecesNumber} {translations.pieces} ={" "}
+                    {qty * productDetails.piecesNumber}{" "}
+                    {translations.totalPieces})
                   </p>
                 )}
               </div>
@@ -393,30 +410,40 @@ const ClientProduct = () => {
               <p>{productDetails.description}</p>
               <h2>{translations.majorProductUses}</h2>
               <ul>
-                <li><pre style={{
-                    fontFamily: 'inherit',
-                    fontSize: 'inherit',
-                    color: 'inherit',
-                    margin: 0,
-                    padding: 0,
-                    whiteSpace: 'pre-wrap',
-                    wordWrap: 'break-word',
-                    overflowWrap: 'break-word'
-                  }}>{productDetails.uses}</pre></li>
+                <li>
+                  <pre
+                    style={{
+                      fontFamily: "inherit",
+                      fontSize: "inherit",
+                      color: "inherit",
+                      margin: 0,
+                      padding: 0,
+                      whiteSpace: "pre-wrap",
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
+                    }}
+                  >
+                    {productDetails.uses}
+                  </pre>
+                </li>
               </ul>
               <h2>{translations.idealFor}</h2>
               <ul>
                 <li>
-                  <pre style={{
-                    fontFamily: 'inherit',
-                    fontSize: 'inherit',
-                    color: 'inherit',
-                    margin: 0,
-                    padding: 0,
-                    whiteSpace: 'pre-wrap',
-                    wordWrap: 'break-word',
-                    overflowWrap: 'break-word'
-                  }}>{productDetails.features}</pre>
+                  <pre
+                    style={{
+                      fontFamily: "inherit",
+                      fontSize: "inherit",
+                      color: "inherit",
+                      margin: 0,
+                      padding: 0,
+                      whiteSpace: "pre-wrap",
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
+                    }}
+                  >
+                    {productDetails.features}
+                  </pre>
                 </li>
               </ul>
             </div>

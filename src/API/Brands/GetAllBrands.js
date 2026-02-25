@@ -14,8 +14,13 @@ const GetAllBrands = async (setAllBrands, setError, setLoading) => {
         const result = await response.json();
 
         if (response.ok) {
-            setAllBrands(result.brands)
-            setLoading(false)
+            const brands = Array.isArray(result.brands)
+                ? result.brands
+                : Array.isArray(result.data)
+                    ? result.data
+                    : [];
+            setAllBrands(brands);
+            setLoading(false);
 
         } else {
             if (response.status == 400) {
@@ -32,7 +37,8 @@ const GetAllBrands = async (setAllBrands, setError, setLoading) => {
         }
     } catch (error) {
         setError('An error occurred');
-        setLoading(false)
+        setAllBrands([]);
+        setLoading(false);
     }
 }
 export default GetAllBrands;

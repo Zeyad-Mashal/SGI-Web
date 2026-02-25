@@ -635,7 +635,7 @@ export default function Shop() {
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1 || loading}
               >
-                <FaChevronLeft />
+                {lang === "ar" ? <FaChevronRight /> : <FaChevronLeft />}
                 {translations.previous}
               </button>
               
@@ -681,7 +681,7 @@ export default function Shop() {
                 }
               >
                 {translations.next}
-                <FaChevronRight />
+                {lang === "ar" ? <FaChevronLeft /> : <FaChevronRight />}
               </button>
             </div>
           )}

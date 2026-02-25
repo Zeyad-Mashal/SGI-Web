@@ -22,6 +22,7 @@ import { FaRegHeart, FaRegUser } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
+import { CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/constants/contact";
 import Search from "@/API/Search/Search";
 import GetCategories from "@/API/Categories/GetCategories";
 import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
@@ -341,8 +342,8 @@ const Navbar = () => {
           <div>
             <p>{translations.callus}</p>
             <span>
-              <a href="tel:+971565088475" target="_blanck">
-                +971 565088475
+              <a href={`tel:${CONTACT_PHONE_TEL}`} target="_blanck">
+                {CONTACT_PHONE}
               </a>
             </span>
           </div>
@@ -434,7 +435,7 @@ const Navbar = () => {
         <div className="our_shop">
           <a href="/shop">
             {translations.exploreallproducts}{" "}
-            <FontAwesomeIcon icon={faArrowRight} />
+            <FontAwesomeIcon icon={isArabic ? faArrowLeft : faArrowRight} />
           </a>
         </div>
       </div>
