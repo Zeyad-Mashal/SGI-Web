@@ -1,31 +1,35 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import "./SuccessModal.css";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 
-const SuccessModal = ({ isOpen, onClose }) => {
+const SuccessModal = ({
+  isOpen,
+  onClose,
+  title,
+  message,
+  autoCloseDelay = 2800,
+  redirectOnClose = true,
+}) => {
   const router = useRouter();
   const [lang, setLang] = useState("en");
   const [translations, setTranslations] = useState(en);
+  const [closing, setClosing] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const closeTimeoutRef = useRef(null);
 
   useEffect(() => {
-    // Get language from localStorage
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
     setTranslations(savedLang === "ar" ? ar : en);
-
-    // Listen for language changes
     const handleStorageChange = () => {
       const newLang = localStorage.getItem("lang") || "en";
       setLang(newLang);
       setTranslations(newLang === "ar" ? ar : en);
     };
-
     window.addEventListener("storage", handleStorageChange);
-    
-    // Also check periodically for language changes
     const interval = setInterval(() => {
       const currentLang = localStorage.getItem("lang") || "en";
       if (currentLang !== lang) {
@@ -33,7 +37,6 @@ const SuccessModal = ({ isOpen, onClose }) => {
         setTranslations(currentLang === "ar" ? ar : en);
       }
     }, 500);
-
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       clearInterval(interval);
@@ -42,26 +45,52 @@ const SuccessModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      // Auto-close and redirect after 5 seconds
+      setClosing(false);
+      setVisible(true);
       const timer = setTimeout(() => {
-        onClose();
-        router.push("/");
-      }, 6000);
-
-      return () => clearTimeout(timer);
+        setClosing(true);
+        closeTimeoutRef.current = setTimeout(() => {
+          onClose?.();
+          if (redirectOnClose) router.push("/");
+          setVisible(false);
+        }, 420);
+      }, autoCloseDelay);
+      return () => {
+        clearTimeout(timer);
+        if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+      };
+    } else {
+      setVisible(false);
+      setClosing(false);
     }
-  }, [isOpen, onClose, router]);
+  }, [isOpen, autoCloseDelay, onClose, redirectOnClose, router]);
 
   const handleGoHome = () => {
-    onClose();
-    router.push("/");
+    setClosing(true);
+    setTimeout(() => {
+      onClose?.();
+      if (redirectOnClose) router.push("/");
+      setVisible(false);
+    }, 380);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !visible) return null;
+
+  const displayTitle = title ?? translations.yourRequestSetSuccessfully;
+  const displayMessage = message ?? translations.weTakeItIntoConsideration;
 
   return (
-    <div className="success-modal-overlay" onClick={handleGoHome}>
-      <div className="success-modal-content" onClick={(e) => e.stopPropagation()}>
+    <div
+      className={`success-modal-overlay ${closing ? "success-modal-overlay--exit" : ""}`}
+      onClick={handleGoHome}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="success-modal-title"
+    >
+      <div
+        className={`success-modal-content ${closing ? "success-modal-content--exit" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="success-modal-icon">
           <svg
             className="checkmark"
@@ -82,10 +111,11 @@ const SuccessModal = ({ isOpen, onClose }) => {
             />
           </svg>
         </div>
-        <h2 className="success-modal-title">{translations.yourRequestSetSuccessfully}</h2>
-        <p className="success-modal-message">
-          {translations.weTakeItIntoConsideration}
-        </p>
+        <h2 id="success-modal-title" className="success-modal-title">
+          {displayTitle}
+        </h2>
+        <p className="success-modal-message">{displayMessage}</p>
+        <div className="success-modal-progress" />
         <button className="success-modal-button" onClick={handleGoHome}>
           {translations.goToHome}
         </button>
@@ -95,4 +125,3 @@ const SuccessModal = ({ isOpen, onClose }) => {
 };
 
 export default SuccessModal;
-

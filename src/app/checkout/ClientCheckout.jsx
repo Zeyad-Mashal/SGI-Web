@@ -9,6 +9,7 @@ import CreateOrder from "@/API/Orders/CreateOrder";
 import { getCart, getCartTotal, clearCart } from "@/utils/cartUtils";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa6";
+import SuccessModal from "@/app/components/SuccessModal/SuccessModal";
 import en from "../../translation/en.json";
 import ar from "../../translation/ar.json";
 
@@ -240,14 +241,9 @@ const ClientCheckout = () => {
 
     if (result) {
       setSuccess(translations.orderPlacedSuccessfully);
-      // Clear cart
       clearCart();
-      // Clear saved coupon
       localStorage.removeItem("savedCoupon");
-      // Redirect to home or order confirmation page
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
+      // المودال يغلق تلقائياً بعد الأنيميشن ثم يوجه للهوم
     }
   };
 
@@ -269,19 +265,14 @@ const ClientCheckout = () => {
         </div>
       )}
 
-      {success && (
-        <div
-          style={{
-            color: "green",
-            marginBottom: "1rem",
-            padding: "0.5rem",
-            background: "#e8f5e9",
-            borderRadius: "8px",
-          }}
-        >
-          {success}
-        </div>
-      )}
+      <SuccessModal
+        isOpen={!!success}
+        onClose={() => setSuccess("")}
+        title={success || undefined}
+        message={translations.orderSuccessMessage}
+        autoCloseDelay={2800}
+        redirectOnClose={true}
+      />
 
       <div className="checkout_container">
         {/* ------------------ Personal Info ------------------ */}

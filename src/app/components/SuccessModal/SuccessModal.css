@@ -1,19 +1,22 @@
+/* Overlay: fade in */
 .success-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  animation: fadeIn 0.3s ease-in-out;
-  backdrop-filter: blur(4px);
+  animation: successOverlayIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-@keyframes fadeIn {
+.success-modal-overlay--exit {
+  animation: successOverlayOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes successOverlayIn {
   from {
     opacity: 0;
   }
@@ -22,47 +25,75 @@
   }
 }
 
+@keyframes successOverlayOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Content: scale + slide up with bounce */
 .success-modal-content {
-  background: white;
-  border-radius: 20px;
+  background: #fff;
+  border-radius: 24px;
   padding: 3rem 2.5rem;
-  max-width: 500px;
+  max-width: 440px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: successContentIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   position: relative;
   overflow: hidden;
 }
 
-.success-modal-content::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #007d4e, #00a86b, #007d4e);
-  animation: progressBar 5s linear;
+.success-modal-content--exit {
+  animation: successContentOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes progressBar {
+@keyframes successContentIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes successContentOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+
+/* Progress bar: يتحرك مع مدة الإغلاق التلقائي */
+.success-modal-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #076b4e, #0d9b6c);
+  border-radius: 0 0 24px 24px;
+  transform-origin: left;
+  animation: successProgressShrink 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes successProgressShrink {
   from {
     width: 100%;
   }
   to {
     width: 0%;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(50px) scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
   }
 }
 
@@ -74,68 +105,72 @@
 }
 
 .checkmark {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  width: 88px;
+  height: 88px;
   display: block;
-  stroke-width: 3;
-  stroke: #007d4e;
+  stroke-width: 2.5;
+  stroke: #0d9b6c;
   stroke-miterlimit: 10;
-  animation: scaleIn 0.5s ease-in-out 0.2s both;
+  animation: successCheckScale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
 }
 
-@keyframes scaleIn {
+@keyframes successCheckScale {
   from {
     transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.08);
   }
   to {
     transform: scale(1);
+    opacity: 1;
   }
 }
 
 .checkmark-circle {
   stroke-dasharray: 166;
   stroke-dashoffset: 166;
-  stroke-width: 3;
+  stroke-width: 2.5;
   stroke-miterlimit: 10;
-  stroke: #007d4e;
+  stroke: #0d9b6c;
   fill: none;
-  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  animation: successStroke 0.7s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
 }
 
 .checkmark-check {
   transform-origin: 50% 50%;
   stroke-dasharray: 48;
   stroke-dashoffset: 48;
-  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  animation: successStroke 0.35s cubic-bezier(0.65, 0, 0.45, 1) 0.75s forwards;
 }
 
-@keyframes stroke {
-  100% {
+@keyframes successStroke {
+  to {
     stroke-dashoffset: 0;
   }
 }
 
 .success-modal-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #007d4e;
-  margin-bottom: 1rem;
-  animation: fadeInUp 0.5s ease-in-out 0.4s both;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #076b4e;
+  margin-bottom: 0.75rem;
+  animation: successTextIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
 }
 
 .success-modal-message {
-  font-size: 1.1rem;
-  color: rgba(0, 0, 0, 0.7);
-  margin-bottom: 2rem;
-  line-height: 1.6;
-  animation: fadeInUp 0.5s ease-in-out 0.6s both;
+  font-size: 1.05rem;
+  color: rgba(0, 0, 0, 0.65);
+  margin-bottom: 1.75rem;
+  line-height: 1.55;
+  animation: successTextIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.55s both;
 }
 
-@keyframes fadeInUp {
+@keyframes successTextIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -144,23 +179,22 @@
 }
 
 .success-modal-button {
-  background-color: #007d4e;
-  color: white;
+  background: linear-gradient(180deg, #0d9b6c 0%, #076b4e 100%);
+  color: #fff;
   border: none;
-  padding: 0.9rem 2.5rem;
-  font-size: 1.1rem;
+  padding: 0.9rem 2.25rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.5s ease-in-out 0.8s both;
-  box-shadow: 0 4px 15px rgba(0, 125, 78, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: successTextIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
+  box-shadow: 0 4px 14px rgba(13, 155, 108, 0.35);
 }
 
 .success-modal-button:hover {
-  background-color: #005d3a;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 125, 78, 0.4);
+  box-shadow: 0 8px 20px rgba(13, 155, 108, 0.4);
 }
 
 .success-modal-button:active {
@@ -169,12 +203,12 @@
 
 @media screen and (max-width: 768px) {
   .success-modal-content {
-    padding: 2rem 1.5rem;
-    max-width: 90%;
+    padding: 2.25rem 1.5rem;
+    border-radius: 20px;
   }
 
   .success-modal-title {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
   }
 
   .success-modal-message {
@@ -182,13 +216,12 @@
   }
 
   .checkmark {
-    width: 60px;
-    height: 60px;
+    width: 72px;
+    height: 72px;
   }
 
   .success-modal-button {
-    padding: 0.8rem 2rem;
+    padding: 0.85rem 2rem;
     font-size: 1rem;
   }
 }
-

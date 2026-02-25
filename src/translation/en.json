@@ -298,6 +298,7 @@
     "pleaseEnterDeliveryAddress": "Please enter your delivery address",
     "yourCartIsEmpty": "Your cart is empty",
     "orderPlacedSuccessfully": "Order placed successfully!",
+    "orderSuccessMessage": "Thank you for your order. We'll be in touch soon.",
     "totalOrders": "Total Orders",
     "totalSpent": "Total Spent",
     "activeSavings": "Active Savings",

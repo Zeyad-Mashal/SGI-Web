@@ -285,6 +285,7 @@
     "pleaseSelectDeliveryAddress": "يرجى اختيار عنوان التوصيل",
     "pleaseEnterDeliveryAddress": "يرجى إدخال عنوان التوصيل",
     "orderPlacedSuccessfully": "تم تقديم الطلب بنجاح!",
+    "orderSuccessMessage": "شكراً لثقتك. سنتواصل معك قريباً.",
     "totalOrders": "إجمالي الطلبات",
     "totalSpent": "إجمالي المصروف",
     "activeSavings": "التوفير النشط",
