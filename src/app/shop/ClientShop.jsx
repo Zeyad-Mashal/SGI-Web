@@ -18,6 +18,7 @@ import GetProducts from "@/API/Products/GetProducts";
 import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
 import GetProductsByBrand from "@/API/Brands/GetProductsByBrand";
 import GetCategories from "@/API/Categories/GetCategories";
+import GetAllBrands from "@/API/Brands/GetAllBrands";
 import Image from "next/image";
 import { addToCart } from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
@@ -26,7 +27,13 @@ import {
   isFavorited,
   getFavorites,
 } from "@/utils/favoriteUtils";
-import { faChevronDown, faChevronRight, faTimes, faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronRight,
+  faTimes,
+  faArrowRight,
+  faArrowLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
 
@@ -38,9 +45,10 @@ export default function Shop() {
   const categoryId = searchParams.get("category");
   const brandId = searchParams.get("brand");
   const pageParam = searchParams.get("page");
-  const currentPage = pageParam && !isNaN(pageParam) && parseInt(pageParam, 10) > 0 
-    ? parseInt(pageParam, 10) 
-    : 1;
+  const currentPage =
+    pageParam && !isNaN(pageParam) && parseInt(pageParam, 10) > 0
+      ? parseInt(pageParam, 10)
+      : 1;
   const [favorites, setFavorites] = useState([]);
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -58,19 +66,50 @@ export default function Shop() {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState(null);
+  const [allBrands, setAllBrands] = useState([]);
+  const [brandsLoading, setBrandsLoading] = useState(false);
   const [lang, setLang] = useState("en");
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "list"
   const [translations, setTranslations] = useState(en);
-  
+
   useEffect(() => {
     // Get language from localStorage
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
     setTranslations(savedLang === "ar" ? ar : en);
-    
-    // Fetch categories
+
+    // Fetch categories and brands
     GetCategories(setCategories, setError, setCategoriesLoading);
-    
+    GetAllBrands(
+      (brands) => {
+        if (!Array.isArray(brands)) {
+          setAllBrands([]);
+          return;
+        }
+        const allowedBrandsEn = ["Cleenol", "INDUQUIM", "SEITZ"];
+        const allowedBrandsAr = ["كلينول", "إندوكيم", "سيتز"];
+        const allowedSet = new Set([
+          ...allowedBrandsEn.map((n) => n.trim().toUpperCase()),
+          ...allowedBrandsAr.map((n) => n.trim()),
+        ]);
+        const filteredBrands = brands.filter((brand) => {
+          if (!brand.name) return false;
+          const names = [
+            typeof brand.name === "string" ? brand.name : null,
+            brand.name?.en,
+            brand.name?.ar,
+          ].filter(Boolean);
+          return names.some((n) => {
+            const normalized = String(n).trim();
+            const upper = normalized.toUpperCase();
+            return allowedSet.has(upper) || allowedSet.has(normalized);
+          });
+        });
+        setAllBrands(filteredBrands.length > 0 ? filteredBrands : brands);
+      },
+      setError,
+      setBrandsLoading,
+    );
     setFavorites(getFavorites());
 
     // Listen for language changes
@@ -81,7 +120,7 @@ export default function Shop() {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    
+
     // Also check periodically for language changes (in case it's changed in the same window)
     const interval = setInterval(() => {
       const currentLang = localStorage.getItem("lang") || "en";
@@ -97,14 +136,7 @@ export default function Shop() {
     };
   }, [lang]);
 
-  // Hide filter when brand is selected, show it otherwise
-  useEffect(() => {
-    if (brandId) {
-      setShowDesktopFilter(false);
-    } else {
-      setShowDesktopFilter(true);
-    }
-  }, [brandId]);
+  // Keep filter sidebar visible so user can change brand or category
 
   useEffect(() => {
     // Fetch products when categoryId, brandId or page changes
@@ -119,7 +151,7 @@ export default function Shop() {
       // Find which category/subcategory is selected
       let foundMainCategory = null;
       let foundSubCategory = null;
-      
+
       categories.forEach((cat, index) => {
         if (cat._id === categoryId) {
           foundMainCategory = cat._id;
@@ -186,9 +218,9 @@ export default function Shop() {
 
   // Debug: Log pagination state
   useEffect(() => {
-    console.log('Pagination state:', pagination);
-    console.log('Current page:', currentPage);
-    console.log('Products count:', allProducts.length);
+    console.log("Pagination state:", pagination);
+    console.log("Current page:", currentPage);
+    console.log("Products count:", allProducts.length);
   }, [pagination, currentPage, allProducts.length]);
 
   const handleFavoriteClick = (e, item) => {
@@ -203,44 +235,65 @@ export default function Shop() {
       showToast(translations.addedToFavorites, "success");
     }
   };
-  
+
   const getAllProducts = (page = 1) => {
-    GetProducts((products) => {
-      setAllProducts(products);
-      setOriginalProducts(products);
-    }, setError, setLoading, page, setPagination);
+    GetProducts(
+      (products) => {
+        setAllProducts(products);
+        setOriginalProducts(products);
+      },
+      setError,
+      setLoading,
+      page,
+      setPagination,
+    );
   };
 
   const getProductsByCategory = (categoryId, page = 1) => {
     // امسح المنتجات السابقة فوراً قبل جلب المنتجات الجديدة
     setAllProducts([]);
     setOriginalProducts([]);
-    
-    GetProductSByCategory((products) => {
-      // تأكد من أن products هو array حتى لو كان فارغاً
-      const productsArray = Array.isArray(products) ? products : [];
-      setAllProducts(productsArray);
-      setOriginalProducts(productsArray);
-    }, setError, setLoading, categoryId, page, setPagination);
+
+    GetProductSByCategory(
+      (products) => {
+        // تأكد من أن products هو array حتى لو كان فارغاً
+        const productsArray = Array.isArray(products) ? products : [];
+        setAllProducts(productsArray);
+        setOriginalProducts(productsArray);
+      },
+      setError,
+      setLoading,
+      categoryId,
+      page,
+      setPagination,
+    );
   };
 
   const getProductsByBrand = (brandId, page = 1) => {
     // امسح المنتجات السابقة فوراً قبل جلب المنتجات الجديدة
     setAllProducts([]);
     setOriginalProducts([]);
-    
-    GetProductsByBrand((products) => {
-      // تأكد من أن products هو array حتى لو كان فارغاً
-      const productsArray = Array.isArray(products) ? products : [];
-      setAllProducts(productsArray);
-      setOriginalProducts(productsArray);
-    }, setError, setLoading, brandId, page, setPagination);
+
+    GetProductsByBrand(
+      (products) => {
+        // تأكد من أن products هو array حتى لو كان فارغاً
+        const productsArray = Array.isArray(products) ? products : [];
+        setAllProducts(productsArray);
+        setOriginalProducts(productsArray);
+      },
+      setError,
+      setLoading,
+      brandId,
+      page,
+      setPagination,
+    );
   };
 
   const handleCategoryClick = (categoryIndex) => {
     const category = categories[categoryIndex];
-    const hasSubCategories = category && category.subCategories && category.subCategories.length > 0;
-    
+    const hasSubCategories =
+      category && category.subCategories && category.subCategories.length > 0;
+
     if (expandedCategory === categoryIndex) {
       // إذا كانت مفتوحة، أغلقها
       setExpandedCategory(null);
@@ -258,7 +311,7 @@ export default function Shop() {
       setExpandedCategory(categoryIndex);
       // Reset subcategory selection when expanding main category
       setSelectedSubCategoryId(null);
-      
+
       // إذا كانت الـ category ليس لديها subcategories، امسح المنتجات وأظهر رسالة
       if (!hasSubCategories) {
         setAllProducts([]);
@@ -306,6 +359,20 @@ export default function Shop() {
     handleMainCategoryClick(categoryId);
   };
 
+  const handleBrandClick = (brandIdParam) => {
+    setSelectedCategoryId(null);
+    setSelectedSubCategoryId(null);
+    setExpandedCategory(null);
+    if (window.innerWidth <= 991) {
+      setShowFilter(false);
+    }
+    const params = new URLSearchParams();
+    params.set("brand", brandIdParam);
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const clearFilter = () => {
     setSelectedCategoryId(null);
     setSelectedSubCategoryId(null);
@@ -316,7 +383,10 @@ export default function Shop() {
   };
 
   const handlePageChange = (newPage) => {
-    if (newPage < 1 || (pagination.totalPages && newPage > pagination.totalPages)) {
+    if (
+      newPage < 1 ||
+      (pagination.totalPages && newPage > pagination.totalPages)
+    ) {
       return;
     }
     scrollToTop();
@@ -345,13 +415,10 @@ export default function Shop() {
             <h2>
               <MdOutlineSettingsInputComponent /> {translations.categories}
             </h2>
-            
+
             {/* Clear Filter Button */}
             {(selectedCategoryId || selectedSubCategoryId || brandId) && (
-              <button 
-                className="clear_filter_btn"
-                onClick={clearFilter}
-              >
+              <button className="clear_filter_btn" onClick={clearFilter}>
                 <FontAwesomeIcon icon={faTimes} />
                 {translations.clearFilter}
               </button>
@@ -359,17 +426,27 @@ export default function Shop() {
 
             {/* Categories List */}
             {categoriesLoading ? (
-              <div className="category_loading">{translations.loadingCategories}</div>
+              <div className="category_loading">
+                {translations.loadingCategories}
+              </div>
             ) : categories.length > 0 ? (
               <div className="categories_list">
                 {categories.map((category, index) => {
-                  const categoryName = category.name?.[lang] || category.name?.en || category.name || translations.unnamedCategory;
-                  const hasSubCategories = category.subCategories && category.subCategories.length > 0;
+                  const categoryName =
+                    category.name?.[lang] ||
+                    category.name?.en ||
+                    category.name ||
+                    translations.unnamedCategory;
+                  const hasSubCategories =
+                    category.subCategories && category.subCategories.length > 0;
                   const isExpanded = expandedCategory === index;
                   const isSelected = selectedCategoryId === category._id;
-                  
+
                   return (
-                    <div key={category._id || index} className="category_item_wrapper">
+                    <div
+                      key={category._id || index}
+                      className="category_item_wrapper"
+                    >
                       <div
                         className={`category_main_item ${isSelected ? "selected" : ""} ${isExpanded ? "expanded" : ""}`}
                         onClick={() => {
@@ -383,27 +460,41 @@ export default function Shop() {
                         }}
                       >
                         <span className="category_name">{categoryName}</span>
-                        <FontAwesomeIcon 
-                          icon={lang === "ar" ? faArrowLeft : faArrowRight} 
-                          onClick={(e) => handleMainCategoryArrowClick(category._id, e)}
-                          style={{ cursor: 'pointer', fontSize: '18px', fontWeight: 'bold' }}
+                        <FontAwesomeIcon
+                          icon={lang === "ar" ? faArrowLeft : faArrowRight}
+                          onClick={(e) =>
+                            handleMainCategoryArrowClick(category._id, e)
+                          }
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                          }}
                           className="main_category_arrow"
                         />
                       </div>
-                      
+
                       {/* Subcategories */}
                       {hasSubCategories && isExpanded && (
                         <div className="subcategories_list">
-                          {category.subCategories && category.subCategories.length > 0 ? (
+                          {category.subCategories &&
+                          category.subCategories.length > 0 ? (
                             category.subCategories.map((subCategory) => {
-                              const subCategoryName = subCategory.name?.[lang] || subCategory.name?.en || subCategory.name || translations.unnamedSubcategory;
-                              const isSubSelected = selectedSubCategoryId === subCategory._id;
-                              
+                              const subCategoryName =
+                                subCategory.name?.[lang] ||
+                                subCategory.name?.en ||
+                                subCategory.name ||
+                                translations.unnamedSubcategory;
+                              const isSubSelected =
+                                selectedSubCategoryId === subCategory._id;
+
                               return (
                                 <div
                                   key={subCategory._id}
                                   className={`subcategory_item ${isSubSelected ? "selected" : ""}`}
-                                  onClick={() => handleSubCategoryClick(subCategory._id)}
+                                  onClick={() =>
+                                    handleSubCategoryClick(subCategory._id)
+                                  }
                                 >
                                   {subCategoryName}
                                 </div>
@@ -416,19 +507,68 @@ export default function Shop() {
                           )}
                         </div>
                       )}
-                      
+
                       {/* إذا كانت الـ category مفتوحة وليس لديها subcategories، امسح المنتجات */}
                       {!hasSubCategories && isExpanded && (
                         <div className="no_subcategories_message">
                           <p>{translations.thisCategoryHasNoSubcategories}</p>
                         </div>
                       )}
-          </div>
+                    </div>
                   );
                 })}
-          </div>
+              </div>
             ) : (
-              <div className="no_categories">{translations.noCategoriesAvailable}</div>
+              <div className="no_categories">
+                {translations.noCategoriesAvailable}
+              </div>
+            )}
+          </div>
+
+          {/* Brand Filter - same style as home page brands */}
+          <div className="filter_top filter_brands">
+            <h2>
+              <MdOutlineSettingsInputComponent /> {translations.brands}
+            </h2>
+            {brandsLoading ? (
+              <div className="category_loading">
+                {translations.loadingBrands}
+              </div>
+            ) : allBrands.length > 0 ? (
+              <div className="brands_list">
+                {allBrands.map((brand) => {
+                  const brandName =
+                    typeof brand.name === "string"
+                      ? brand.name
+                      : brand.name?.[lang] ||
+                        brand.name?.en ||
+                        brand.name?.ar ||
+                        "";
+                  const isSelected = brandId === brand._id;
+                  return (
+                    <div
+                      key={brand._id}
+                      className={`brand_filter_item ${isSelected ? "selected" : ""}`}
+                      onClick={() => handleBrandClick(brand._id)}
+                    >
+                      {brand.logo ? (
+                        <Image
+                          src={brand.logo}
+                          alt={brandName}
+                          width={80}
+                          height={32}
+                          style={{ objectFit: "contain" }}
+                        />
+                      ) : null}
+                      <span className="brand_filter_name">{brandName}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="no_categories">
+                {translations.noBrandsAvailable}
+              </div>
             )}
           </div>
         </div>
@@ -436,38 +576,28 @@ export default function Shop() {
         {/* SHOP CONTENT */}
         <div className="shop_content">
           <div className="shop_filter_top">
-            {!brandId && (
-              <h3
-                onClick={() => {
-                  if (window.innerWidth <= 991) {
-                    // موبايل
-                    setShowFilter(!showFilter);
-                  } else {
-                    // ديسكتوب
-                    setShowDesktopFilter(!showDesktopFilter);
-                  }
-                }}
-              >
-                <FiFilter />
-                {translations.filters}
-              </h3>
-            )}
+            <h3
+              onClick={() => {
+                if (window.innerWidth <= 991) {
+                  setShowFilter(!showFilter);
+                } else {
+                  setShowDesktopFilter(!showDesktopFilter);
+                }
+              }}
+            >
+              <FiFilter />
+              {translations.filters}
+            </h3>
 
-            <p>
+            {/* <p>
               <span>{pagination.totalProducts || allProducts.length}</span> {translations.productsFound}
-            </p>
-            {/* <select>
-              <option value="Most Popular">Most Popular</option>
-              <option value="Most Popular">Most Popular</option>
-              <option value="Most Popular">Most Popular</option>
-              <option value="Most Popular">Most Popular</option>
-            </select> */}
+            </p> */}
             <div className="shop_display">
-              <TbAlignBoxRightMiddle 
+              <TbAlignBoxRightMiddle
                 className={`flex-display ${viewMode === "list" ? "active" : ""}`}
                 onClick={() => setViewMode("list")}
               />
-              <AiOutlineBars 
+              <AiOutlineBars
                 className={`grid-display ${viewMode === "grid" ? "active" : ""}`}
                 onClick={() => setViewMode("grid")}
               />
@@ -485,14 +615,18 @@ export default function Shop() {
                 <span className="loader"></span>
                 <span className="loader"></span>
               </div>
-            ) : allProducts.length === 0 && (selectedCategoryId || selectedSubCategoryId || brandId) ? (
+            ) : allProducts.length === 0 &&
+              (selectedCategoryId || selectedSubCategoryId || brandId) ? (
               <div className="no_products_message">
                 <div className="no_products_icon">
                   <FiBox />
                 </div>
                 <h3>{translations.thisFilterHasNoProducts}</h3>
                 <p>{translations.trySelectingDifferentCategory}</p>
-                <button className="clear_filter_btn_inline" onClick={clearFilter}>
+                <button
+                  className="clear_filter_btn_inline"
+                  onClick={clearFilter}
+                >
                   {translations.clearFilter}
                 </button>
               </div>
@@ -507,10 +641,16 @@ export default function Shop() {
             ) : (
               allProducts.map((item) => {
                 return (
-                  <div className={`Featured_card ${viewMode === "list" ? "list_view" : "grid_view"}`} key={item._id}>
+                  <div
+                    className={`Featured_card ${viewMode === "list" ? "list_view" : "grid_view"}`}
+                    key={item._id}
+                  >
                     {viewMode === "list" ? (
                       <>
-                        <a href={`/product/${item._id}`} className="list_view_link">
+                        <a
+                          href={`/product/${item._id}`}
+                          className="list_view_link"
+                        >
                           <div className="Featured_img">
                             <Image
                               src={
@@ -524,7 +664,9 @@ export default function Shop() {
                               loading="lazy"
                             />
                             <FontAwesomeIcon
-                              icon={isFavorited(item._id) ? faHeartSolid : faHeart}
+                              icon={
+                                isFavorited(item._id) ? faHeartSolid : faHeart
+                              }
                               className={`heart-icon ${
                                 isFavorited(item._id) ? "favorited" : ""
                               }`}
@@ -549,7 +691,9 @@ export default function Shop() {
                               </div> */}
                             </div>
                             <div className="Featured_price">
-                              <h3>{translations.aed} {item.price}</h3>
+                              <h3>
+                                {translations.aed} {item.price}
+                              </h3>
                             </div>
                           </div>
                         </a>
@@ -559,7 +703,10 @@ export default function Shop() {
                               e.preventDefault();
                               e.stopPropagation();
                               addToCart(item, 1);
-                              showToast(translations.productAddedToCart, "success");
+                              showToast(
+                                translations.productAddedToCart,
+                                "success",
+                              );
                             }}
                           >
                             {translations.addtocart}
@@ -568,57 +715,64 @@ export default function Shop() {
                       </>
                     ) : (
                       <>
-                    <a href={`/product/${item._id}`}>
-                      <div className="Featured_img">
-                        <Image
-                          src={
-                            item.picUrls && item.picUrls[0]
-                              ? item.picUrls[0]
-                              : "/images/empty_product.png"
-                          }
-                          alt="product image"
+                        <a href={`/product/${item._id}`}>
+                          <div className="Featured_img">
+                            <Image
+                              src={
+                                item.picUrls && item.picUrls[0]
+                                  ? item.picUrls[0]
+                                  : "/images/empty_product.png"
+                              }
+                              alt="product image"
                               width={1000}
                               height={1000}
-                          loading="lazy"
-                        />
-                        <FontAwesomeIcon
-                          icon={isFavorited(item._id) ? faHeartSolid : faHeart}
-                          className={`heart-icon ${
-                            isFavorited(item._id) ? "favorited" : ""
-                          }`}
-                          onClick={(e) => handleFavoriteClick(e, item)}
-                          style={{
-                            color: isFavorited(item._id)
-                              ? "#ef4444"
-                              : "inherit",
-                            cursor: "pointer",
-                            transition: "all 0.3s ease",
-                            transform: isFavorited(item._id)
-                              ? "scale(1.2)"
-                              : "scale(1)",
-                          }}
-                        />
-                        <p>{translations.featured}</p>
-                      </div>
-                      {/* <div className="Featured_stars">
+                              loading="lazy"
+                            />
+                            <FontAwesomeIcon
+                              icon={
+                                isFavorited(item._id) ? faHeartSolid : faHeart
+                              }
+                              className={`heart-icon ${
+                                isFavorited(item._id) ? "favorited" : ""
+                              }`}
+                              onClick={(e) => handleFavoriteClick(e, item)}
+                              style={{
+                                color: isFavorited(item._id)
+                                  ? "#ef4444"
+                                  : "inherit",
+                                cursor: "pointer",
+                                transition: "all 0.3s ease",
+                                transform: isFavorited(item._id)
+                                  ? "scale(1.2)"
+                                  : "scale(1)",
+                              }}
+                            />
+                            <p>{translations.featured}</p>
+                          </div>
+                          {/* <div className="Featured_stars">
                             <p>{translations.minimumOrder}</p>
                       </div> */}
-                      <h2>{item.name}</h2>
-                    </a>
+                          <h2>{item.name}</h2>
+                        </a>
 
-                    <div className="Featured_price">
-                      <h3>{translations.aed} {item.price}</h3>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          addToCart(item, 1);
-                          showToast(translations.productAddedToCart, "success");
-                        }}
-                      >
-                        {translations.addtocart}
-                      </button>
-                    </div>
+                        <div className="Featured_price">
+                          <h3>
+                            {translations.aed} {item.price}
+                          </h3>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              addToCart(item, 1);
+                              showToast(
+                                translations.productAddedToCart,
+                                "success",
+                              );
+                            }}
+                          >
+                            {translations.addtocart}
+                          </button>
+                        </div>
                       </>
                     )}
                   </div>
@@ -628,7 +782,8 @@ export default function Shop() {
           </div>
 
           {/* PAGINATION */}
-          {(pagination.totalPages > 1 || (allProducts.length > 0 && currentPage > 1)) && (
+          {(pagination.totalPages > 1 ||
+            (allProducts.length > 0 && currentPage > 1)) && (
             <div className="pagination">
               <button
                 className="pagination_button"
@@ -638,9 +793,12 @@ export default function Shop() {
                 {lang === "ar" ? <FaChevronRight /> : <FaChevronLeft />}
                 {translations.previous}
               </button>
-              
+
               <div className="pagination_numbers">
-                {Array.from({ length: pagination.totalPages || 1 }, (_, i) => i + 1).map((pageNum) => {
+                {Array.from(
+                  { length: pagination.totalPages || 1 },
+                  (_, i) => i + 1,
+                ).map((pageNum) => {
                   // Show first page, last page, current page, and pages around current
                   if (
                     pageNum === 1 ||
@@ -676,9 +834,7 @@ export default function Shop() {
               <button
                 className="pagination_button"
                 onClick={() => handlePageChange(currentPage + 1)}
-                disabled={
-                  currentPage === pagination.totalPages || loading
-                }
+                disabled={currentPage === pagination.totalPages || loading}
               >
                 {translations.next}
                 {lang === "ar" ? <FaChevronLeft /> : <FaChevronRight />}

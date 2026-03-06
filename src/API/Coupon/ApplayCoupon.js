@@ -14,26 +14,19 @@ const ApplayCoupon = async (coupon, setError, setLoading, setDiscount) => {
 
         if (response.ok) {
             setDiscount(result.discount);
-            setLoading(false)
+            setLoading(false);
             return result;
         } else {
-            if (response.status == 400) {
-                setError(result.message);
-                setLoading(false)
-                console.log(result.message);
-
-
-            } else if (response.status == 403) {
-                setError(result.message);
-                setLoading(false)
-            } else {
-                setError(result.message);
-                setLoading(false)
-            }
+            const message = result?.message || "An error occurred";
+            setError(message);
+            setLoading(false);
+            return { success: false, message };
         }
     } catch (error) {
-        setError('An error occurred');
-        setLoading(false)
+        const message = "An error occurred";
+        setError(message);
+        setLoading(false);
+        return { success: false, message };
     }
 }
 export default ApplayCoupon;

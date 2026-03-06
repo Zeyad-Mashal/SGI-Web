@@ -14,6 +14,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
+  font-family: "Roboto", sans-serif;
 }
 .top_navbar > p {
   font-size: 0.7rem;
@@ -29,6 +30,7 @@
   justify-content: space-evenly;
   align-items: center;
   margin: 25px 0;
+  font-family: "Roboto", sans-serif;
 }
 .logo > a > img {
   width: 130px;
@@ -39,6 +41,7 @@
   align-items: center;
   position: relative;
   width: 740px;
+  font-family: "Roboto", sans-serif;
 }
 .search > input {
   width: 100%;
@@ -48,6 +51,7 @@
   padding: 0px 1rem;
   height: 40px;
   border-radius: 16px;
+  font-family: "Roboto", sans-serif;
 }
 .search > span {
   position: absolute;
@@ -56,6 +60,7 @@
   background-color: rgba(215, 223, 43, 1);
   padding: 0.4rem 1.8rem;
   border-radius: 0 16px 16px 0;
+  font-family: "Roboto", sans-serif;
 }
 .search > span > svg {
   width: 25px;
@@ -71,6 +76,7 @@
   padding: 0.5rem;
   width: 150px;
   height: 40px;
+  font-family: "Roboto", sans-serif;
 }
 .phone_number > svg {
   width: 35px;
@@ -90,10 +96,12 @@
   margin: 0;
   font-size: 0.7rem;
   color: rgba(0, 0, 0, 0.7);
+  font-family: "Roboto", sans-serif;
 }
 .phone_number > div > span {
   font-weight: bold;
   font-size: 0.7rem;
+  font-family: "Roboto", sans-serif;
 }
 .navbar_links {
   width: 10%;
@@ -101,6 +109,7 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  font-family: "Roboto", sans-serif;
 }
 .navbar_links > a {
   width: 20px;
@@ -108,6 +117,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Roboto", sans-serif;
 }
 .navbar_links > a > svg {
   width: 100%;
@@ -119,6 +129,7 @@
 .cart_link {
   position: relative;
   display: inline-block;
+  font-family: "Roboto", sans-serif;
 }
 
 .cart_badge {
@@ -139,6 +150,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   min-width: 20px;
   padding: 0 2px;
+  font-family: "Roboto", sans-serif;
 }
 
 .cart_badge:empty {
@@ -146,6 +158,7 @@
 }
 .mega_menu_btn > span {
   cursor: pointer;
+  font-family: "Roboto", sans-serif;
 }
 .menu {
   width: 100%;
@@ -153,6 +166,7 @@
   justify-content: space-around;
   align-items: center;
   margin-bottom: 25px;
+  font-family: "Roboto", sans-serif;
 }
 .mega_menu_btn {
   display: flex;
@@ -160,6 +174,7 @@
   align-items: center;
   gap: 1rem;
   font-size: 14px;
+  font-family: "Roboto", sans-serif;
 }
 .mega_menu_btn::after {
   content: "";
@@ -181,6 +196,7 @@
 .desktop_menu .main_links li {
   cursor: pointer;
   font-size: 14px;
+  font-family: "Roboto", sans-serif;
 }
 .desktop_menu .main_links li a {
   color: rgba(0, 0, 0, 0.8);
@@ -188,13 +204,16 @@
   transition: all 0.3s ease;
   position: relative;
   padding: 5px 0;
+  font-family: "Roboto", sans-serif;
 }
 .desktop_menu .main_links li a:hover {
   color: #d7df2a;
+  font-family: "Roboto", sans-serif;
 }
 .desktop_menu .main_links li a.active {
   color: #d7df2a;
   font-weight: 600;
+  font-family: "Roboto", sans-serif;
 }
 .desktop_menu .main_links li a.active::after {
   content: "";
@@ -204,16 +223,19 @@
   width: 100%;
   height: 2px;
   background-color: #d7df2a;
+  font-family: "Roboto", sans-serif;
 }
 .login_links {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  font-family: "Roboto", sans-serif;
 }
 .login_links > a {
   text-decoration: underline;
   color: black;
+  font-family: "Roboto", sans-serif;
 }
 .login_links span {
   border: 1px solid rgba(215, 223, 43, 1);
@@ -222,6 +244,7 @@
   width: auto;
   height: 40px;
   font-size: 0.8rem;
+  font-family: "Roboto", sans-serif;
 }
 .logout-btn {
   border: 1px solid #cc0000;
@@ -234,6 +257,7 @@
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
+  font-family: "Roboto", sans-serif;
 }
 .logout-btn:hover {
   background-color: #cc0000;
@@ -243,6 +267,7 @@
 }
 .our_shop {
   width: 15%;
+  font-family: "Roboto", sans-serif;
 }
 .our_shop > a {
   width: 200px;
@@ -255,6 +280,7 @@
   border: 1px solid rgba(215, 223, 43, 1);
   padding: 0.6rem 5px;
   font-size: 0.9rem;
+  font-family: "Roboto", sans-serif;
 }
 .our_shop > a > svg {
   width: 10px;
@@ -263,6 +289,7 @@
   border-radius: 50%;
   padding: 8px;
   color: white;
+  font-family: "Roboto", sans-serif;
 }
 /* ✅ إخفاء الموبايل مينيو وأيقونة في الديسكتوب */
 .mobile_menu_icon,

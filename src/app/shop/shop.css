@@ -187,6 +187,45 @@
   font-style: italic;
 }
 
+/* Brand Filter - same style as category filter */
+.filter_brands {
+  margin-top: 12px;
+}
+.brands_list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.brand_filter_item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+.brand_filter_item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(223, 144, 0, 0.5);
+}
+.brand_filter_item.selected {
+  background-color: rgba(223, 144, 0, 0.1);
+  border-color: rgba(223, 144, 0, 1);
+}
+.brand_filter_name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.8);
+}
+[dir="rtl"] .brand_filter_item {
+  flex-direction: row-reverse;
+}
+
 .clear_filter_btn {
   width: 100%;
   display: flex;

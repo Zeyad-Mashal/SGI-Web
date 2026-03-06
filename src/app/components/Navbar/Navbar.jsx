@@ -209,7 +209,7 @@ const Navbar = () => {
         <p>
           {translations.navbartop} <a href="/shop">{translations.shopnow}</a>
         </p>
-        <p onClick={toggleLang} className="lang_switch">
+        {/* <p onClick={toggleLang} className="lang_switch">
           {lang === "en" ? (
             <span>
               <Image
@@ -231,7 +231,7 @@ const Navbar = () => {
               EN
             </span>
           )}
-        </p>
+        </p> */}
       </div>
 
       {/* 🔸 Middle Navbar */}
@@ -342,7 +342,7 @@ const Navbar = () => {
           <div>
             <p>{translations.callus}</p>
             <span>
-              <a href={`tel:${CONTACT_PHONE_TEL}`} target="_blanck">
+              <a href={`https://wa.me/${CONTACT_PHONE_TEL}`} target="_blanck">
                 {CONTACT_PHONE}
               </a>
             </span>

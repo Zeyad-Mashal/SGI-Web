@@ -30,6 +30,7 @@ const ClientCart = () => {
   const [emptyContent, setEmptyContent] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
+  const [shipping, setShipping] = useState(0);
   const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState();
@@ -37,6 +38,13 @@ const ClientCart = () => {
   const [loading, setLoading] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(null);
+  const [couponFeedback, setCouponFeedback] = useState(null);
+  const [confirmModal, setConfirmModal] = useState({
+    open: false,
+    type: null,
+    productId: null,
+    exiting: false,
+  });
   const [lang, setLang] = useState("en");
   const [translations, setTranslations] = useState(en);
 
@@ -46,7 +54,7 @@ const ClientCart = () => {
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
     setTranslations(savedLang === "ar" ? ar : en);
-    
+
     setMounted(true);
     loadCart();
 
@@ -58,7 +66,7 @@ const ClientCart = () => {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    
+
     // Also check periodically for language changes
     const interval = setInterval(() => {
       const currentLang = localStorage.getItem("lang") || "en";
@@ -74,15 +82,26 @@ const ClientCart = () => {
     };
   }, [lang]);
 
+  // نفس منطق الـ checkout: شحن حسب قيمة الطلب، ضريبة 5% على (المجموع + الشحن)
+  const calculateShipping = (orderValue) => {
+    if (orderValue >= 1 && orderValue <= 99) return 30;
+    if (orderValue >= 100 && orderValue <= 199) return 20;
+    if (orderValue >= 200 && orderValue <= 299) return 10;
+    if (orderValue >= 300) return 0;
+    return 0;
+  };
+
   // ---------------------- 2) Update totals ----------------------
   useEffect(() => {
     if (!mounted) return;
 
     const currentSubtotal = getCartTotal();
-    const currentTax = currentSubtotal * 0.05;
-    const currentTotal = currentSubtotal + currentTax;
+    const currentShipping = calculateShipping(currentSubtotal);
+    const currentTax = (currentSubtotal + currentShipping) * 0.05;
+    const currentTotal = currentSubtotal + currentShipping + currentTax;
 
     setSubtotal(currentSubtotal);
+    setShipping(currentShipping);
     setTax(currentTax);
     setTotal(currentTotal);
   }, [cartItems, mounted]);
@@ -98,8 +117,10 @@ const ClientCart = () => {
       setDiscount(discount);
 
       const currentSubtotal = getCartTotal();
-      const currentTax = currentSubtotal * 0.05;
-      const beforeDiscountTotal = currentSubtotal + currentTax;
+      const currentShipping = calculateShipping(currentSubtotal);
+      const currentTax = (currentSubtotal + currentShipping) * 0.05;
+      const beforeDiscountTotal =
+        currentSubtotal + currentShipping + currentTax;
 
       const discountAmount = beforeDiscountTotal * (discount / 100);
       const finalTotal = beforeDiscountTotal - discountAmount;
@@ -143,40 +164,103 @@ const ClientCart = () => {
     }
   };
 
-  const handleClearCart = () => {
-    clearCart();
-    setCartItems([]);
-    setEmptyContent(true);
-    setContent(false);
+  const handleRemoveItem = (productId) => {
+    setConfirmModal({ open: true, type: "remove_item", productId, exiting: false });
   };
 
+  const openClearCartConfirm = () => {
+    setConfirmModal({ open: true, type: "clear_cart", productId: null, exiting: false });
+  };
+
+  const closeConfirmModal = () => {
+    setConfirmModal((prev) => ({ ...prev, exiting: true }));
+    setTimeout(() => {
+      setConfirmModal({ open: false, type: null, productId: null, exiting: false });
+    }, 280);
+  };
+
+  const confirmModalAction = () => {
+    if (confirmModal.type === "remove_item" && confirmModal.productId) {
+      removeItem(confirmModal.productId);
+    } else if (confirmModal.type === "clear_cart") {
+      clearCart();
+      setCartItems([]);
+      setEmptyContent(true);
+      setContent(false);
+    }
+    closeConfirmModal();
+  };
+
+  const getCategoryDisplayName = (category) => {
+    if (!category) return "";
+    if (typeof category === "string") return category;
+    if (category?.name) {
+      if (typeof category.name === "object" && category.name !== null) {
+        const currentLang = localStorage.getItem("lang") || "en";
+        return (
+          category.name[currentLang] ||
+          category.name.en ||
+          category.name.ar ||
+          ""
+        );
+      }
+      return String(category.name);
+    }
+    return "";
+  };
+
+  const getProductPath = (item) => {
+    const shopLabel = translations.shop || "Shop";
+    if (!item.categories?.length) return shopLabel;
+    const categoryName = getCategoryDisplayName(item.categories[0]);
+    return categoryName ? `${shopLabel} / ${categoryName}` : shopLabel;
+  };
+
+
   const handleApplyCoupon = async () => {
+    setCouponFeedback(null);
+    setError("");
     const result = await ApplayCoupon(
       coupon,
       setError,
       setLoading,
-      setDiscount
+      setDiscount,
     );
 
     if (result && result.discount) {
       const currentSubtotal = getCartTotal();
-      const currentTax = currentSubtotal * 0.05;
-      const beforeDiscountTotal = currentSubtotal + currentTax;
+      const currentShipping = calculateShipping(currentSubtotal);
+      const currentTax = (currentSubtotal + currentShipping) * 0.05;
+      const beforeDiscountTotal =
+        currentSubtotal + currentShipping + currentTax;
 
       const discountAmount = beforeDiscountTotal * (result.discount / 100);
       const finalTotal = beforeDiscountTotal - discountAmount;
 
       setTotalAfterDiscount(finalTotal);
+      setCouponFeedback({
+        type: "success",
+        message: translations.couponAppliedSuccess,
+      });
 
       localStorage.setItem(
         "savedCoupon",
         JSON.stringify({
           code: coupon,
           discount: result.discount,
-        })
+        }),
       );
+    } else {
+      const message = result?.message || translations.couponInvalid;
+      setCouponFeedback({ type: "error", message });
     }
   };
+
+  useEffect(() => {
+    if (!couponFeedback) return;
+    const timer = setTimeout(() => setCouponFeedback(null), 2000);
+    return () => clearTimeout(timer);
+  }, [couponFeedback]);
 
   const removeCoupon = () => {
     localStorage.removeItem("savedCoupon");
@@ -207,9 +291,7 @@ const ClientCart = () => {
               />
 
               <h1>{translations.yourCartIsEmpty}</h1>
-              <p>
-                {translations.startAddingWholesale}
-              </p>
+              <p>{translations.startAddingWholesale}</p>
 
               <div className="empty_content">
                 <p>
@@ -239,14 +321,14 @@ const ClientCart = () => {
                   <div className="cart_left">
                     <div className="cart_count">
                       <div className="cart_count_left">
-                        <h3>{translations.cartItems} ({cartItems.length})</h3>
-                        <p>
-                          {translations.allPricesIncludeDiscounts}
-                        </p>
+                        <h3>
+                          {translations.cartItems} ({cartItems.length})
+                        </h3>
+                        <p>{translations.allPricesIncludeDiscounts}</p>
                       </div>
                       <div
                         className="cart_count_right"
-                        onClick={handleClearCart}
+                        onClick={openClearCartConfirm}
                       >
                         <RiDeleteBin6Line /> {translations.clearCart}
                       </div>
@@ -270,20 +352,29 @@ const ClientCart = () => {
                           <div className="cart_product_content">
                             <div className="product_item_top">
                               <div className="product_item_top_title">
+                                <p className="cart_product_path">
+                                  {getProductPath(item)}
+                                </p>
                                 <h2>{item.name}</h2>
                                 <span>
                                   {(() => {
-                                    if (!item.categories?.length) return translations.product;
+                                    if (!item.categories?.length)
+                                      return translations.product;
                                     const category = item.categories[0];
-                                    // Handle both object format {_id, name: {en, ar}} and string format
-                                    if (typeof category === 'string') {
+                                    if (typeof category === "string")
                                       return category;
-                                    }
                                     if (category?.name) {
-                                      // Check if name is an object with lang keys
-                                      if (typeof category.name === 'object' && category.name !== null) {
-                                        const currentLang = localStorage.getItem("lang") || "en";
-                                        return category.name[currentLang] || category.name.en || translations.product;
+                                      if (
+                                        typeof category.name === "object" &&
+                                        category.name !== null
+                                      ) {
+                                        const currentLang =
+                                          localStorage.getItem("lang") || "en";
+                                        return (
+                                          category.name[currentLang] ||
+                                          category.name.en ||
+                                          translations.product
+                                        );
                                       }
                                       return String(category.name);
                                     }
@@ -291,10 +382,22 @@ const ClientCart = () => {
                                   })()}
                                 </span>
                                 <p>
-                                  {translations.aed} {item.price} <span>{item.isBoxPricing ? translations.perBox : translations.perUnit}</span>
+                                  {translations.aed} {item.price}{" "}
+                                  <span>
+                                    {item.isBoxPricing
+                                      ? translations.perBox
+                                      : translations.perUnit}
+                                  </span>
                                   {item.isBoxPricing && item.piecesPerBox && (
-                                    <span style={{ fontSize: "0.85em", color: "#666", marginLeft: "0.5rem" }}>
-                                      ({item.piecesPerBox} {translations.piecesPerBox})
+                                    <span
+                                      style={{
+                                        fontSize: "0.85em",
+                                        color: "#666",
+                                        marginLeft: "0.5rem",
+                                      }}
+                                    >
+                                      ({item.piecesPerBox}{" "}
+                                      {translations.piecesPerBox})
                                     </span>
                                   )}
                                 </p>
@@ -303,8 +406,12 @@ const ClientCart = () => {
                               <div className="product_item_top_btns">
                                 <FaRegHeart />
                                 <RiDeleteBin6Line
-                                  onClick={() => removeItem(item._id)}
-                                  style={{ cursor: "pointer" }}
+                                  onClick={() => handleRemoveItem(item._id)}
+                                  className="cart_item_remove_icon"
+                                  title={translations.confirmRemoveFromCart}
+                                  aria-label={
+                                    translations.confirmRemoveFromCart
+                                  }
                                 />
                               </div>
                             </div>
@@ -337,9 +444,10 @@ const ClientCart = () => {
                                   </button>
                                 </div>
 
-                                <p>
-                                  <MdErrorOutline /> {translations.minOrder30Units}
-                                </p>
+                                {/* <p>
+                                  <MdErrorOutline />{" "}
+                                  {translations.minOrder30Units}
+                                </p> */}
 
                                 <div className="total">
                                   <h2>
@@ -377,19 +485,29 @@ const ClientCart = () => {
                         </button>
                       </div>
 
-                      {/* <p>{translations.tryBulk10}</p> */}
-                      {error && <p style={{ color: "red" }}>{error}</p>}
-                      {discount && (
-                        <p style={{ color: "green" }}>{translations.discount} {discount}%</p>
-                      )}
-
-                      {discount && (
-                        <button
-                          onClick={removeCoupon}
-                          className="remove_coupon_btn"
+                      {couponFeedback && (
+                        <div
+                          className={`cart_coupon_feedback cart_coupon_feedback--${couponFeedback.type}`}
+                          role="alert"
                         >
-                          {translations.removeCoupon}
-                        </button>
+                          {couponFeedback.message}
+                        </div>
+                      )}
+                      {discount && (
+                        <div className="cart_discount_applied">
+                          <span className="cart_discount_label">
+                            {translations.discount} <strong>{discount}%</strong>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={removeCoupon}
+                            className="remove_coupon_btn"
+                            title={translations.removeCoupon}
+                            aria-label={translations.removeCoupon}
+                          >
+                            <RiDeleteBin6Line />
+                          </button>
+                        </div>
                       )}
                     </div>
 
@@ -401,23 +519,29 @@ const ClientCart = () => {
                           {translations.subtotal} (
                           {cartItems.reduce(
                             (sum, item) => sum + item.quantity,
-                            0
+                            0,
                           )}{" "}
                           {translations.items})
                         </h4>
-                        <p>{translations.aed} {subtotal.toFixed(2)}</p>
+                        <p>
+                          {translations.aed} {subtotal.toFixed(2)}
+                        </p>
                       </div>
 
                       <div className="summry">
                         <h4>{translations.shipping}</h4>
                         <p>
-                          {subtotal >= 500 ? translations.free : translations.calculatedAtCheckout}
+                          {shipping === 0
+                            ? translations.free
+                            : `${translations.aed} ${shipping.toFixed(2)}`}
                         </p>
                       </div>
 
                       <div className="summry">
                         <h4>{translations.tax5}</h4>
-                        <p>{translations.aed} {tax.toFixed(2)}</p>
+                        <p>
+                          {translations.aed} {tax.toFixed(2)}
+                        </p>
                       </div>
 
                       <hr />
@@ -452,6 +576,54 @@ const ClientCart = () => {
             </div>
           )}
         </>
+      )}
+
+      {/* مودال تأكيد الحذف / مسح السلة */}
+      {confirmModal.open && (
+        <div
+          className={`cart_confirm_overlay ${confirmModal.exiting ? "cart_confirm_overlay--exit" : ""}`}
+          onClick={closeConfirmModal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cart-confirm-title"
+        >
+          <div
+            className={`cart_confirm_modal ${confirmModal.exiting ? "cart_confirm_modal--exit" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="cart_confirm_icon">
+              <RiDeleteBin6Line />
+            </div>
+            <h3 id="cart-confirm-title" className="cart_confirm_title">
+              {confirmModal.type === "clear_cart"
+                ? translations.confirmClearTitle
+                : translations.confirmRemoveTitle}
+            </h3>
+            <p className="cart_confirm_message">
+              {confirmModal.type === "clear_cart"
+                ? translations.confirmClearCart
+                : translations.confirmRemoveFromCart}
+            </p>
+            <div className="cart_confirm_actions">
+              <button
+                type="button"
+                className="cart_confirm_btn cart_confirm_btn--cancel"
+                onClick={closeConfirmModal}
+              >
+                {translations.cancel}
+              </button>
+              <button
+                type="button"
+                className="cart_confirm_btn cart_confirm_btn--confirm"
+                onClick={confirmModalAction}
+              >
+                {confirmModal.type === "clear_cart"
+                  ? translations.confirmClear
+                  : translations.confirmRemove}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

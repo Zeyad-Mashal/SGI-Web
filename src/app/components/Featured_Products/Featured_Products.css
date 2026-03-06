@@ -66,7 +66,8 @@
 .Featured_card {
   width: 100%;
   max-width: 400px;
-  height: 475px;
+  height: auto;
+  min-height: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,17 +78,30 @@
 }
 .Featured_card > a {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 .Featured_card .Featured_img {
   width: 100%;
-  height: 340px;
+  aspect-ratio: 1;
   padding: 0;
   border-radius: 16px;
-}
-.Featured_card .Featured_img > img {
-  width: 100%;
-  height: 100%;
   position: relative;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+.Featured_card .Featured_img > span {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 16px;
+}
+.Featured_card .Featured_img img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
   border-radius: 16px;
 }
 .Featured_img > svg {
@@ -289,13 +303,14 @@
     padding: 20px;
   }
   .Featured_card {
-    width: 135px;
+    width: 100%;
+    max-width: 100%;
     height: auto;
     gap: 0;
   }
   .Featured_card .Featured_img {
     width: 100%;
-    height: 150px;
+    aspect-ratio: 1;
   }
   .Featured_card .Featured_img p,
   .Featured_card .Featured_img svg {

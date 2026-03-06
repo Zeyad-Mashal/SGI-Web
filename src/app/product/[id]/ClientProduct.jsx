@@ -233,6 +233,7 @@ const ClientProduct = () => {
         <div className="product_content">
           {/* <span>{productDetails?.categories[0]}</span> */}
           <h1>{productDetails.name}</h1>
+          {/* <span>{productDetails.brand}</span> */}
           {/* <p>
             <FaStar />
             <FaStar />

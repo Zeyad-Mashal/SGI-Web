@@ -122,9 +122,11 @@ const Featured_Products = () => {
                       <Image
                         src={item.picUrls?.[0] || "/images/empty_product.png"}
                         alt="product image"
-                        width={1000}
-                        height={1000}
+                        width={400}
+                        height={400}
                         loading="lazy"
+                        style={{ objectFit: "contain" }}
+                        sizes="(max-width: 789px) 50vw, (max-width: 1024px) 33vw, 20vw"
                       />
                       <FontAwesomeIcon
                         icon={isFavorited(item._id) ? faHeartSolid : faHeart}
