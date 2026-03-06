@@ -34,7 +34,7 @@ const ClientLogin = () => {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    
+
     // Also check periodically for language changes
     const interval = setInterval(() => {
       const currentLang = localStorage.getItem("lang") || "en";
@@ -100,13 +100,15 @@ const ClientLogin = () => {
         <div className="register-form">
           <h1>{translations.signIn}</h1>
           <p>
-            {translations.dontHaveAccount} <a href="/register">{translations.signUp}</a>
+            {translations.dontHaveAccount}{" "}
+            <a href="/register">{translations.signUp}</a>
           </p>
           <a href="/">{translations.goToHomePage}</a>
           <div className="form-content">
             <label>
               <h3>
-                {translations.email}<span>*</span>
+                {translations.email}
+                <span>*</span>
               </h3>
               <input
                 type="text"
@@ -116,13 +118,17 @@ const ClientLogin = () => {
             </label>
             <label>
               <h3>
-                {translations.password}<span>*</span>
+                {translations.password}
+                <span>*</span>
               </h3>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <p style={{ margin: "0.25rem 0 0", fontSize: "0.9rem" }}>
+                <a href="/forget-password">{translations.forgetPassword}</a>
+              </p>
             </label>
             <button onClick={handleLogin}>
               {loading ? translations.loading : translations.signIn}

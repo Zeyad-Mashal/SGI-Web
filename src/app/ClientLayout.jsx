@@ -11,7 +11,7 @@ export default function ClientLayout({ children }) {
   const [lang, setLang] = useState("en");
 
   // الصفحات اللي مش عايز يظهر فيها navbar/footer
-  const hiddenPaths = ["/login", "/register"];
+  const hiddenPaths = ["/login", "/register", "/forget-password"];
   const hideLayout = hiddenPaths.includes(pathname);
 
   useEffect(() => {
