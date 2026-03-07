@@ -377,6 +377,31 @@ const ClientProduct = () => {
               </div>
             )}
           </div>
+
+          {productDetails?.uses != null && productDetails?.uses !== "" && (
+            <div className="product_major_uses">
+              <h3 className="product_major_uses_title">
+                {translations.majorProductUses}
+              </h3>
+              <div className="product_major_uses_content">
+                <pre
+                  className="product_major_uses_text"
+                  style={{
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    color: "inherit",
+                    margin: 0,
+                    padding: 0,
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                  }}
+                >
+                  {productDetails.uses}
+                </pre>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -409,25 +434,6 @@ const ClientProduct = () => {
             <div className="product_desc_description">
               <h2>{translations.productDescription}</h2>
               <p>{productDetails.description}</p>
-              <h2>{translations.majorProductUses}</h2>
-              <ul>
-                <li>
-                  <pre
-                    style={{
-                      fontFamily: "inherit",
-                      fontSize: "inherit",
-                      color: "inherit",
-                      margin: 0,
-                      padding: 0,
-                      whiteSpace: "pre-wrap",
-                      wordWrap: "break-word",
-                      overflowWrap: "break-word",
-                    }}
-                  >
-                    {productDetails.uses}
-                  </pre>
-                </li>
-              </ul>
               <h2>{translations.idealFor}</h2>
               <ul>
                 <li>

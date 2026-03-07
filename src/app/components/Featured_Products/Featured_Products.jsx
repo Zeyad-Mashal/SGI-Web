@@ -59,14 +59,18 @@ const Featured_Products = () => {
   const [error, setError] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
   const getFeaturedProduct = () => {
-    GetFeaturedProducts((products) => {
-      // فلترة المنتجات لعرض فقط التي type = "featured"
-      const featuredProducts = products.filter((product) => {
-        const productType = product.type || product.Type || "";
-        return productType.toLowerCase() === "featured";
-      });
-      setAllProducts(featuredProducts);
-    }, setError, setLoading);
+    GetFeaturedProducts(
+      (products) => {
+        // فلترة المنتجات لعرض فقط التي type = "featured"
+        const featuredProducts = products.filter((product) => {
+          const productType = product.type || product.Type || "";
+          return productType.toLowerCase() === "featured";
+        });
+        setAllProducts(featuredProducts);
+      },
+      setError,
+      setLoading,
+    );
   };
   return (
     <div className="Featured_Products">
@@ -109,8 +113,8 @@ const Featured_Products = () => {
               320: { slidesPerView: 2.25 },
               480: { slidesPerView: 3 },
               768: { slidesPerView: 4 },
-              1024: { slidesPerView: 4 },
-              1400: { slidesPerView: 5 },
+              1024: { slidesPerView: 5 },
+              1400: { slidesPerView: 6 },
             }}
             className="Featured_Products_swiper"
           >

@@ -388,6 +388,13 @@
   align-items: center;
   color: rgba(0, 0, 0, 0.8);
 }
+.cart_coupon_row {
+  margin-top: 0.25rem;
+}
+.cart_coupon_discount {
+  color: #0d9488;
+  font-weight: 600;
+}
 .cart_right_summry > hr {
   height: 0.5rem;
   width: 100%;

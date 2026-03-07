@@ -34,6 +34,8 @@ import {
   faArrowRight,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaPlus } from "react-icons/fa6";
+
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
 
@@ -57,6 +59,8 @@ export default function Shop() {
   });
   const [showFilter, setShowFilter] = useState(false);
   const [showDesktopFilter, setShowDesktopFilter] = useState(true);
+  const [categoriesSectionOpen, setCategoriesSectionOpen] = useState(false);
+  const [brandsSectionOpen, setBrandsSectionOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
@@ -157,10 +161,8 @@ export default function Shop() {
           foundMainCategory = cat._id;
           setSelectedCategoryId(cat._id);
           setSelectedSubCategoryId(null);
-          // Expand the category if it has subcategories
-          if (cat.subCategories && cat.subCategories.length > 0) {
-            setExpandedCategory(index);
-          }
+          // لا نفتح الـ dropdown عند اختيار الكاتيجوري الرئيسية (النقر على الكاتيجوري نفسها)
+          setExpandedCategory(null);
         } else if (cat.subCategories) {
           cat.subCategories.forEach((subCat) => {
             if (subCat._id === categoryId) {
@@ -410,13 +412,40 @@ export default function Shop() {
           ) : (
             ""
           )}
-          {/* Category Filter */}
-          <div className="filter_top">
-            <h2>
+
+          {/* Filters header + view switches + collapse (desktop) */}
+          <div className="filter_top filter_header_row">
+            <h2 className="filter_section_title">
+              <FiFilter /> {translations.filters}
+            </h2>
+            <div className="shop_display shop_display_in_sidebar">
+              <TbAlignBoxRightMiddle
+                className={`flex-display ${viewMode === "list" ? "active" : ""}`}
+                onClick={() => setViewMode("list")}
+              />
+              <AiOutlineBars
+                className={`grid-display ${viewMode === "grid" ? "active" : ""}`}
+                onClick={() => setViewMode("grid")}
+              />
+            </div>
+          </div>
+
+          {/* Category Filter - collapsible */}
+          <div className="filter_top filter_collapsible">
+            <h2
+              className="filter_dropdown_trigger"
+              onClick={() => setCategoriesSectionOpen((o) => !o)}
+              aria-expanded={categoriesSectionOpen}
+            >
               <MdOutlineSettingsInputComponent /> {translations.categories}
+              <span
+                className={`filter_dropdown_chevron ${categoriesSectionOpen ? "open" : ""}`}
+              >
+                <FontAwesomeIcon icon={faChevronDown} />
+              </span>
             </h2>
 
-            {/* Clear Filter Button */}
+            {/* Clear Filter Button - inside when open */}
             {(selectedCategoryId || selectedSubCategoryId || brandId) && (
               <button className="clear_filter_btn" onClick={clearFilter}>
                 <FontAwesomeIcon icon={faTimes} />
@@ -424,13 +453,16 @@ export default function Shop() {
               </button>
             )}
 
-            {/* Categories List */}
-            {categoriesLoading ? (
-              <div className="category_loading">
-                {translations.loadingCategories}
-              </div>
-            ) : categories.length > 0 ? (
-              <div className="categories_list">
+            <div
+              className={`filter_dropdown_content ${categoriesSectionOpen ? "open" : ""}`}
+            >
+              {/* Categories List */}
+              {categoriesLoading ? (
+                <div className="category_loading">
+                  {translations.loadingCategories}
+                </div>
+              ) : categories.length > 0 ? (
+                <div className="categories_list">
                 {categories.map((category, index) => {
                   const categoryName =
                     category.name?.[lang] ||
@@ -450,24 +482,24 @@ export default function Shop() {
                       <div
                         className={`category_main_item ${isSelected ? "selected" : ""} ${isExpanded ? "expanded" : ""}`}
                         onClick={() => {
-                          if (hasSubCategories) {
-                            // إذا كان لديها subcategories، افتح/أغلق القائمة
-                            handleCategoryClick(index);
-                          } else {
-                            // إذا لم يكن لديها subcategories، اختر الـ category مباشرة
-                            handleMainCategoryClick(category._id);
-                          }
+                          // النقر على الكاتيجوري نفسها = فتح الكاتيجوري الكبيرة (الرئيسية)
+                          handleMainCategoryClick(category._id);
                         }}
                       >
                         <span className="category_name">{categoryName}</span>
-                        <FontAwesomeIcon
-                          icon={lang === "ar" ? faArrowLeft : faArrowRight}
-                          onClick={(e) =>
-                            handleMainCategoryArrowClick(category._id, e)
-                          }
+                        <FaPlus
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // النقر على الأيقونة = فتح/إغلاق الساب كاتيجوري
+                            if (hasSubCategories) {
+                              handleCategoryClick(index);
+                            } else {
+                              handleMainCategoryClick(category._id);
+                            }
+                          }}
                           style={{
                             cursor: "pointer",
-                            fontSize: "18px",
+                            fontSize: "28px",
                             fontWeight: "bold",
                           }}
                           className="main_category_arrow"
@@ -519,17 +551,30 @@ export default function Shop() {
                 })}
               </div>
             ) : (
-              <div className="no_categories">
-                {translations.noCategoriesAvailable}
-              </div>
-            )}
+                <div className="no_categories">
+                  {translations.noCategoriesAvailable}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Brand Filter - same style as home page brands */}
-          <div className="filter_top filter_brands">
-            <h2>
+          {/* Brand Filter - collapsible */}
+          <div className="filter_top filter_collapsible filter_brands">
+            <h2
+              className="filter_dropdown_trigger"
+              onClick={() => setBrandsSectionOpen((o) => !o)}
+              aria-expanded={brandsSectionOpen}
+            >
               <MdOutlineSettingsInputComponent /> {translations.brands}
+              <span
+                className={`filter_dropdown_chevron ${brandsSectionOpen ? "open" : ""}`}
+              >
+                <FontAwesomeIcon icon={faChevronDown} />
+              </span>
             </h2>
+            <div
+              className={`filter_dropdown_content ${brandsSectionOpen ? "open" : ""}`}
+            >
             {brandsLoading ? (
               <div className="category_loading">
                 {translations.loadingBrands}
@@ -570,28 +615,28 @@ export default function Shop() {
                 {translations.noBrandsAvailable}
               </div>
             )}
+            </div>
           </div>
         </div>
 
         {/* SHOP CONTENT */}
         <div className="shop_content">
-          <div className="shop_filter_top">
+          {/* Mobile: bar to open filter + view switches. Desktop: when sidebar hidden, bar to show it again + switches */}
+          <div
+            className={`shop_filter_top_mobile ${!showDesktopFilter ? "shop_filter_top_desktop_visible" : ""}`}
+          >
             <h3
               onClick={() => {
                 if (window.innerWidth <= 991) {
-                  setShowFilter(!showFilter);
+                  setShowFilter(true);
                 } else {
-                  setShowDesktopFilter(!showDesktopFilter);
+                  setShowDesktopFilter(true);
                 }
               }}
             >
               <FiFilter />
               {translations.filters}
             </h3>
-
-            {/* <p>
-              <span>{pagination.totalProducts || allProducts.length}</span> {translations.productsFound}
-            </p> */}
             <div className="shop_display">
               <TbAlignBoxRightMiddle
                 className={`flex-display ${viewMode === "list" ? "active" : ""}`}

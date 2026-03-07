@@ -20,6 +20,7 @@ import { CiSearch } from "react-icons/ci";
 import { FiPhone } from "react-icons/fi";
 import { FaRegHeart, FaRegUser } from "react-icons/fa";
 import { RiShoppingBag3Line } from "react-icons/ri";
+import { BsCart } from "react-icons/bs";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 import { CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/constants/contact";
@@ -28,6 +29,7 @@ import GetCategories from "@/API/Categories/GetCategories";
 import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
 import LogoutModal from "@/app/components/LogoutModal/LogoutModal";
 import { getCartItemCount } from "@/utils/cartUtils";
+import { getFavoritesCount } from "@/utils/favoriteUtils";
 
 const Navbar = () => {
   const router = useRouter();
@@ -49,28 +51,37 @@ const Navbar = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [favoriteItemCount, setFavoriteItemCount] = useState(0);
 
   useEffect(() => {
     GetCategories(setCategories, setError, setLoading);
-    // تحديث عدد المنتجات في السلة
+    // تحديث عدد المنتجات في السلة والمفضلة
     updateCartCount();
+    updateFavoriteCount();
 
     // الاستماع لتغييرات localStorage من نفس النافذة
     const handleStorageChange = (e) => {
       if (e.key === "cart" || !e.key) {
         updateCartCount();
       }
+      if (e.key === "favorites" || !e.key) {
+        updateFavoriteCount();
+      }
     };
 
     // الاستماع لتغييرات localStorage من نوافذ أخرى
     window.addEventListener("storage", handleStorageChange);
 
-    // فحص السلة كل 500ms للتحديث الفوري (أسرع)
-    const interval = setInterval(updateCartCount, 500);
+    // فحص السلة والمفضلة كل 500ms للتحديث الفوري (أسرع)
+    const interval = setInterval(() => {
+      updateCartCount();
+      updateFavoriteCount();
+    }, 500);
 
     // تحديث عند تغيير التركيز على النافذة
     const handleFocus = () => {
       updateCartCount();
+      updateFavoriteCount();
     };
     window.addEventListener("focus", handleFocus);
 
@@ -84,6 +95,11 @@ const Navbar = () => {
   const updateCartCount = () => {
     const count = getCartItemCount();
     setCartItemCount(count);
+  };
+
+  const updateFavoriteCount = () => {
+    const count = getFavoritesCount();
+    setFavoriteItemCount(count);
   };
 
   const closeMegaMenu = () => {
@@ -247,8 +263,11 @@ const Navbar = () => {
           >
             <CiSearch />
           </span>
-          <a href="/fav">
+          <a href="/fav" className="fav_link">
             <FaRegHeart />
+            {favoriteItemCount > 0 && (
+              <span className="fav_badge">{favoriteItemCount}</span>
+            )}
           </a>
           {token && (
             <a href="/profile">
@@ -257,7 +276,8 @@ const Navbar = () => {
           )}
 
           <a href="/cart" className="cart_link">
-            <RiShoppingBag3Line />
+            <BsCart />
+
             {cartItemCount > 0 && (
               <span className="cart_badge">{cartItemCount}</span>
             )}
@@ -349,8 +369,11 @@ const Navbar = () => {
           </div>
         </div>
         <div className="navbar_links">
-          <a href="/fav">
+          <a href="/fav" className="fav_link">
             <FaRegHeart />
+            {favoriteItemCount > 0 && (
+              <span className="fav_badge">{favoriteItemCount}</span>
+            )}
           </a>
 
           {token && (
@@ -360,7 +383,8 @@ const Navbar = () => {
           )}
 
           <a href="/cart" className="cart_link">
-            <RiShoppingBag3Line />
+            <BsCart />
+
             {cartItemCount > 0 && (
               <span className="cart_badge">{cartItemCount}</span>
             )}

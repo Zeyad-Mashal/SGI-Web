@@ -20,6 +20,7 @@ import {
 } from "@/utils/cartUtils";
 import { useRouter } from "next/navigation";
 import ApplayCoupon from "@/API/Coupon/ApplayCoupon";
+import GetCategories from "@/API/Categories/GetCategories";
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
 
@@ -47,6 +48,7 @@ const ClientCart = () => {
   });
   const [lang, setLang] = useState("en");
   const [translations, setTranslations] = useState(en);
+  const [categoriesTree, setCategoriesTree] = useState([]);
 
   // ---------------------- 1) On Mount ----------------------
   useEffect(() => {
@@ -57,6 +59,7 @@ const ClientCart = () => {
 
     setMounted(true);
     loadCart();
+    GetCategories(setCategoriesTree, () => {}, () => {});
 
     // Listen for language changes
     const handleStorageChange = () => {
@@ -209,11 +212,39 @@ const ClientCart = () => {
     return "";
   };
 
+  // بناء المسار الكامل: Shop / Main Category / Sub Category
   const getProductPath = (item) => {
     const shopLabel = translations.shop || "Shop";
     if (!item.categories?.length) return shopLabel;
-    const categoryName = getCategoryDisplayName(item.categories[0]);
-    return categoryName ? `${shopLabel} / ${categoryName}` : shopLabel;
+
+    const cat = item.categories[0];
+    const categoryId = typeof cat === "object" && cat !== null ? cat._id : cat;
+    if (!categoryId || !categoriesTree.length) {
+      const name = getCategoryDisplayName(cat);
+      return name ? `${shopLabel} / ${name}` : shopLabel;
+    }
+
+    for (const main of categoriesTree) {
+      if (main._id === categoryId) {
+        const mainName = getCategoryDisplayName(main);
+        return mainName ? `${shopLabel} / ${mainName}` : shopLabel;
+      }
+      if (main.subCategories && Array.isArray(main.subCategories)) {
+        for (const sub of main.subCategories) {
+          if (sub._id === categoryId) {
+            const mainName = getCategoryDisplayName(main);
+            const subName = getCategoryDisplayName(sub);
+            if (mainName && subName)
+              return `${shopLabel} / ${mainName} / ${subName}`;
+            if (subName) return `${shopLabel} / ${subName}`;
+            if (mainName) return `${shopLabel} / ${mainName}`;
+            return shopLabel;
+          }
+        }
+      }
+    }
+    const name = getCategoryDisplayName(cat);
+    return name ? `${shopLabel} / ${name}` : shopLabel;
   };
 
 
@@ -543,6 +574,18 @@ const ClientCart = () => {
                           {translations.aed} {tax.toFixed(2)}
                         </p>
                       </div>
+
+                      {discount != null && discount > 0 && (
+                        <div className="summry cart_coupon_row">
+                          <h4>
+                            {translations.coupon || "Coupon"} ({discount}%)
+                          </h4>
+                          <p className="cart_coupon_discount">
+                            - {translations.aed}{" "}
+                            {(total * (discount / 100)).toFixed(2)}
+                          </p>
+                        </div>
+                      )}
 
                       <hr />
 

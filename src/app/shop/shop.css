@@ -42,6 +42,94 @@
 .filter_top > h2 > svg {
   color: rgba(223, 144, 0, 1);
 }
+
+/* Filters header row: "Filters" + view switches */
+.filter_header_row {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.filter_section_title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.filter_section_title > svg {
+  color: rgba(223, 144, 0, 1);
+}
+.shop_display_in_sidebar .flex-display,
+.shop_display_in_sidebar .grid-display {
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+.shop_display_in_sidebar .flex-display:hover,
+.shop_display_in_sidebar .grid-display:hover {
+  background-color: rgba(223, 144, 0, 0.15);
+}
+.shop_display_in_sidebar .flex-display.active,
+.shop_display_in_sidebar .grid-display.active {
+  background-color: #000;
+  color: white;
+}
+
+/* Collapsible sections (Categories / Brands) */
+.filter_collapsible {
+  width: 100%;
+  flex-direction: column;
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+.filter_dropdown_trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin: 0 0 10px 0;
+  padding: 4px 0;
+  user-select: none;
+}
+.filter_dropdown_trigger:hover {
+  color: rgba(223, 144, 0, 1);
+}
+.filter_dropdown_chevron {
+  display: inline-flex;
+  transition: transform 0.3s ease;
+  color: rgba(0, 0, 0, 0.6);
+}
+.filter_dropdown_chevron.open {
+  transform: rotate(180deg);
+  color: rgba(223, 144, 0, 1);
+}
+.filter_dropdown_content {
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease-out;
+  box-sizing: border-box;
+}
+.filter_dropdown_content.open {
+  max-height: 1200px;
+  transition: max-height 0.4s ease-in;
+  width: 100%;
+  padding-bottom: 16px;
+}
+.filter_dropdown_content .categories_list,
+.filter_dropdown_content .brands_list,
+.filter_dropdown_content .category_loading,
+.filter_dropdown_content .no_categories {
+  width: 100%;
+  box-sizing: border-box;
+}
+.filter_collapsible .clear_filter_btn {
+  margin-bottom: 10px;
+}
 .filter_top > input {
   width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -337,37 +425,43 @@
   flex-direction: column;
   gap: 1rem;
 }
-.shop_filter_top {
-  display: flex;
+/* Desktop: no bar in middle (removed shop_filter_top from content) */
+
+/* Mobile only: bar to open filter + view switches */
+.shop_filter_top_mobile {
+  display: none;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
+  width: 100%;
   box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.4);
-  padding: 8px 2rem;
+  padding: 10px 1rem;
   border-radius: 16px;
+  margin-bottom: 0.5rem;
 }
-.shop_filter_top > h3 {
+.shop_filter_top_mobile > h3 {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border: 1px solid black;
-  padding: 8px;
+  padding: 8px 12px;
   border-radius: 12px;
   cursor: pointer;
-  width: 120px;
+  margin: 0;
+  font-size: 1rem;
 }
-.shop_filter_top > p {
-  color: rgba(0, 0, 0, 0.5);
+.shop_filter_top_mobile > h3:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
-.shop_filter_top > p > span {
-  font-size: 20px;
+.shop_filter_top_mobile .shop_display {
+  display: flex;
 }
-.shop_filter_top > select {
-  border: 1px solid black;
-  padding: 8px;
-  border-radius: 12px;
-  outline: none;
+@media screen and (min-width: 992px) {
+  .shop_filter_top_mobile.shop_filter_top_desktop_visible {
+    display: flex;
+    width: 90%;
+    max-width: 600px;
+  }
 }
 .shop_display {
   display: flex;
@@ -746,21 +840,11 @@
   .shop_content {
     width: 100%;
   }
-  .shop_filter_top {
-    padding: 10px;
-    width: 100%;
+  .shop_filter_top_mobile {
+    display: flex;
   }
-  .shop_filter_top > h3 {
-    font-size: 0.8rem;
-  }
-  .shop_filter_top > p {
-    display: none;
-  }
-  .shop_filter_top > select {
-    font-size: 0.8rem;
-  }
-  .shop_display {
-    display: none;
+  .shop_filter_top_mobile > h3 {
+    font-size: 0.9rem;
   }
   .shop_list {
     justify-content: center;

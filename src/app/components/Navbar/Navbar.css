@@ -156,6 +156,35 @@
 .cart_badge:empty {
   display: none;
 }
+
+.fav_link {
+  position: relative;
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+}
+
+.fav_badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: rgba(239, 68, 68, 1);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.fav_badge:empty {
+  display: none;
+}
+
 .mega_menu_btn > span {
   cursor: pointer;
   font-family: "Roboto", sans-serif;
@@ -233,7 +262,9 @@
   font-family: "Roboto", sans-serif;
 }
 .login_links > a {
-  text-decoration: underline;
+  /* text-decoration: underline; */
+  font-size: 0.8rem;
+  font-weight: bold;
   color: black;
   font-family: "Roboto", sans-serif;
 }
@@ -244,6 +275,7 @@
   width: auto;
   height: 40px;
   font-size: 0.8rem;
+  font-weight: bold;
   font-family: "Roboto", sans-serif;
 }
 .logout-btn {
@@ -687,7 +719,8 @@
     width: 18px;
     height: 18px;
   }
-  .cart_badge {
+  .cart_badge,
+  .fav_badge {
     width: 16px;
     height: 16px;
     font-size: 0.6rem;
@@ -1092,11 +1125,13 @@
   }
 
   /* Mobile Cart Badge */
-  .mobile_menu_icon .cart_link {
+  .mobile_menu_icon .cart_link,
+  .mobile_menu_icon .fav_link {
     position: relative;
   }
 
-  .mobile_menu_icon .cart_badge {
+  .mobile_menu_icon .cart_badge,
+  .mobile_menu_icon .fav_badge {
     position: absolute;
     top: -6px;
     right: -6px;
