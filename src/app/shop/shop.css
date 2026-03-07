@@ -499,11 +499,11 @@
   flex-wrap: wrap;
 }
 
-/* Grid View - 4 cards per row */
+/* Grid View - 4 cards per row، كارد أصغر */
 .shop_list .grid_view {
   width: calc(25% - 0.75rem);
-  max-width: 300px;
-  min-width: 250px;
+  max-width: 260px;
+  min-width: 200px;
 }
 
 /* List View - Full width vertical layout */
@@ -517,13 +517,13 @@
 }
 .Featured_card {
   width: 100%;
-  max-width: 300px;
-  min-height: 430px;
+  max-width: 260px;
+  min-height: 360px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   flex-direction: column;
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
   position: relative;
@@ -632,9 +632,9 @@
 }
 .Featured_card .Featured_img {
   width: 100%;
-  height: 340px;
+  height: 260px;
   padding: 0;
-  border-radius: 16px;
+  border-radius: 14px;
 }
 .Featured_card .Featured_img > img {
   width: 100%;
@@ -665,27 +665,27 @@
   right: 20px;
 }
 .Featured_card h2 {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
-  margin: 8px 0 12px 0;
+  margin: 6px 0 8px 0;
   text-align: left;
-  padding: 0px 10px;
-  line-height: 1.4;
+  padding: 0 8px;
+  line-height: 1.35;
 }
 .Featured_stars {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  padding: 10px 10px 0 10px;
-  margin-top: 8px;
+  padding: 6px 8px 0 8px;
+  margin-top: 4px;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
 }
 .Featured_stars > svg {
   color: rgba(255, 169, 13, 1);
   margin-right: 2px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 .Featured_stars > p {
   margin-left: 5px;
@@ -700,21 +700,22 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 12px 10px;
+  padding: 8px 8px 10px;
   margin-top: auto;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 .Featured_price > h3 {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 .Featured_price > button {
-  padding: 5px 15px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
   background-color: black;
   color: white;
   border: none;
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -780,10 +781,12 @@
   }
 }
 
-/* Responsive Grid View */
+/* Responsive Grid View - 4 منتجات في الصف */
 @media screen and (max-width: 1400px) {
   .shop_list .grid_view {
-    width: calc(33.333% - 0.67rem);
+    width: calc(25% - 0.75rem);
+    max-width: 260px;
+    min-width: 200px;
   }
 }
 
