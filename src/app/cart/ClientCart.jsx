@@ -110,6 +110,7 @@ const ClientCart = () => {
   }, [cartItems, mounted]);
 
   // ---------------------- 3) Load coupon if saved ----------------------
+  // الكوبون يُحسب على سعر المنتجات فقط، ثم الشحن كما هو، ثم الضريبة على (المجموع بعد الخصم + الشحن)
   useEffect(() => {
     if (!mounted) return;
 
@@ -121,12 +122,11 @@ const ClientCart = () => {
 
       const currentSubtotal = getCartTotal();
       const currentShipping = calculateShipping(currentSubtotal);
-      const currentTax = (currentSubtotal + currentShipping) * 0.05;
-      const beforeDiscountTotal =
-        currentSubtotal + currentShipping + currentTax;
 
-      const discountAmount = beforeDiscountTotal * (discount / 100);
-      const finalTotal = beforeDiscountTotal - discountAmount;
+      const discountAmount = currentSubtotal * (discount / 100);
+      const subtotalAfterDiscount = currentSubtotal - discountAmount;
+      const taxAfterCoupon = (subtotalAfterDiscount + currentShipping) * 0.05;
+      const finalTotal = subtotalAfterDiscount + currentShipping + taxAfterCoupon;
 
       setTotalAfterDiscount(finalTotal);
     }
@@ -261,12 +261,11 @@ const ClientCart = () => {
     if (result && result.discount) {
       const currentSubtotal = getCartTotal();
       const currentShipping = calculateShipping(currentSubtotal);
-      const currentTax = (currentSubtotal + currentShipping) * 0.05;
-      const beforeDiscountTotal =
-        currentSubtotal + currentShipping + currentTax;
 
-      const discountAmount = beforeDiscountTotal * (result.discount / 100);
-      const finalTotal = beforeDiscountTotal - discountAmount;
+      const discountAmount = currentSubtotal * (result.discount / 100);
+      const subtotalAfterDiscount = currentSubtotal - discountAmount;
+      const taxAfterCoupon = (subtotalAfterDiscount + currentShipping) * 0.05;
+      const finalTotal = subtotalAfterDiscount + currentShipping + taxAfterCoupon;
 
       setTotalAfterDiscount(finalTotal);
       setCouponFeedback({
@@ -571,7 +570,11 @@ const ClientCart = () => {
                       <div className="summry">
                         <h4>{translations.tax5}</h4>
                         <p>
-                          {translations.aed} {tax.toFixed(2)}
+                          {translations.aed}{" "}
+                          {(discount != null && discount > 0
+                            ? (subtotal - subtotal * (discount / 100) + shipping) * 0.05
+                            : tax
+                          ).toFixed(2)}
                         </p>
                       </div>
 
@@ -582,7 +585,7 @@ const ClientCart = () => {
                           </h4>
                           <p className="cart_coupon_discount">
                             - {translations.aed}{" "}
-                            {(total * (discount / 100)).toFixed(2)}
+                            {(subtotal * (discount / 100)).toFixed(2)}
                           </p>
                         </div>
                       )}

@@ -74,7 +74,7 @@
   background-color: rgba(215, 223, 43, 0.25);
   border-radius: 25px;
   padding: 0.5rem;
-  width: 150px;
+  width: fit-content;
   height: 40px;
   font-family: "Roboto", sans-serif;
 }

@@ -8,20 +8,21 @@ import {
   faLinkedin,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
-import {
-  sendForgotPasswordCode,
-  verifyForgotPasswordCode,
-} from "@/API/ForgotPassword/ForgotPassword";
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+import SendCode from "@/API/Password/SendCode";
+import CheckCode from "@/API/Password/CheckCode";
+import ChangePassword from "@/API/Password/ChangePassword";
 import en from "../../translation/en.json";
 import ar from "../../translation/ar.json";
 
-const CODE_LENGTH = 6;
+const CODE_LENGTH = 5;
 const RESEND_COOLDOWN_SECONDS = 30;
 
 const ClientForgetPassword = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState(Array(CODE_LENGTH).fill(""));
+  const [codeVerified, setCodeVerified] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
@@ -29,6 +30,13 @@ const ClientForgetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [resendCountdown, setResendCountdown] = useState(0);
   const [translations, setTranslations] = useState(en);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successSummary, setSuccessSummary] = useState({
+    email: "",
+    password: "",
+  });
   const codeInputRefs = useRef([]);
 
   useEffect(() => {
@@ -55,13 +63,11 @@ const ClientForgetPassword = () => {
       setError(translations.pleaseEnterEmail || "Please enter your email");
       return;
     }
-    const res = await sendForgotPasswordCode(
-      email.trim(),
-      setError,
-      setLoading,
-    );
+    const res = await SendCode(email.trim(), setError, setLoading);
     if (res?.success) {
       setStep(2);
+      setCodeVerified(false);
+      setCode(Array(CODE_LENGTH).fill(""));
       setResendCountdown(RESEND_COOLDOWN_SECONDS);
       setSuccessMsg(translations.codeSentToEmail || "Code sent to your email");
     }
@@ -97,15 +103,30 @@ const ClientForgetPassword = () => {
     codeInputRefs.current[nextIndex]?.focus();
   };
 
-  const handleVerify = async () => {
+  const handleCheckCode = async () => {
     setError(null);
+    setSuccessMsg(null);
     const fullCode = code.join("");
     if (fullCode.length !== CODE_LENGTH) {
       setError(
-        translations.pleaseEnterFullCode || "Please enter the 6-digit code",
+        translations.pleaseEnterFullCode ||
+          `Please enter the ${CODE_LENGTH}-digit code`,
       );
       return;
     }
+    const res = await CheckCode(email, fullCode, setError, setLoading);
+    if (res?.success) {
+      setCodeVerified(true);
+      setResendCountdown(0);
+      setSuccessMsg(
+        translations.codeActivatedEnterNewPassword ||
+          "Code activated. Enter your new password below.",
+      );
+    }
+  };
+
+  const handleVerify = async () => {
+    setError(null);
     if (!newPassword || newPassword.length < 6) {
       setError(
         translations.passwordMinLength ||
@@ -117,28 +138,29 @@ const ClientForgetPassword = () => {
       setError(translations.passwordsDoNotMatch || "Passwords do not match");
       return;
     }
-    const res = await verifyForgotPasswordCode(
+    const res = await ChangePassword(
       email,
-      code,
       newPassword,
+      confirmPassword,
       setError,
       setLoading,
     );
     if (res?.success) {
-      setSuccessMsg(
-        translations.passwordResetSuccess || "Password reset successfully!",
-      );
+      setSuccessSummary({ email, password: newPassword });
+      setShowSuccessModal(true);
       setTimeout(() => {
         window.location.href = "/login";
-      }, 2000);
+      }, 5000);
     }
   };
 
   const handleResend = async () => {
     if (resendCountdown > 0) return;
     setError(null);
-    const res = await sendForgotPasswordCode(email, setError, setLoading);
+    const res = await SendCode(email, setError, setLoading);
     if (res?.success) {
+      setCodeVerified(false);
+      setCode(Array(CODE_LENGTH).fill(""));
       setResendCountdown(RESEND_COOLDOWN_SECONDS);
       setSuccessMsg(
         translations.codeSentToEmail || "Code sent again to your email",
@@ -210,7 +232,11 @@ const ClientForgetPassword = () => {
                     placeholder="example@email.com"
                   />
                 </label>
-                <button onClick={handleSendCode} disabled={loading}>
+                <button
+                  onClick={handleSendCode}
+                  disabled={loading}
+                  className="forget_password_button"
+                >
                   {loading ? translations.loading : translations.sendCode}
                 </button>
               </>
@@ -234,55 +260,165 @@ const ClientForgetPassword = () => {
                         onChange={(e) => handleCodeChange(i, e.target.value)}
                         onKeyDown={(e) => handleCodeKeyDown(i, e)}
                         className={digit ? "filled" : ""}
+                        disabled={codeVerified}
                       />
                     ))}
                   </div>
                 </label>
-                <div className="resend-row">
+                {!codeVerified && (
+                  <div className="resend-row">
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      disabled={resendCountdown > 0 || loading}
+                    >
+                      {resendCountdown > 0
+                        ? `${translations.resendCodeIn || "Resend in"} ${resendCountdown}s`
+                        : translations.resendCode}
+                    </button>
+                  </div>
+                )}
+                {!codeVerified ? (
                   <button
-                    type="button"
-                    onClick={handleResend}
-                    disabled={resendCountdown > 0 || loading}
+                    onClick={handleCheckCode}
+                    disabled={loading}
+                    className="forget_password_button"
                   >
-                    {resendCountdown > 0
-                      ? `${translations.resendCodeIn || "Resend in"} ${resendCountdown}s`
-                      : translations.resendCode}
+                    {loading
+                      ? translations.loading
+                      : translations.verifyCode || "Verify code"}
                   </button>
-                </div>
-                <label>
-                  <h3>
-                    {translations.newPassword}
-                    <span>*</span>
-                  </h3>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="••••••••"
-                  />
-                </label>
-                <label>
-                  <h3>
-                    {translations.confirmPassword}
-                    <span>*</span>
-                  </h3>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                  />
-                </label>
-                <button onClick={handleVerify} disabled={loading}>
-                  {loading ? translations.loading : translations.resetPassword}
-                </button>
+                ) : (
+                  <>
+                    <div className="forget-message forget-message--success">
+                      <span className="forget-message-icon">✓</span>
+                      <p>{successMsg}</p>
+                    </div>
+                    <label>
+                      <h3>
+                        {translations.newPassword}
+                        <span>*</span>
+                      </h3>
+                      <div className="forget-password-input-wrap">
+                        <input
+                          type={showNewPassword ? "text" : "password"}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="••••••••"
+                        />
+                        <button
+                          type="button"
+                          className="forget-password-toggle"
+                          onClick={() => setShowNewPassword((v) => !v)}
+                          title={
+                            showNewPassword
+                              ? translations.hidePassword
+                              : translations.showPassword
+                          }
+                          aria-label={
+                            showNewPassword
+                              ? translations.hidePassword
+                              : translations.showPassword
+                          }
+                        >
+                          <FontAwesomeIcon
+                            icon={showNewPassword ? faEyeSlash : faEye}
+                          />
+                        </button>
+                      </div>
+                    </label>
+                    <label>
+                      <h3>
+                        {translations.confirmPassword}
+                        <span>*</span>
+                      </h3>
+                      <div className="forget-password-input-wrap">
+                        <input
+                          type={showConfirmPassword ? "text" : "password"}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="••••••••"
+                        />
+                        <button
+                          type="button"
+                          className="forget-password-toggle"
+                          onClick={() => setShowConfirmPassword((v) => !v)}
+                          title={
+                            showConfirmPassword
+                              ? translations.hidePassword
+                              : translations.showPassword
+                          }
+                          aria-label={
+                            showConfirmPassword
+                              ? translations.hidePassword
+                              : translations.showPassword
+                          }
+                        >
+                          <FontAwesomeIcon
+                            icon={showConfirmPassword ? faEyeSlash : faEye}
+                          />
+                        </button>
+                      </div>
+                    </label>
+                    <button
+                      onClick={handleVerify}
+                      disabled={loading}
+                      className="forget_password_button"
+                    >
+                      {loading
+                        ? translations.loading
+                        : translations.resetPassword}
+                    </button>
+                  </>
+                )}
               </>
             )}
-            {error && <p className="forget-error">{error}</p>}
-            {successMsg && <p className="forget-success">{successMsg}</p>}
+            {error && (
+              <div className="forget-message forget-message--error">
+                <span className="forget-message-icon">!</span>
+                <p>{error}</p>
+              </div>
+            )}
+            {successMsg && !codeVerified && (
+              <div className="forget-message forget-message--success">
+                <span className="forget-message-icon">✓</span>
+                <p>{successMsg}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {showSuccessModal && (
+        <div className="forget-success-overlay" role="dialog" aria-modal="true">
+          <div className="forget-success-modal">
+            <div className="forget-success-modal-icon">✓</div>
+            <h3>
+              {translations.passwordConfirmedTitle || "Password confirmed"}
+            </h3>
+            <p className="forget-success-modal-text">
+              {translations.passwordConfirmedUseNew ||
+                "Use your new password to sign in."}
+            </p>
+            <div className="forget-success-summary">
+              <p>
+                <strong>{translations.email}:</strong> {successSummary.email}
+              </p>
+              <p>
+                <strong>{translations.newPassword}:</strong>{" "}
+                {successSummary.password}
+              </p>
+            </div>
+            <p className="forget-success-redirect">
+              {translations.redirectingToLoginIn || "Redirecting to login in"} 5{" "}
+              {translations.seconds || "seconds"}...
+            </p>
+            <div className="forget-success-progress">
+              <div className="forget-success-progress-bar" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
