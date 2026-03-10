@@ -757,9 +757,7 @@ const ClientProfile = () => {
                       <BsBoxSeam />
                       <div>
                         <h3>
-                          {order.order_id
-                            ? `ORD-${order.order_id}`
-                            : `Order #${index + 1}`}
+                          {order.order_id ?? order._id ?? `Order #${index + 1}`}
                         </h3>
                         <p>
                           {orderDate} • {itemCount} {itemCount !== 1 ? translations.itemsPlural : translations.item}
@@ -827,9 +825,7 @@ const ClientProfile = () => {
             <div className="order_modal_header">
               <h2>
                 {translations.orderDetails} -{" "}
-                {selectedOrder.order_id
-                  ? `ORD-${selectedOrder.order_id}`
-                  : translations.order}
+                {selectedOrder.order_id ?? selectedOrder._id ?? translations.order}
               </h2>
               <button className="close_modal_btn" onClick={closeModal}>
                 <IoClose size={24} />
@@ -1358,9 +1354,7 @@ const ClientProfile = () => {
                           <BsBoxSeam />
                           <div className="all_orders_item_info">
                             <h3>
-                              {order.order_id
-                                ? `ORD-${order.order_id}`
-                                : `${translations.order} #${index + 1}`}
+                              {order.order_id ?? order._id ?? `${translations.order} #${index + 1}`}
                             </h3>
                             <p>
                               {orderDate} • {itemCount} {itemCount !== 1 ? translations.itemsPlural : translations.item}
