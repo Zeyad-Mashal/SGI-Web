@@ -9,6 +9,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStar,
   faHeart as faHeartSolid,
+  faMinus,
+  faTrashAlt,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import "./shop.css";
@@ -20,7 +23,12 @@ import GetProductsByBrand from "@/API/Brands/GetProductsByBrand";
 import GetCategories from "@/API/Categories/GetCategories";
 import GetAllBrands from "@/API/Brands/GetAllBrands";
 import Image from "next/image";
-import { addToCart } from "@/utils/cartUtils";
+import {
+  addToCart,
+  getCart,
+  updateCartItemQuantity,
+  removeFromCart,
+} from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
 import {
   toggleFavorite,
@@ -75,6 +83,35 @@ export default function Shop() {
   const [lang, setLang] = useState("en");
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "list"
   const [translations, setTranslations] = useState(en);
+  const [cart, setCart] = useState([]);
+
+  const getCartQty = (productId) =>
+    cart.find((i) => i._id === productId)?.quantity ?? 0;
+  const handleAddToCart = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(item, 1);
+    setCart(getCart());
+    showToast(translations.productAddedToCart || "Product added to cart!", "success");
+  };
+  const handleUpdateQty = (e, productId, newQty) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (newQty < 1) {
+      removeFromCart(productId);
+      showToast(translations.removedFromCart || "Removed from cart", "info");
+    } else {
+      updateCartItemQuantity(productId, newQty);
+    }
+    setCart(getCart());
+  };
+  const handleRemoveFromCart = (e, productId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    removeFromCart(productId);
+    setCart(getCart());
+    showToast(translations.removedFromCart || "Removed from cart", "info");
+  };
 
   useEffect(() => {
     // Get language from localStorage
@@ -115,6 +152,7 @@ export default function Shop() {
       setBrandsLoading,
     );
     setFavorites(getFavorites());
+    setCart(getCart());
 
     // Listen for language changes
     const handleStorageChange = () => {
@@ -139,6 +177,16 @@ export default function Shop() {
       clearInterval(interval);
     };
   }, [lang]);
+
+  useEffect(() => {
+    const refreshCart = () => setCart(getCart());
+    window.addEventListener("focus", refreshCart);
+    window.addEventListener("storage", refreshCart);
+    return () => {
+      window.removeEventListener("focus", refreshCart);
+      window.removeEventListener("storage", refreshCart);
+    };
+  }, []);
 
   // Keep filter sidebar visible so user can change brand or category
 
@@ -743,19 +791,62 @@ export default function Shop() {
                           </div>
                         </a>
                         <div className="list_view_actions">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              addToCart(item, 1);
-                              showToast(
-                                translations.productAddedToCart,
-                                "success",
-                              );
-                            }}
-                          >
-                            {translations.addtocart}
-                          </button>
+                          {getCartQty(item._id) === 0 ? (
+                            <button
+                              onClick={(e) => handleAddToCart(e, item)}
+                            >
+                              {translations.addtocart}
+                            </button>
+                          ) : (
+                            <div
+                              className="shop_cart_counter"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                type="button"
+                                className="shop_counter_btn"
+                                onClick={(e) =>
+                                  getCartQty(item._id) === 1
+                                    ? handleRemoveFromCart(e, item._id)
+                                    : handleUpdateQty(
+                                        e,
+                                        item._id,
+                                        getCartQty(item._id) - 1,
+                                      )
+                                }
+                                aria-label={
+                                  getCartQty(item._id) === 1
+                                    ? "Remove"
+                                    : "Decrease"
+                                }
+                              >
+                                <FontAwesomeIcon
+                                  icon={
+                                    getCartQty(item._id) === 1
+                                      ? faTrashAlt
+                                      : faMinus
+                                  }
+                                />
+                              </button>
+                              <span className="shop_counter_qty">
+                                {getCartQty(item._id)}
+                              </span>
+                              <button
+                                type="button"
+                                className="shop_counter_btn"
+                                onClick={(e) =>
+                                  handleUpdateQty(
+                                    e,
+                                    item._id,
+                                    getCartQty(item._id) + 1,
+                                  )
+                                }
+                                aria-label="Increase"
+                              >
+                                <FontAwesomeIcon icon={faPlus} />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </>
                     ) : (
@@ -804,19 +895,63 @@ export default function Shop() {
                           <h3>
                             {translations.aed} {item.price}
                           </h3>
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              addToCart(item, 1);
-                              showToast(
-                                translations.productAddedToCart,
-                                "success",
-                              );
-                            }}
-                          >
-                            {translations.addtocart}
-                          </button>
+                          {getCartQty(item._id) === 0 ? (
+                            <button
+                              className="shop_add_btn"
+                              onClick={(e) => handleAddToCart(e, item)}
+                            >
+                              {translations.addtocart}
+                            </button>
+                          ) : (
+                            <div
+                              className="shop_cart_counter"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                type="button"
+                                className="shop_counter_btn"
+                                onClick={(e) =>
+                                  getCartQty(item._id) === 1
+                                    ? handleRemoveFromCart(e, item._id)
+                                    : handleUpdateQty(
+                                        e,
+                                        item._id,
+                                        getCartQty(item._id) - 1,
+                                      )
+                                }
+                                aria-label={
+                                  getCartQty(item._id) === 1
+                                    ? "Remove"
+                                    : "Decrease"
+                                }
+                              >
+                                <FontAwesomeIcon
+                                  icon={
+                                    getCartQty(item._id) === 1
+                                      ? faTrashAlt
+                                      : faMinus
+                                  }
+                                />
+                              </button>
+                              <span className="shop_counter_qty">
+                                {getCartQty(item._id)}
+                              </span>
+                              <button
+                                type="button"
+                                className="shop_counter_btn"
+                                onClick={(e) =>
+                                  handleUpdateQty(
+                                    e,
+                                    item._id,
+                                    getCartQty(item._id) + 1,
+                                  )
+                                }
+                                aria-label="Increase"
+                              >
+                                <FontAwesomeIcon icon={faPlus} />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </>
                     )}

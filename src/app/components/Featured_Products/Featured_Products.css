@@ -188,7 +188,8 @@
   margin-left: 0;
   margin-right: 10px;
 }
-.Featured_price > button {
+.Featured_price > button,
+.Featured_price .Featured_add_btn {
   padding: 5px 15px;
   background-color: black;
   color: white;
@@ -196,6 +197,44 @@
   border-radius: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.Featured_cart_counter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #111;
+  color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 36px;
+}
+.Featured_counter_btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+.Featured_counter_btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.Featured_counter_btn svg {
+  font-size: 0.85rem;
+}
+.Featured_counter_qty {
+  min-width: 2rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0 6px;
 }
 .Featured_Products_swiper {
   direction: ltr;

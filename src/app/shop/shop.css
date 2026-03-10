@@ -624,6 +624,14 @@
   background-color: rgba(0, 0, 0, 0.8);
   transform: translateY(-2px);
 }
+
+.Featured_card.list_view .list_view_actions .shop_cart_counter {
+  min-width: 120px;
+  border-radius: 12px;
+}
+.Featured_card.list_view .list_view_actions .shop_counter_btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
 .Featured_card > a {
   width: 100%;
   display: flex;
@@ -709,7 +717,8 @@
   font-weight: bold;
   margin-right: 8px;
 }
-.Featured_price > button {
+.Featured_price > button,
+.Featured_price .shop_add_btn {
   padding: 6px 12px;
   font-size: 0.85rem;
   background-color: black;
@@ -719,6 +728,45 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+.shop_cart_counter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #111;
+  color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 34px;
+}
+.shop_counter_btn {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+.shop_counter_btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.shop_counter_btn svg {
+  font-size: 0.8rem;
+}
+.shop_counter_qty {
+  min-width: 1.75rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0 4px;
+}
+
 .close_filter {
   width: 100%;
   display: none;

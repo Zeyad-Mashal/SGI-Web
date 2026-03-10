@@ -11,12 +11,20 @@ import {
   faArrowLeft,
   faArrowRight,
   faStar,
+  faMinus,
+  faTrashAlt,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import GetProducts from "@/API/Products/GetProducts";
-import { addToCart } from "@/utils/cartUtils";
+import {
+  addToCart,
+  getCart,
+  updateCartItemQuantity,
+  removeFromCart,
+} from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
 import {
   toggleFavorite,
@@ -37,12 +45,50 @@ const Our_Products = () => {
   }, []);
   const { showToast } = useToast();
   const [favorites, setFavorites] = useState([]);
+  const [cart, setCart] = useState([]);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   useEffect(() => {
     getAllProducts();
     setFavorites(getFavorites());
+    setCart(getCart());
   }, []);
+  useEffect(() => {
+    const refreshCart = () => setCart(getCart());
+    window.addEventListener("focus", refreshCart);
+    window.addEventListener("storage", refreshCart);
+    return () => {
+      window.removeEventListener("focus", refreshCart);
+      window.removeEventListener("storage", refreshCart);
+    };
+  }, []);
+  const getCartQty = (productId) =>
+    cart.find((i) => i._id === productId)?.quantity ?? 0;
+  const handleAddToCart = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(item, 1);
+    setCart(getCart());
+    showToast("Product added to cart!", "success");
+  };
+  const handleUpdateQty = (e, productId, newQty) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (newQty < 1) {
+      removeFromCart(productId);
+      showToast("Removed from cart", "info");
+    } else {
+      updateCartItemQuantity(productId, newQty);
+    }
+    setCart(getCart());
+  };
+  const handleRemoveFromCart = (e, productId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    removeFromCart(productId);
+    setCart(getCart());
+    showToast("Removed from cart", "info");
+  };
 
   const handleFavoriteClick = (e, item) => {
     e.preventDefault();
@@ -132,16 +178,63 @@ const Our_Products = () => {
                       <h3>
                         {translations.aed} {item.price}
                       </h3>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          addToCart(item, 1);
-                          showToast("Product added to cart!", "success");
-                        }}
-                      >
-                        {translations.addtocart}
-                      </button>
+                      {getCartQty(item._id) === 0 ? (
+                        <button
+                          className="Our_Products_add_btn"
+                          onClick={(e) => handleAddToCart(e, item)}
+                        >
+                          {translations.addtocart}
+                        </button>
+                      ) : (
+                        <div
+                          className="Our_Products_cart_counter"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            type="button"
+                            className="Our_Products_counter_btn"
+                            onClick={(e) =>
+                              getCartQty(item._id) === 1
+                                ? handleRemoveFromCart(e, item._id)
+                                : handleUpdateQty(
+                                    e,
+                                    item._id,
+                                    getCartQty(item._id) - 1
+                                  )
+                            }
+                            aria-label={
+                              getCartQty(item._id) === 1
+                                ? "Remove"
+                                : "Decrease"
+                            }
+                          >
+                            <FontAwesomeIcon
+                              icon={
+                                getCartQty(item._id) === 1
+                                  ? faTrashAlt
+                                  : faMinus
+                              }
+                            />
+                          </button>
+                          <span className="Our_Products_counter_qty">
+                            {getCartQty(item._id)}
+                          </span>
+                          <button
+                            type="button"
+                            className="Our_Products_counter_btn"
+                            onClick={(e) =>
+                              handleUpdateQty(
+                                e,
+                                item._id,
+                                getCartQty(item._id) + 1
+                              )
+                            }
+                            aria-label="Increase"
+                          >
+                            <FontAwesomeIcon icon={faPlus} />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </a>
                 </div>
