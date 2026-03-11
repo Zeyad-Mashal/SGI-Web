@@ -397,7 +397,7 @@
     justify-content: center;
     align-items: flex-start;
   }
-  .Our_Products_item .ourProducts_img {
+  .Our_Products_item > a > .ourProducts_img {
     height: 180px;
   }
 
