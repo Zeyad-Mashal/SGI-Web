@@ -1256,8 +1256,9 @@ const ClientProfile = () => {
                       }}
                     >
                       <option value="Cash on Delivery">{translations.cashOnDelivery}</option>
-                      <option value="Credit Card">{translations.creditCard}</option>
-                      <option value="Debit Card">{translations.debitCard}</option>
+                      <option value="Cash by Visa/Mastercard">{translations.cashByVisaMastercard}</option>
+                      <option value="Cash by transfer">{translations.cashByTransfer}</option>
+                      <option value="Cash by credit">{translations.cashByCredit}</option>
                     </select>
                   </div>
                 </div>
@@ -1611,8 +1612,9 @@ const ClientProfile = () => {
                       }}
                     >
                       <option value="Cash on Delivery">{translations.cashOnDelivery}</option>
-                      <option value="Credit Card">{translations.creditCard}</option>
-                      <option value="Debit Card">{translations.debitCard}</option>
+                      <option value="Cash by Visa/Mastercard">{translations.cashByVisaMastercard}</option>
+                      <option value="Cash by transfer">{translations.cashByTransfer}</option>
+                      <option value="Cash by credit">{translations.cashByCredit}</option>
                     </select>
                   </div>
                 </div>

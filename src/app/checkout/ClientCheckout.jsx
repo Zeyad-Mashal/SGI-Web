@@ -6,6 +6,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import GetAddress from "@/API/Address/GetAddress";
 import AddAddress from "@/API/Address/AddAddress";
 import CreateOrder from "@/API/Orders/CreateOrder";
+import CreatePayment from "@/API/Payment/CreatePayment";
 import { getCart, getCartTotal, clearCart } from "@/utils/cartUtils";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa6";
@@ -122,7 +123,8 @@ const ClientCheckout = () => {
     const calculatedShipping = calculateShipping(calculatedSubtotal);
     // Tax is 5% of (subtotal + shipping)
     const calculatedTax = (calculatedSubtotal + calculatedShipping) * 0.05;
-    const totalBeforeDiscount = calculatedSubtotal + calculatedShipping + calculatedTax; // Subtotal + Shipping + Tax
+    const totalBeforeDiscount =
+      calculatedSubtotal + calculatedShipping + calculatedTax; // Subtotal + Shipping + Tax
 
     setSubtotal(calculatedSubtotal);
     setShipping(calculatedShipping);
@@ -224,26 +226,49 @@ const ClientCheckout = () => {
       price: item.price,
     }));
 
-    // Format order data
+    const userName = `${firstName.trim()} ${lastName.trim()}`;
+    const userPhoneVal = userPhone.trim();
+
     const orderData = {
       paymentWay: paymentWay,
-      userName: `${firstName.trim()} ${lastName.trim()}`,
-      userPhone: userPhone.trim(),
+      userName,
+      userPhone: userPhoneVal,
       email: email.trim() || undefined,
       totalAmount: totalAmount,
-      city: city.trim(), // City value from dropdown
+      city: city.trim(),
       address: deliveryAddress,
       cartItems: formattedCartItems,
     };
 
-    // Create order (works without login)
+    // Payment by Card: 1) CreatePayment أولاً، 2) لو ok احفظ الطلب واتجه للينك، 3) الطلب يتنفذ على /payment/result
+    if (paymentWay === "Cash by Visa/Mastercard" || paymentWay === "Cash by credit") {
+      const paymentData = {
+        userName,
+        userPhone: userPhoneVal,
+        totalAmount: String(totalAmount.toFixed(2)),
+      };
+      const paymentResult = await CreatePayment(
+        paymentData,
+        setError,
+        setLoading
+      );
+      if (paymentResult?.paymentLink) {
+        sessionStorage.setItem(
+          "pendingOrderAfterPayment",
+          JSON.stringify(orderData)
+        );
+        window.location.href = paymentResult.paymentLink;
+      }
+      return;
+    }
+
+    // Cash on Delivery: create order مباشرة
     const result = await CreateOrder(orderData, setError, setLoading, () => {});
 
     if (result) {
       setSuccess(translations.orderPlacedSuccessfully);
       clearCart();
       localStorage.removeItem("savedCoupon");
-      // المودال يغلق تلقائياً بعد الأنيميشن ثم يوجه للهوم
     }
   };
 
@@ -340,9 +365,12 @@ const ClientCheckout = () => {
                 borderRadius: "8px",
               }}
             >
-              <option value="Cash on Delivery">{translations.cashOnDelivery}</option>
-              <option value="Credit Card">{translations.creditCard}</option>
-              <option value="Debit Card">{translations.debitCard}</option>
+              <option value="Cash on Delivery">
+                {translations.cashOnDelivery}
+              </option>
+              <option value="Cash by Visa/Mastercard">{translations.cashByVisaMastercard}</option>
+              <option value="Cash by transfer">{translations.cashByTransfer}</option>
+              <option value="Cash by credit">{translations.cashByCredit}</option>
             </select>
           </div>
         </div>
@@ -369,9 +397,7 @@ const ClientCheckout = () => {
                   }}
                   required
                 >
-                  <option value="">
-                    {translations.selectCity}
-                  </option>
+                  <option value="">{translations.selectCity}</option>
                   {UAE_CITIES.map((cityOption) => (
                     <option key={cityOption.value} value={cityOption.value}>
                       {lang === "ar" ? cityOption.ar : cityOption.en}
@@ -484,9 +510,7 @@ const ClientCheckout = () => {
           )}
 
           {id && addresses.length === 0 && (
-            <p className="no_address">
-              {translations.noSavedAddresses}
-            </p>
+            <p className="no_address">{translations.noSavedAddresses}</p>
           )}
         </div>
 
@@ -510,7 +534,9 @@ const ClientCheckout = () => {
               }}
             >
               <h3>{translations.items}</h3>
-              <p>{cartItems.length} {translations.itemsPlural}</p>
+              <p>
+                {cartItems.length} {translations.itemsPlural}
+              </p>
             </div>
             {cartItems.map((item) => (
               <div
@@ -525,7 +551,9 @@ const ClientCheckout = () => {
                 <p>
                   {item.name} x {item.quantity}
                 </p>
-                <p>{translations.aed} {(item.price * item.quantity).toFixed(2)}</p>
+                <p>
+                  {translations.aed} {(item.price * item.quantity).toFixed(2)}
+                </p>
               </div>
             ))}
 
@@ -540,7 +568,9 @@ const ClientCheckout = () => {
               }}
             >
               <p>{translations.orderPrice}</p>
-              <p>{translations.aed} {subtotal.toFixed(2)}</p>
+              <p>
+                {translations.aed} {subtotal.toFixed(2)}
+              </p>
             </div>
 
             {/* Shipping */}
@@ -552,7 +582,9 @@ const ClientCheckout = () => {
               }}
             >
               <p>{translations.shipping || "Shipping"}</p>
-              <p>{translations.aed} {shipping.toFixed(2)}</p>
+              <p>
+                {translations.aed} {shipping.toFixed(2)}
+              </p>
             </div>
 
             {/* Tax - 5% of (Order Price + Shipping) */}
@@ -564,7 +596,9 @@ const ClientCheckout = () => {
               }}
             >
               <p>{translations.tax5}</p>
-              <p>{translations.aed} {tax.toFixed(2)}</p>
+              <p>
+                {translations.aed} {tax.toFixed(2)}
+              </p>
             </div>
 
             {/* Discount (if applicable) */}
@@ -578,7 +612,9 @@ const ClientCheckout = () => {
                 }}
               >
                 <p>{translations.discount}</p>
-                <p>- {translations.aed} {discount.toFixed(2)}</p>
+                <p>
+                  - {translations.aed} {discount.toFixed(2)}
+                </p>
               </div>
             )}
 
@@ -594,7 +630,9 @@ const ClientCheckout = () => {
               }}
             >
               <h3>{translations.totalAmount}</h3>
-              <p>{translations.aed} {totalAmount.toFixed(2)}</p>
+              <p>
+                {translations.aed} {totalAmount.toFixed(2)}
+              </p>
             </div>
           </div>
         </div>
