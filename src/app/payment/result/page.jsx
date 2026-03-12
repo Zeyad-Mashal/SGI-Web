@@ -108,7 +108,7 @@ const PaymentResultContent = () => {
           Payment Status In Progress
         </h2>
         <p style={{ color: "#666", margin: 0 }}>
-          جاري التحقق من حالة الدفع...
+          Checking payment status...
         </p>
         <style>{`
           @keyframes spin {
@@ -216,7 +216,7 @@ const PaymentResultContent = () => {
             borderRadius: "8px",
           }}
         >
-          العودة لصفحة الدفع
+          Back to Checkout
         </button>
       </div>
     );
@@ -226,20 +226,51 @@ const PaymentResultContent = () => {
     return (
       <div
         style={{
-          padding: "2rem",
-          textAlign: "center",
-          minHeight: "50vh",
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.5)",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "1rem",
+          zIndex: 1000,
+          padding: "1rem",
         }}
+        role="dialog"
+        aria-modal="true"
       >
-        <h1>Payment Result</h1>
-        <p style={{ color: "green", margin: 0 }}>
-          تم الدفع وتنفيذ الطلب بنجاح. جاري تحويلك للرئيسية...
-        </p>
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: "12px",
+            padding: "2rem",
+            maxWidth: "400px",
+            width: "100%",
+            textAlign: "center",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+          }}
+        >
+          <div
+            style={{
+              width: "56px",
+              height: "56px",
+              margin: "0 auto 1rem",
+              borderRadius: "50%",
+              background: "#e8f5e9",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "28px",
+            }}
+          >
+            ✓
+          </div>
+          <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.25rem" }}>
+            Payment Successful
+          </h2>
+          <p style={{ color: "#666", margin: "0 0 1.5rem" }}>
+            Your payment was completed and the order has been placed. Redirecting to home...
+          </p>
+        </div>
       </div>
     );
   }
@@ -253,7 +284,7 @@ const PaymentResultContent = () => {
       }}
     >
       <h1>Payment Result</h1>
-      <p>نتيجة الدفع ستظهر هنا.</p>
+      <p>Payment result will appear here.</p>
     </div>
   );
 };
