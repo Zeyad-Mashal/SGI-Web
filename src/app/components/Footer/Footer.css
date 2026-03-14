@@ -93,7 +93,13 @@
   display: flex;
   gap: 1rem;
 }
-.footer_social > svg {
+.footer_social a {
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.footer_social a svg {
   width: 15px;
   height: 15px;
   border-radius: 50%;

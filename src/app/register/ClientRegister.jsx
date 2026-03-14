@@ -1,13 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import "./register.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faXTwitter,
   faLinkedin,
+  faSquareFacebook,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
+import { SOCIAL_LINKEDIN, SOCIAL_FACEBOOK, SOCIAL_INSTAGRAM } from "@/constants/contact";
 import Register from "@/API/Register/Register";
 import SuccessModal from "@/app/components/SuccessModal/SuccessModal";
 import en from "../../translation/en.json";
@@ -157,18 +159,22 @@ const ClientRegister = () => {
                 width={250}
                 height={250}
               />
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faXTwitter} className="icon" />
-              </a>
               <a
-                href="https://linkedin.com"
+                href={SOCIAL_LINKEDIN}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <FontAwesomeIcon icon={faLinkedin} className="icon" />
               </a>
               <a
-                href="https://instagram.com"
+                href={SOCIAL_FACEBOOK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faSquareFacebook} className="icon" />
+              </a>
+              <a
+                href={SOCIAL_INSTAGRAM}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -295,7 +301,12 @@ const ClientRegister = () => {
             </div>
             <div className="register-terms">
               <input type="checkbox" />
-              <h4>{translations.agreeToTerms}</h4>
+              <h4>
+                {translations.agreeToTermsPrefix}
+                <Link href="/Privacy" className="register-terms-link">
+                  {translations.termsAndConditionLink}
+                </Link>
+              </h4>
             </div>
             {error && (
               <div

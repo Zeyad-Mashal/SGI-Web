@@ -394,6 +394,8 @@
     "commercialFile": "الملف التجاري",
     "expiryDate": "تاريخ الانتهاء",
     "agreeToTerms": "الموافقة على الشروط والأحكام",
+    "agreeToTermsPrefix": "الموافقة على ",
+    "termsAndConditionLink": "الشروط والأحكام",
     "creating": "جاري الإنشاء...",
     "pleaseEnterCompanyName": "يرجى إدخال اسم الشركة",
     "pleaseEnterEmail": "يرجى إدخال البريد الإلكتروني",

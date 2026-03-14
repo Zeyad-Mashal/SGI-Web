@@ -461,11 +461,19 @@ export default function Shop() {
             ""
           )}
 
-          {/* Filters header + view switches + collapse (desktop) */}
+          {/* Filters header: title + Clear Filter (centered) + view switches */}
           <div className="filter_top filter_header_row">
             <h2 className="filter_section_title">
               <FiFilter /> {translations.filters}
             </h2>
+            <div className="filter_header_center">
+              {(selectedCategoryId || selectedSubCategoryId || brandId) && (
+                <button className="clear_filter_btn clear_filter_btn_in_header" onClick={clearFilter}>
+                  <FontAwesomeIcon icon={faTimes} />
+                  {translations.clearFilter}
+                </button>
+              )}
+            </div>
             <div className="shop_display shop_display_in_sidebar">
               <TbAlignBoxRightMiddle
                 className={`flex-display ${viewMode === "list" ? "active" : ""}`}
@@ -492,14 +500,6 @@ export default function Shop() {
                 <FontAwesomeIcon icon={faChevronDown} />
               </span>
             </h2>
-
-            {/* Clear Filter Button - inside when open */}
-            {(selectedCategoryId || selectedSubCategoryId || brandId) && (
-              <button className="clear_filter_btn" onClick={clearFilter}>
-                <FontAwesomeIcon icon={faTimes} />
-                {translations.clearFilter}
-              </button>
-            )}
 
             <div
               className={`filter_dropdown_content ${categoriesSectionOpen ? "open" : ""}`}

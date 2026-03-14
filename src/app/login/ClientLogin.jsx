@@ -4,10 +4,11 @@ import "./login.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faXTwitter,
   faLinkedin,
+  faSquareFacebook,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
+import { SOCIAL_LINKEDIN, SOCIAL_FACEBOOK, SOCIAL_INSTAGRAM } from "@/constants/contact";
 import Login from "@/API/Login/Login";
 import en from "../../translation/en.json";
 import ar from "../../translation/ar.json";
@@ -76,18 +77,22 @@ const ClientLogin = () => {
                 width={250}
                 height={250}
               />
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faXTwitter} className="icon" />
-              </a>
               <a
-                href="https://linkedin.com"
+                href={SOCIAL_LINKEDIN}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <FontAwesomeIcon icon={faLinkedin} className="icon" />
               </a>
               <a
-                href="https://instagram.com"
+                href={SOCIAL_FACEBOOK}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faSquareFacebook} className="icon" />
+              </a>
+              <a
+                href={SOCIAL_INSTAGRAM}
                 target="_blank"
                 rel="noopener noreferrer"
               >

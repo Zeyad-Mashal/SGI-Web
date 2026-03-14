@@ -146,6 +146,15 @@
   font-size: 0.9rem;
   color: rgba(0, 0, 0, 0.7);
   font-weight: bold;
+  margin: 0;
+}
+.register-terms-link {
+  color: rgba(223, 144, 0, 1);
+  text-decoration: underline;
+  font-weight: bold;
+}
+.register-terms-link:hover {
+  color: rgba(180, 115, 0, 1);
 }
 .register-form button {
   width: 100%;

@@ -150,7 +150,7 @@
   color: rgba(0, 125, 78, 1);
   background-color: rgba(219, 252, 231, 0.7);
   width: 150px;
-  font-size: 0.8rem;
+  font-size: 1rem;
   padding: 10px;
   border-radius: 16px;
   text-align: center;
@@ -253,7 +253,7 @@
   border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 .total {
-  width: 150px;
+  width: fit-content;
 }
 .total h2 {
   font-size: 20px;

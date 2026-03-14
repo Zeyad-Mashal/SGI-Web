@@ -43,17 +43,32 @@
   color: rgba(223, 144, 0, 1);
 }
 
-/* Filters header row: "Filters" + view switches */
+/* Filters header row: "Filters" + Clear Filter (centered) + view switches - single line */
 .filter_header_row {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
-.filter_section_title {
+.filter_header_row .filter_section_title {
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.filter_header_center {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
 }
 .filter_section_title > svg {
   color: rgba(223, 144, 0, 1);
@@ -75,6 +90,19 @@
 .shop_display_in_sidebar .grid-display.active {
   background-color: #000;
   color: white;
+}
+
+/* Clear Filter button in center of Filters header - stays within section, no wrap */
+.filter_header_row .clear_filter_btn_in_header {
+  width: auto;
+  margin: 0;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.filter_header_row .shop_display_in_sidebar {
+  flex-shrink: 0;
 }
 
 /* Collapsible sections (Categories / Brands) */
@@ -126,9 +154,6 @@
 .filter_dropdown_content .no_categories {
   width: 100%;
   box-sizing: border-box;
-}
-.filter_collapsible .clear_filter_btn {
-  margin-bottom: 10px;
 }
 .filter_top > input {
   width: 100%;

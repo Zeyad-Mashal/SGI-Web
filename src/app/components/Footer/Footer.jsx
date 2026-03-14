@@ -4,11 +4,11 @@ import "./Footer.css";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faXTwitter,
+  faLinkedin,
   faSquareFacebook,
   faInstagram,
-  faLinkedin,
 } from "@fortawesome/free-brands-svg-icons";
+import { SOCIAL_LINKEDIN, SOCIAL_FACEBOOK, SOCIAL_INSTAGRAM } from "@/constants/contact";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 const Footer = () => {
@@ -62,10 +62,15 @@ const Footer = () => {
       <div className="footer_copyright">
         <p>{translations.allrightsreserved}</p>
         <div className="footer_social">
-          <FontAwesomeIcon icon={faXTwitter} />
-          <FontAwesomeIcon icon={faSquareFacebook} />
-          <FontAwesomeIcon icon={faInstagram} />
-          <FontAwesomeIcon icon={faLinkedin} />
+          <a href={SOCIAL_LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <FontAwesomeIcon icon={faLinkedin} />
+          </a>
+          <a href={SOCIAL_FACEBOOK} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <FontAwesomeIcon icon={faSquareFacebook} />
+          </a>
+          <a href={SOCIAL_INSTAGRAM} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <FontAwesomeIcon icon={faInstagram} />
+          </a>
         </div>
       </div>
     </div>
