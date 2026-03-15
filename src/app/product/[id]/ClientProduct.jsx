@@ -8,8 +8,15 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useParams } from "next/navigation";
 import ProductDetails from "@/API/Products/ProductDetails";
-import { addToCart } from "@/utils/cartUtils";
+import {
+  addToCart,
+  getCart,
+  getCartQtyForProduct,
+  updateCartItemQuantityByMode,
+} from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faMinus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import {
   toggleFavorite,
   isFavorited,
@@ -29,6 +36,19 @@ const ClientProduct = () => {
 
   const [activeImg, setActiveImg] = useState(null);
   const [imageLoading, setImageLoading] = useState(true);
+  const [cart, setCart] = useState([]);
+  const [productDetails, setProductDetails] = useState([]);
+
+  const cartQty =
+    productDetails?._id && Array.isArray(cart)
+      ? (cart.find(
+          (i) =>
+            i._id === productDetails._id &&
+            (i.isBoxPricing ?? false) === useBoxPrice
+        )?.quantity ?? 0)
+      : 0;
+  const isInCart = cartQty > 0;
+
   const updateQty = (value) => {
     const num = Math.max(0, Number(value));
     setQty(num);
@@ -100,7 +120,10 @@ const ClientProduct = () => {
     const prevIndex = (currentIndex - 1 + imgs.length) % imgs.length;
     setActiveImg(imgs[prevIndex]);
   };
-  const [productDetails, setProductDetails] = useState([]);
+
+  useEffect(() => {
+    setCart(getCart());
+  }, [id, useBoxPrice]);
 
   useEffect(() => {
     // Get language from localStorage
@@ -110,6 +133,7 @@ const ClientProduct = () => {
 
     getProductDetails();
     setFavorites(getFavorites());
+    setCart(getCart());
 
     // Listen for language changes
     const handleStorageChange = () => {
@@ -287,23 +311,83 @@ const ClientProduct = () => {
                 : `(${translations.units})`}
             </h3>
             <div className="Quantity_counter">
-              <div className="counter">
-                <button onClick={() => updateQty(Math.max(1, qty - 1))}>
-                  -
-                </button>
-                <input
-                  type="text"
-                  value={qty}
-                  onChange={(e) => updateQty(e.target.value)}
-                />
-                <button onClick={() => updateQty(qty + 1)}>+</button>
-              </div>
+              {isInCart ? (
+                <div
+                  className="shop_cart_counter product_page_cart_counter"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    className="shop_counter_btn"
+                    onClick={() => {
+                      if (!productDetails?._id) return;
+                      if (cartQty === 1) {
+                        updateCartItemQuantityByMode(
+                          productDetails._id,
+                          useBoxPrice,
+                          0
+                        );
+                        showToast(
+                          translations.removedFromCart || "Removed from cart",
+                          "info"
+                        );
+                      } else {
+                        updateCartItemQuantityByMode(
+                          productDetails._id,
+                          useBoxPrice,
+                          cartQty - 1
+                        );
+                      }
+                      setCart(getCart());
+                    }}
+                    aria-label={
+                      cartQty === 1 ? "Remove" : "Decrease"
+                    }
+                  >
+                    <FontAwesomeIcon
+                      icon={cartQty === 1 ? faTrashAlt : faMinus}
+                    />
+                  </button>
+                  <span className="shop_counter_qty">{cartQty}</span>
+                  <button
+                    type="button"
+                    className="shop_counter_btn"
+                    onClick={() => {
+                      if (!productDetails?._id) return;
+                      updateCartItemQuantityByMode(
+                        productDetails._id,
+                        useBoxPrice,
+                        cartQty + 1
+                      );
+                      setCart(getCart());
+                    }}
+                    aria-label="Increase"
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
+              ) : (
+                <div className="counter">
+                  <button onClick={() => updateQty(Math.max(1, qty - 1))}>
+                    -
+                  </button>
+                  <input
+                    type="text"
+                    value={qty}
+                    onChange={(e) => updateQty(e.target.value)}
+                  />
+                  <button onClick={() => updateQty(qty + 1)}>+</button>
+                </div>
+              )}
 
               <div className="total">
                 <h2>
                   {translations.total}
                   <span>
-                    {(qty * getCurrentPrice()).toFixed(2)} {translations.aed}
+                    {((isInCart ? cartQty : qty) * getCurrentPrice()).toFixed(
+                      2
+                    )}{" "}
+                    {translations.aed}
                   </span>{" "}
                 </h2>
                 {useBoxPrice && productDetails?.piecesNumber && (
@@ -314,9 +398,9 @@ const ClientProduct = () => {
                       marginTop: "0.5rem",
                     }}
                   >
-                    ({qty} {translations.boxesPlural} ×{" "}
+                    ({(isInCart ? cartQty : qty)} {translations.boxesPlural} ×{" "}
                     {productDetails.piecesNumber} {translations.pieces} ={" "}
-                    {qty * productDetails.piecesNumber}{" "}
+                    {(isInCart ? cartQty : qty) * productDetails.piecesNumber}{" "}
                     {translations.totalPieces})
                   </p>
                 )}
@@ -325,33 +409,32 @@ const ClientProduct = () => {
           </div>
 
           <div className="product_btns">
-            <button
-              onClick={() => {
-                if (productDetails && productDetails._id) {
-                  // Create a modified product object with the current price
-                  // If box pricing, use boxPrice and quantity represents boxes
-                  // If unit pricing, use regular price and quantity represents units
-                  const productToAdd = {
-                    ...productDetails,
-                    price: getCurrentPrice(),
-                    // Store pricing mode info for cart
-                    isBoxPricing: useBoxPrice,
-                    piecesPerBox: useBoxPrice
-                      ? productDetails.piecesNumber
-                      : undefined,
-                  };
-                  addToCart(productToAdd, qty);
-                  const message = useBoxPrice
-                    ? `${qty} ${translations.boxesPlural} ${translations.addedToCartWithBoxes} (${
-                        qty * productDetails.piecesNumber
-                      } ${translations.pieces})`
-                    : translations.productAddedToCart;
-                  showToast(message, "success");
-                }
-              }}
-            >
-              <RiShoppingBag3Line /> {translations.addtocart}
-            </button>
+            {!isInCart && (
+              <button
+                onClick={() => {
+                  if (productDetails && productDetails._id) {
+                    const productToAdd = {
+                      ...productDetails,
+                      price: getCurrentPrice(),
+                      isBoxPricing: useBoxPrice,
+                      piecesPerBox: useBoxPrice
+                        ? productDetails.piecesNumber
+                        : undefined,
+                    };
+                    addToCart(productToAdd, qty);
+                    setCart(getCart());
+                    const message = useBoxPrice
+                      ? `${qty} ${translations.boxesPlural} ${translations.addedToCartWithBoxes} (${
+                          qty * productDetails.piecesNumber
+                        } ${translations.pieces})`
+                      : translations.productAddedToCart;
+                    showToast(message, "success");
+                  }
+                }}
+              >
+                <RiShoppingBag3Line /> {translations.addtocart}
+              </button>
+            )}
             {productDetails && productDetails._id && (
               <div
                 onClick={handleFavoriteClick}

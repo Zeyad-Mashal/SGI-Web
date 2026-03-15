@@ -252,6 +252,46 @@
 .counter button:last-child {
   border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
+
+/* Product page cart counter (same logic as shop - when item already in cart) */
+.product_page_cart_counter.shop_cart_counter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #111;
+  color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 34px;
+}
+.product_page_cart_counter .shop_counter_btn {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+.product_page_cart_counter .shop_counter_btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.product_page_cart_counter .shop_counter_btn svg {
+  font-size: 0.8rem;
+}
+.product_page_cart_counter .shop_counter_qty {
+  min-width: 1.75rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0 4px;
+}
+
 .total {
   width: fit-content;
 }

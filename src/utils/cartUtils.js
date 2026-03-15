@@ -96,6 +96,39 @@ export const updateCartItemQuantity = (productId, quantity) => {
     return cart;
 };
 
+// Get quantity in cart for a product with specific pricing mode (for product page)
+export const getCartQtyForProduct = (productId, isBoxPricing = false) => {
+    const cart = getCart();
+    const item = cart.find(
+        (i) =>
+            i._id === productId &&
+            (i.isBoxPricing ?? false) === !!isBoxPricing
+    );
+    return item?.quantity ?? 0;
+};
+
+// Update or remove cart line by product id and pricing mode (for product page counter)
+export const updateCartItemQuantityByMode = (productId, isBoxPricing, quantity) => {
+    const cart = getCart();
+    const itemIndex = cart.findIndex(
+        (i) =>
+            i._id === productId &&
+            (i.isBoxPricing ?? false) === !!isBoxPricing
+    );
+    if (itemIndex === -1) {
+        if (quantity > 0) return cart; // nothing to update
+        return cart;
+    }
+    if (quantity <= 0) {
+        cart.splice(itemIndex, 1);
+        saveCart(cart);
+        return cart;
+    }
+    cart[itemIndex].quantity = quantity;
+    saveCart(cart);
+    return cart;
+};
+
 // Clear entire cart
 export const clearCart = () => {
     if (typeof window === 'undefined') return;
