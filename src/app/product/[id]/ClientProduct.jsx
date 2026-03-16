@@ -44,10 +44,20 @@ const ClientProduct = () => {
       ? (cart.find(
           (i) =>
             i._id === productDetails._id &&
-            (i.isBoxPricing ?? false) === useBoxPrice
+            (i.isBoxPricing ?? false) === useBoxPrice,
         )?.quantity ?? 0)
       : 0;
   const isInCart = cartQty > 0;
+
+  const stockNum =
+    productDetails?.stock != null
+      ? Number(productDetails.stock)
+      : productDetails?.quantity != null
+        ? Number(productDetails.quantity)
+        : null;
+  const isOutOfStock = stockNum !== null && !isNaN(stockNum) && stockNum <= 0;
+  const hasLowStock =
+    stockNum !== null && !isNaN(stockNum) && stockNum > 0 && stockNum < 10;
 
   const updateQty = (value) => {
     const num = Math.max(0, Number(value));
@@ -277,6 +287,25 @@ const ClientProduct = () => {
             {translations.reviewRefundPolicy}{" "}
             <a href="/returns">{translations.learnMore}</a>
           </h5>
+
+          {stockNum !== null && !isNaN(stockNum) && (
+            <div className="product_stock_status">
+              <span
+                className={`product_stock_badge ${isOutOfStock ? "out" : "in"}`}
+              >
+                {isOutOfStock ? translations.outOfStock : translations.inStock}
+              </span>
+              {hasLowStock && (
+                <p className="product_stock_remaining">
+                  {translations.remainingPieces.replace(
+                    "{{count}}",
+                    String(stockNum),
+                  )}
+                </p>
+              )}
+            </div>
+          )}
+
           {productDetails?.boxPrice !== null &&
             productDetails?.boxPrice !== undefined &&
             productDetails?.boxPrice !== "" &&
@@ -325,24 +354,22 @@ const ClientProduct = () => {
                         updateCartItemQuantityByMode(
                           productDetails._id,
                           useBoxPrice,
-                          0
+                          0,
                         );
                         showToast(
                           translations.removedFromCart || "Removed from cart",
-                          "info"
+                          "info",
                         );
                       } else {
                         updateCartItemQuantityByMode(
                           productDetails._id,
                           useBoxPrice,
-                          cartQty - 1
+                          cartQty - 1,
                         );
                       }
                       setCart(getCart());
                     }}
-                    aria-label={
-                      cartQty === 1 ? "Remove" : "Decrease"
-                    }
+                    aria-label={cartQty === 1 ? "Remove" : "Decrease"}
                   >
                     <FontAwesomeIcon
                       icon={cartQty === 1 ? faTrashAlt : faMinus}
@@ -357,7 +384,7 @@ const ClientProduct = () => {
                       updateCartItemQuantityByMode(
                         productDetails._id,
                         useBoxPrice,
-                        cartQty + 1
+                        cartQty + 1,
                       );
                       setCart(getCart());
                     }}
@@ -385,7 +412,7 @@ const ClientProduct = () => {
                   {translations.total}
                   <span>
                     {((isInCart ? cartQty : qty) * getCurrentPrice()).toFixed(
-                      2
+                      2,
                     )}{" "}
                     {translations.aed}
                   </span>{" "}
@@ -398,7 +425,7 @@ const ClientProduct = () => {
                       marginTop: "0.5rem",
                     }}
                   >
-                    ({(isInCart ? cartQty : qty)} {translations.boxesPlural} ×{" "}
+                    ({isInCart ? cartQty : qty} {translations.boxesPlural} ×{" "}
                     {productDetails.piecesNumber} {translations.pieces} ={" "}
                     {(isInCart ? cartQty : qty) * productDetails.piecesNumber}{" "}
                     {translations.totalPieces})
@@ -412,7 +439,7 @@ const ClientProduct = () => {
             {!isInCart && (
               <button
                 onClick={() => {
-                  if (productDetails && productDetails._id) {
+                  if (productDetails && productDetails._id && !isOutOfStock) {
                     const productToAdd = {
                       ...productDetails,
                       price: getCurrentPrice(),
@@ -431,8 +458,13 @@ const ClientProduct = () => {
                     showToast(message, "success");
                   }
                 }}
+                disabled={isOutOfStock}
+                className={isOutOfStock ? "product_btn_disabled" : ""}
               >
-                <RiShoppingBag3Line /> {translations.addtocart}
+                <RiShoppingBag3Line />{" "}
+                {isOutOfStock
+                  ? translations.outOfStock
+                  : translations.addtocart}
               </button>
             )}
             {productDetails && productDetails._id && (

@@ -292,6 +292,36 @@
   padding: 0 4px;
 }
 
+/* Stock status */
+.product_stock_status {
+  margin: 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.product_stock_badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  width: fit-content;
+}
+.product_stock_badge.in {
+  background: rgba(34, 197, 94, 0.15);
+  color: #166534;
+}
+.product_stock_badge.out {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+.product_stock_remaining {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #b45309;
+  font-weight: 500;
+}
+
 .total {
   width: fit-content;
 }
@@ -317,6 +347,12 @@
   border-radius: 16px;
   height: 40px;
   cursor: pointer;
+}
+.product_btns > button:disabled,
+.product_btns > button.product_btn_disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.35);
 }
 .product_btns > svg {
   border: 1px solid rgba(215, 223, 43, 1);
