@@ -1157,3 +1157,37 @@
     left: 0;
   }
 }
+
+/* Home: Navbar initial enter animation (strong + smooth) */
+.home-navbar-enter {
+  width: 100%;
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+  filter: none;
+  will-change: auto;
+}
+
+@keyframes homeNavbarEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(-36px) scale(0.985);
+    filter: blur(18px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(6px) scale(1.01);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-navbar-enter {
+    animation: none !important;
+  }
+}

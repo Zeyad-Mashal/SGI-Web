@@ -367,3 +367,34 @@
     height: 40px;
   }
 }
+
+/* Home: Hero initial enter animation (strong + smooth) */
+.home-hero-enter {
+  animation: homeHeroEnter 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  opacity: 0;
+  transform: none;
+  filter: blur(8px);
+  will-change: opacity, filter;
+}
+
+@keyframes homeHeroEnter {
+  0% {
+    opacity: 0;
+    transform: none;
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-enter {
+    animation: none !important;
+  }
+}

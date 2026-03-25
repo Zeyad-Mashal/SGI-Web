@@ -13,6 +13,7 @@ export default function ClientLayout({ children }) {
   // الصفحات اللي مش عايز يظهر فيها navbar/footer
   const hiddenPaths = ["/login", "/register", "/forget-password"];
   const hideLayout = hiddenPaths.includes(pathname);
+  const isHome = pathname === "/" || pathname === "/Home";
 
   useEffect(() => {
     let savedLang = localStorage.getItem("lang");
@@ -36,11 +37,10 @@ export default function ClientLayout({ children }) {
 
   return (
     <ToastProvider>
-      {!hideLayout && <Navbar />}
+      {!hideLayout && (isHome ? <div className="home-navbar-enter"><Navbar /></div> : <Navbar />)}
       {children}
       {!hideLayout && <Footer />}
       <WhatsAppButton />
     </ToastProvider>
   );
 }
-

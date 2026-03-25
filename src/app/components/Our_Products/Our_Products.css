@@ -101,7 +101,8 @@
   transform: scale(1.05);
   transition: all 0.3s ease;
 }
-.Our_Products_img {
+.Our_Products_img,
+.ourProducts_img {
   width: 100%;
   height: auto;
   display: flex;
@@ -109,6 +110,56 @@
   align-items: flex-start;
   padding: 10px;
   border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.Our_Products_img::after,
+.ourProducts_img::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 35%,
+    rgba(255, 255, 255, 0.95) 55%,
+    transparent 75%
+  );
+  opacity: 0;
+  transform: translateX(-30%) rotate(8deg);
+  transition:
+    opacity 0.35s ease,
+    transform 0.65s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.Our_Products_item:hover .Our_Products_img::after,
+.Our_Products_item:hover .ourProducts_img::after {
+  opacity: 1;
+  transform: translateX(30%) rotate(8deg);
+}
+
+.Our_Products_item:hover .Our_Products_img img,
+.Our_Products_item:hover .ourProducts_img img {
+  filter: brightness(1.06) saturate(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Our_Products_img::after,
+  .ourProducts_img::after {
+    transition: none !important;
+  }
+  .Our_Products_item:hover .Our_Products_img::after,
+  .Our_Products_item:hover .ourProducts_img::after {
+    opacity: 0 !important;
+    transform: none !important;
+  }
+  .Our_Products_item:hover .Our_Products_img img,
+  .Our_Products_item:hover .ourProducts_img img {
+    filter: none !important;
+  }
 }
 .Our_Products_item > a > .ourProducts_img {
   height: 280px;
@@ -203,7 +254,9 @@
   color: #fff;
   cursor: pointer;
   padding: 0;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 .Our_Products_counter_btn:hover {
   background: rgba(255, 255, 255, 0.15);

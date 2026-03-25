@@ -8,19 +8,48 @@ import Our_Products from "../components/Our_Products/Our_Products";
 import ContactUs from "../components/ContactUs/ContactUs";
 import Categories from "../components/Categories/Categories";
 import Banner2 from "../components/Banner2/Banner2";
+import ScrollReveal from "../components/ScrollReveal/ScrollReveal";
 
 const Home = () => {
   return (
     <div>
-      <Hero />
-      <Featrues />
-      <Brands />
-      <Featured_Products />
-      <Banner2 />
-      <Banner />
-      <Categories />
-      <Our_Products />
-      <ContactUs />
+      <div className="home-hero-enter">
+        <Hero />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <Featrues />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <Brands />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <Featured_Products />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <Banner2 />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <Banner />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <Categories />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <Our_Products />
+      </div>
+
+      <div className="home-reveal" data-reveal="true">
+        <ContactUs />
+      </div>
+
+      <ScrollReveal />
     </div>
   );
 };

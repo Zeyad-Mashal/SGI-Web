@@ -102,6 +102,40 @@
   height: 100% !important;
   object-fit: contain !important;
   border-radius: 16px;
+  transform: scale(1);
+  transition:
+    transform 0.45s ease,
+    filter 0.45s ease;
+}
+
+.Featured_card .Featured_img::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 35%,
+    rgba(255, 255, 255, 0.95) 55%,
+    transparent 75%
+  );
+  opacity: 0;
+  transform: translateX(-30%) rotate(8deg);
+  transition:
+    opacity 0.35s ease,
+    transform 0.65s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.Featured_card:hover .Featured_img::after {
+  opacity: 1;
+  transform: translateX(30%) rotate(8deg);
+}
+
+.Featured_card:hover .Featured_img img {
+  transform: scale(1.05);
+  filter: brightness(1.06) saturate(1.05);
 }
 .Featured_img > svg {
   background-color: white;
@@ -221,7 +255,9 @@
   color: #fff;
   cursor: pointer;
   padding: 0;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 .Featured_counter_btn:hover {
   background: rgba(255, 255, 255, 0.15);
@@ -403,5 +439,22 @@
     width: 30px;
     height: 30px;
     margin-top: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Featured_card .Featured_img img,
+  .Featured_card .Featured_img::after {
+    transition: none !important;
+  }
+
+  .Featured_card:hover .Featured_img img {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .Featured_card:hover .Featured_img::after {
+    opacity: 0 !important;
+    transform: none !important;
   }
 }
