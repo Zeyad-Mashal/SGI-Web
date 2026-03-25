@@ -338,8 +338,8 @@
   .banner_btns .banner_btn1,
   .banner_btns .banner_btn2 {
     padding: 5px 10px;
-    width: 120px;
-    font-size: 0.9rem;
+    width: fit-content;
+    font-size: 0.8rem;
   }
   .banner_left {
     width: 100%;

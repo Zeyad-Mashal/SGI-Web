@@ -57,7 +57,7 @@
   height: 100%;
 }
 .hero_right_img1 {
-  background-image: url("/images/B2F.jpg");
+  background-image: url("/images/home-banner.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -67,7 +67,7 @@
   overflow: hidden;
 }
 .hero_right_img2 {
-  background-image: url("/images/B1F.jpg");
+  background-image: url("/images/home-banner.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -79,6 +79,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  position: relative;
+  height: 100%;
 }
 
 .hero_content span {
@@ -130,6 +132,8 @@
   font-size: 16px;
   color: black;
   margin-top: 0.3rem;
+  position: absolute;
+  bottom: 0;
 }
 
 /* Legacy support for old selectors */
@@ -157,7 +161,7 @@
   font-size: 1rem;
   line-height: 1.5;
 }
-.hero_left a {
+.hero_left > a {
   text-decoration: none;
   background-color: rgba(215, 223, 43, 1);
   padding: 10px;
@@ -252,6 +256,10 @@
   }
 
   /* جعل النص أبيض في الموبايل */
+  .hero_content {
+    position: relative;
+    height: 100%;
+  }
   .hero_content span {
     font-size: 10px;
     width: 80px;
@@ -285,13 +293,13 @@
     line-height: 1.4;
     margin: 0.5rem 0;
   }
-  .hero_content a {
+  .hero_content > a {
     text-decoration: none;
     background-color: rgba(215, 223, 43, 1);
     padding: 0.5rem;
-    width: 120px;
+    width: fit-content;
     height: 30px;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -299,6 +307,8 @@
     font-weight: bold;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     margin-top: 0.5rem;
+    position: absolute;
+    bottom: 0;
   }
 
   /* Legacy support */
@@ -319,7 +329,7 @@
     color: white;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   }
-  .hero_left a {
+  .hero_left > a {
     text-decoration: none;
     background-color: rgba(215, 223, 43, 1);
     padding: 0.5rem;
