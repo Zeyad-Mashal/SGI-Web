@@ -33,7 +33,7 @@ import {
 } from "@/utils/favoriteUtils";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
-const Our_Products = () => {
+const Our_Products = ({ initialProducts = [] }) => {
   const [translations, setTranslations] = useState(en);
   useEffect(() => {
     const lang = localStorage.getItem("lang") || "en";
@@ -102,11 +102,18 @@ const Our_Products = () => {
       showToast("Added to favorites!", "success");
     }
   };
-  const [allProducts, setAllProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState(initialProducts);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const getAllProducts = () => {
-    GetProducts(setAllProducts, setError, setLoading);
+    GetProducts(
+      setAllProducts,
+      setError,
+      setLoading,
+      1,
+      undefined,
+      { skipLoadingIndicator: initialProducts.length > 0 },
+    );
   };
   return (
     <div className="Our_Products">
@@ -114,7 +121,7 @@ const Our_Products = () => {
         <div className="Our_Products_header">
           <div className="Our_Products_header_title">
             <span>{translations.ourproducts}</span>
-            <h1>{translations.exploreourproducts}</h1>
+            <h2>{translations.exploreourproducts}</h2>
           </div>
           <a href="/shop">
             {translations.viewall} <MdKeyboardArrowRight />

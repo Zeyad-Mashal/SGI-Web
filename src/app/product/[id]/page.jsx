@@ -1,5 +1,5 @@
-import React from "react";
 import ClientProduct from "./ClientProduct";
+import { fetchProductDetailsById } from "@/lib/server/storefrontPrefetch";
 
 // This function generates static params for all products at build time
 // Required for static export with dynamic routes
@@ -55,8 +55,11 @@ export async function generateStaticParams() {
   }
 }
 
-const page = () => {
-  return <ClientProduct />;
-};
+export default async function ProductPage({ params }) {
+  const { id } = await params;
+  const initialProduct = await fetchProductDetailsById(id);
 
-export default page;
+  return (
+    <ClientProduct key={id} initialProduct={initialProduct} />
+  );
+}

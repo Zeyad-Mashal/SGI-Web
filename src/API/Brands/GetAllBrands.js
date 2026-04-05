@@ -1,6 +1,7 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/brand/getAll?page=1";
-const GetAllBrands = async (setAllBrands, setError, setLoading) => {
-    setLoading(true)
+const GetAllBrands = async (setAllBrands, setError, setLoading, options = {}) => {
+    const { skipLoadingIndicator = false } = options;
+    if (!skipLoadingIndicator) setLoading(true);
     const lang = localStorage.getItem("lang")
     try {
         const response = await fetch(URL, {

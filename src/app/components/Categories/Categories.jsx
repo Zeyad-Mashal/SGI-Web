@@ -5,8 +5,8 @@ import Image from "next/image";
 import GetCategories from "@/API/Categories/GetCategories";
 import Link from "next/link";
 
-const Categories = () => {
-  const [categories, setCategories] = useState([]);
+const Categories = ({ initialCategories = [] }) => {
+  const [categories, setCategories] = useState(initialCategories);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [lang, setLang] = useState("en");
@@ -24,7 +24,9 @@ const Categories = () => {
   useEffect(() => {
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
-    GetCategories(setCategories, setError, setLoading);
+    GetCategories(setCategories, setError, setLoading, {
+      skipLoadingIndicator: initialCategories.length > 0,
+    });
   }, []);
 
   // Function to find matching subcategory for an image

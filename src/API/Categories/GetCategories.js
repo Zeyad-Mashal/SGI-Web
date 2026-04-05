@@ -1,6 +1,7 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/category/getAll";
-const GetCategories = async (setCategories, setError, setLoading) => {
-    setLoading(true)
+const GetCategories = async (setCategories, setError, setLoading, options = {}) => {
+    const { skipLoadingIndicator = false } = options;
+    if (!skipLoadingIndicator) setLoading(true);
     try {
         const response = await fetch(URL, {
             method: 'GET',

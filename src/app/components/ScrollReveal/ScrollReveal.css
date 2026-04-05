@@ -1,5 +1,8 @@
-/* Initial state for Home scroll-revealed sections */
-.home-reveal[data-reveal="true"] {
+/*
+ * Progressive enhancement: sections are visible when JS is off (no html.js).
+ * With JS, html gets class "js" from root layout; ScrollReveal then animates in.
+ */
+html.js .home-reveal[data-reveal="true"]:not(.is-visible) {
   opacity: 0;
   transform: translateY(26px) scale(0.99);
   filter: blur(10px);
@@ -18,7 +21,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-reveal[data-reveal="true"] {
+  html.js .home-reveal[data-reveal="true"] {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;

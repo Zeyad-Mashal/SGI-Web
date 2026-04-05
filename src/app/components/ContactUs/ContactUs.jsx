@@ -19,7 +19,7 @@ const ContactUs = () => {
   return (
     <div className="ContactUs">
       <div className="contactUS_container">
-        <h1>{translations.contactus}</h1>
+        <h2>{translations.contactus}</h2>
         <p>{translations.contactustostartyourjourneytoday}</p>
         <div className="ContactUs_list">
           <div className="ContactUs_item">

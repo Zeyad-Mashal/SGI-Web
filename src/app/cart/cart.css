@@ -16,8 +16,11 @@
 .cart_content {
   width: 100%;
 }
-.cart_content > h1 {
+.cart_content > h1,
+.cart_page_h1 {
   font-size: 30px;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
 }
 .cart_content > p {
   color: rgba(0, 0, 0, 0.6);
@@ -631,7 +634,8 @@
   .cart {
     padding: 5px;
   }
-  .cart_content > h1 {
+  .cart_content > h1,
+  .cart_container > .cart_page_h1 {
     font-size: 20px;
   }
   .cart_content > p {

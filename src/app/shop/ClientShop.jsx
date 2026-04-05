@@ -46,8 +46,14 @@ import { FaPlus } from "react-icons/fa6";
 
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
+import { filterAllowedBrands } from "@/utils/filterAllowedBrands";
 
-export default function Shop() {
+export default function Shop({
+  initialProducts = [],
+  initialCategories = [],
+  initialBrands = [],
+  initialPagination = null,
+}) {
   const { showToast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -60,25 +66,25 @@ export default function Shop() {
       ? parseInt(pageParam, 10)
       : 1;
   const [favorites, setFavorites] = useState([]);
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 0,
-    totalProducts: 0,
-  });
+  const [pagination, setPagination] = useState(
+    initialPagination && typeof initialPagination === "object"
+      ? initialPagination
+      : { currentPage: 1, totalPages: 0, totalProducts: 0 },
+  );
   const [showFilter, setShowFilter] = useState(false);
   const [showDesktopFilter, setShowDesktopFilter] = useState(true);
   const [categoriesSectionOpen, setCategoriesSectionOpen] = useState(false);
   const [brandsSectionOpen, setBrandsSectionOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [allProducts, setAllProducts] = useState([]);
-  const [originalProducts, setOriginalProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [allProducts, setAllProducts] = useState(initialProducts);
+  const [originalProducts, setOriginalProducts] = useState(initialProducts);
+  const [categories, setCategories] = useState(initialCategories);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState(null);
-  const [allBrands, setAllBrands] = useState([]);
+  const [allBrands, setAllBrands] = useState(initialBrands);
   const [brandsLoading, setBrandsLoading] = useState(false);
   const [lang, setLang] = useState("en");
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "list"
@@ -120,36 +126,20 @@ export default function Shop() {
     setTranslations(savedLang === "ar" ? ar : en);
 
     // Fetch categories and brands
-    GetCategories(setCategories, setError, setCategoriesLoading);
+    GetCategories(setCategories, setError, setCategoriesLoading, {
+      skipLoadingIndicator: initialCategories.length > 0,
+    });
     GetAllBrands(
       (brands) => {
         if (!Array.isArray(brands)) {
           setAllBrands([]);
           return;
         }
-        const allowedBrandsEn = ["Cleenol", "INDUQUIM", "SEITZ"];
-        const allowedBrandsAr = ["كلينول", "إندوكيم", "سيتز"];
-        const allowedSet = new Set([
-          ...allowedBrandsEn.map((n) => n.trim().toUpperCase()),
-          ...allowedBrandsAr.map((n) => n.trim()),
-        ]);
-        const filteredBrands = brands.filter((brand) => {
-          if (!brand.name) return false;
-          const names = [
-            typeof brand.name === "string" ? brand.name : null,
-            brand.name?.en,
-            brand.name?.ar,
-          ].filter(Boolean);
-          return names.some((n) => {
-            const normalized = String(n).trim();
-            const upper = normalized.toUpperCase();
-            return allowedSet.has(upper) || allowedSet.has(normalized);
-          });
-        });
-        setAllBrands(filteredBrands.length > 0 ? filteredBrands : brands);
+        setAllBrands(filterAllowedBrands(brands));
       },
       setError,
       setBrandsLoading,
+      { skipLoadingIndicator: initialBrands.length > 0 },
     );
     setFavorites(getFavorites());
     setCart(getCart());
@@ -669,6 +659,7 @@ export default function Shop() {
 
         {/* SHOP CONTENT */}
         <div className="shop_content">
+          <h1 className="shop_page_h1">{translations.shop}</h1>
           {/* Mobile: bar to open filter + view switches. Desktop: when sidebar hidden, bar to show it again + switches */}
           <div
             className={`shop_filter_top_mobile ${!showDesktopFilter ? "shop_filter_top_desktop_visible" : ""}`}

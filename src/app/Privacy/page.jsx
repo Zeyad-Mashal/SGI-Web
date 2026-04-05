@@ -159,7 +159,7 @@ const Privacy = () => {
 
         {/* Privacy Policy Section */}
         <section className="privacy_section">
-          <h1 className="privacy_main_title">{translations.privacyTitle}</h1>
+          <h2 className="privacy_main_title">{translations.privacyTitle}</h2>
 
           <div className="privacy_item">
             <h2>{translations.privacy.overview.title}</h2>

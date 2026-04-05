@@ -1,6 +1,6 @@
 @import "tailwindcss";
 * {
-  font-family: "Roboto", sans-serif;
+  font-family: inherit;
   padding: 0;
   margin: 0;
   box-sizing: border-box;

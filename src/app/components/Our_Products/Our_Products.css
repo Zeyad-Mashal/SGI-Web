@@ -43,7 +43,8 @@
   align-items: center;
 }
 
-.Our_Products .Our_Products_header_title > h1 {
+.Our_Products .Our_Products_header_title > h1,
+.Our_Products .Our_Products_header_title > h2 {
   font-size: 2rem;
   font-weight: bold;
   margin-top: 1rem;
@@ -61,7 +62,8 @@
   left: auto;
   right: -30px;
 }
-[dir="rtl"] .Our_Products .Our_Products_header_title > h1 {
+[dir="rtl"] .Our_Products .Our_Products_header_title > h1,
+[dir="rtl"] .Our_Products .Our_Products_header_title > h2 {
   text-align: right;
 }
 
@@ -437,7 +439,8 @@
   .Our_Products_price > h3 {
     font-size: 1rem;
   }
-  .Our_Products .Our_Products_header_title > h1 {
+  .Our_Products .Our_Products_header_title > h1,
+  .Our_Products .Our_Products_header_title > h2 {
     font-size: 1.3rem;
   }
   .nav_btn {

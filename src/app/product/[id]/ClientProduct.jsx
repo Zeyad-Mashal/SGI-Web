@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import "./product.css";
 import { FaStar } from "react-icons/fa";
@@ -25,10 +25,11 @@ import {
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
 
-const ClientProduct = () => {
+const ClientProduct = ({ initialProduct = null }) => {
   const { showToast } = useToast();
   const [favorites, setFavorites] = useState([]);
   const { id } = useParams();
+  const firstDetailsFetchRef = useRef(true);
   const [qty, setQty] = useState(1);
   const [useBoxPrice, setUseBoxPrice] = useState(false);
   const [lang, setLang] = useState("en");
@@ -37,7 +38,9 @@ const ClientProduct = () => {
   const [activeImg, setActiveImg] = useState(null);
   const [imageLoading, setImageLoading] = useState(true);
   const [cart, setCart] = useState([]);
-  const [productDetails, setProductDetails] = useState([]);
+  const [productDetails, setProductDetails] = useState(
+    initialProduct ?? null,
+  );
 
   const cartQty =
     productDetails?._id && Array.isArray(cart)
@@ -167,7 +170,7 @@ const ClientProduct = () => {
       window.removeEventListener("storage", handleStorageChange);
       clearInterval(interval);
     };
-  }, [lang]);
+  }, [lang, id]);
 
   useEffect(() => {
     setFavorites(getFavorites());
@@ -185,10 +188,15 @@ const ClientProduct = () => {
       }
     }
   };
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(() => !initialProduct);
   const [error, setError] = useState(null);
   const getProductDetails = () => {
-    ProductDetails(setProductDetails, setError, setLoading, id);
+    const suppress =
+      firstDetailsFetchRef.current && !!initialProduct;
+    firstDetailsFetchRef.current = false;
+    ProductDetails(setProductDetails, setError, setLoading, id, {
+      suppressInitialLoading: suppress,
+    });
   };
   useEffect(() => {
     if (productDetails?.picUrls?.length > 0) {

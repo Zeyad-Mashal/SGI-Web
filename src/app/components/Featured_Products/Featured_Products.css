@@ -35,7 +35,8 @@
   border-radius: 8px;
 }
 
-.Featured_Products .Featured_Products_header_title > h1 {
+.Featured_Products .Featured_Products_header_title > h1,
+.Featured_Products .Featured_Products_header_title > h2 {
   font-size: 2rem;
   font-weight: bold;
   margin-top: 1rem;
@@ -53,7 +54,8 @@
   left: auto;
   right: -30px;
 }
-[dir="rtl"] .Featured_Products .Featured_Products_header_title > h1 {
+[dir="rtl"] .Featured_Products .Featured_Products_header_title > h1,
+[dir="rtl"] .Featured_Products .Featured_Products_header_title > h2 {
   text-align: right;
 }
 
@@ -432,7 +434,8 @@
     width: 90%;
     font-size: 0.8rem;
   }
-  .Featured_Products .Featured_Products_header_title > h1 {
+  .Featured_Products .Featured_Products_header_title > h1,
+  .Featured_Products .Featured_Products_header_title > h2 {
     font-size: 1.3rem;
   }
   .nav_btn {

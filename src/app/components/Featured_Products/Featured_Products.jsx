@@ -32,7 +32,7 @@ import {
 } from "@/utils/favoriteUtils";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
-const Featured_Products = () => {
+const Featured_Products = ({ initialProducts = [] }) => {
   const [translations, setTranslations] = useState(en);
   useEffect(() => {
     const lang = localStorage.getItem("lang") || "en";
@@ -103,7 +103,7 @@ const Featured_Products = () => {
   };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [allProducts, setAllProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState(initialProducts);
   const getFeaturedProduct = () => {
     GetFeaturedProducts(
       (products) => {
@@ -116,6 +116,7 @@ const Featured_Products = () => {
       },
       setError,
       setLoading,
+      { skipLoadingIndicator: initialProducts.length > 0 },
     );
   };
   return (
@@ -124,7 +125,7 @@ const Featured_Products = () => {
         <div className="Featured_Products_header">
           <div className="Featured_Products_header_title">
             <span>{translations.todays}</span>
-            <h1>{translations.featuredproducts}</h1>
+            <h2>{translations.featuredproducts}</h2>
           </div>
 
           {/* أزرار التنقل */}

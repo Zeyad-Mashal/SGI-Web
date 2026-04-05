@@ -1,20 +1,20 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
+import Script from "next/script";
+import { SITE_URL } from "@/constants/site";
 import "./globals.css";
 import "./components/HeartAnimation.css";
 import ClientLayout from "./ClientLayout";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
+  adjustFontFallback: true,
 });
 
 // Use custom favicon from public/images/logo-ico.ico
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: "/images/logo-ico.ico",
     shortcut: "/images/logo-ico.ico",
@@ -22,10 +22,23 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#ffffff",
+};
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${roboto.className} antialiased`}>
+        <Script
+          id="html-js-flag"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js');",
+          }}
+        />
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

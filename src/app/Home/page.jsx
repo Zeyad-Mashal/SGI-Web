@@ -1,16 +1,26 @@
-import React from "react";
+import dynamic from "next/dynamic";
 import Hero from "../components/Hero/Hero";
-import Featrues from "../components/Featrues/Featrues";
-import Brands from "../components/Brands/Brands";
-import Featured_Products from "../components/Featured_Products/Featured_Products";
-import Banner from "../components/Banner/Banner";
-import Our_Products from "../components/Our_Products/Our_Products";
-import ContactUs from "../components/ContactUs/ContactUs";
-import Categories from "../components/Categories/Categories";
-import Banner2 from "../components/Banner2/Banner2";
-import ScrollReveal from "../components/ScrollReveal/ScrollReveal";
+import { fetchHomePageData } from "@/lib/server/storefrontPrefetch";
 
-const Home = () => {
+const Featrues = dynamic(() => import("../components/Featrues/Featrues"));
+const Brands = dynamic(() => import("../components/Brands/Brands"));
+const Featured_Products = dynamic(() =>
+  import("../components/Featured_Products/Featured_Products"),
+);
+const Banner2 = dynamic(() => import("../components/Banner2/Banner2"));
+const Banner = dynamic(() => import("../components/Banner/Banner"));
+const Categories = dynamic(() => import("../components/Categories/Categories"));
+const Our_Products = dynamic(() =>
+  import("../components/Our_Products/Our_Products"),
+);
+const ContactUs = dynamic(() => import("../components/ContactUs/ContactUs"));
+const ScrollReveal = dynamic(() =>
+  import("../components/ScrollReveal/ScrollReveal"),
+);
+
+export default async function Home() {
+  const { featured, products, categories, brands } = await fetchHomePageData();
+
   return (
     <div>
       <div className="home-hero-enter">
@@ -22,11 +32,11 @@ const Home = () => {
       </div>
 
       <div className="home-reveal" data-reveal="true">
-        <Brands />
+        <Brands initialBrands={brands} />
       </div>
 
       <div className="home-reveal" data-reveal="true">
-        <Featured_Products />
+        <Featured_Products initialProducts={featured} />
       </div>
 
       <div className="home-reveal" data-reveal="true">
@@ -38,11 +48,11 @@ const Home = () => {
       </div>
 
       <div className="home-reveal" data-reveal="true">
-        <Categories />
+        <Categories initialCategories={categories} />
       </div>
 
       <div className="home-reveal" data-reveal="true">
-        <Our_Products />
+        <Our_Products initialProducts={products} />
       </div>
 
       <div className="home-reveal" data-reveal="true">
@@ -52,6 +62,4 @@ const Home = () => {
       <ScrollReveal />
     </div>
   );
-};
-
-export default Home;
+}

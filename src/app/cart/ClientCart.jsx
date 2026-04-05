@@ -305,6 +305,7 @@ const ClientCart = () => {
       {/* -------------- Loading -------------- */}
       {!mounted ? (
         <div className="cart_container">
+          <h1 className="cart_page_h1">{translations.shoppingCart}</h1>
           <p>{translations.loading}</p>
         </div>
       ) : (

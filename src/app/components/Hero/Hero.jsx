@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import "./Hero.css";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
@@ -18,6 +19,16 @@ const Hero = () => {
   return (
     <div className="hero">
       <div className="hero_left">
+        <Image
+          className="hero_lcp_image"
+          src="/images/home-banner.png"
+          alt=""
+          fill
+          priority
+          fetchPriority="high"
+          sizes="(max-width: 768px) 100vw, 100vw"
+          quality={82}
+        />
         {/* <div className="hero_overlay"></div> */}
         <div className="hero_content">
           <span>{translations.b2bsolution}</span>

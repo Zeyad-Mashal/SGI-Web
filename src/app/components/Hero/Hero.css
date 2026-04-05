@@ -9,11 +9,7 @@
 }
 .hero .hero_left {
   width: 100%;
-  background-image: url("/images/home-banner.png");
-  background-size: cover;
-  background-position: center;
   height: 560px;
-  background-repeat: no-repeat;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -23,6 +19,14 @@
   border-radius: 0 16px 16px 0;
   color: black;
   position: relative;
+  overflow: hidden;
+}
+
+.hero_lcp_image {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
 }
 
 .hero_overlay {
@@ -46,6 +50,7 @@
   position: relative;
   z-index: 2;
   width: 100%;
+  flex: 1;
 }
 .hero .hero_right {
   width: 50%;
@@ -224,7 +229,6 @@
   }
   .hero .hero_left {
     width: 100%;
-    background-image: url("/images/home-banner.png");
     height: 400px;
     padding: 2rem 1.5rem;
   }
@@ -368,8 +372,14 @@
   }
 }
 
-/* Home: Hero initial enter animation (strong + smooth) */
+/* Visible when JS is off (no html.js). With JS, animate in like other home sections. */
 .home-hero-enter {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+html.js .home-hero-enter {
   animation: homeHeroEnter 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
   opacity: 0;
   transform: none;
@@ -394,7 +404,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-hero-enter {
+  html.js .home-hero-enter {
     animation: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
 }

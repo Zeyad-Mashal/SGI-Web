@@ -9,10 +9,11 @@ import "swiper/css/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import GetAllBrands from "@/API/Brands/GetAllBrands";
+import { filterAllowedBrands } from "@/utils/filterAllowedBrands";
 import { useRouter } from "next/navigation";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
-const Brands = () => {
+const Brands = ({ initialBrands = [] }) => {
   const router = useRouter();
   const [translations, setTranslations] = useState(en);
   useEffect(() => {
@@ -28,13 +29,9 @@ const Brands = () => {
   useEffect(() => {
     getAllBrands();
   }, []);
-  const [allBrands, setAllBrands] = useState([]);
+  const [allBrands, setAllBrands] = useState(initialBrands);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // العلامات التجارية المسموح بها (نفس الثلاثة في الإنجليزي والعربي)
-  const allowedBrandsEn = ["Cleenol", "INDUQUIM", "SEITZ"];
-  const allowedBrandsAr = ["كلينول", "إندوكيم", "سيتز"]; // أسماء عربية لنفس العلامات إن وردت من الـ API
 
   const getAllBrands = () => {
     GetAllBrands(
@@ -43,29 +40,11 @@ const Brands = () => {
           setAllBrands([]);
           return;
         }
-        const allowedSet = new Set([
-          ...allowedBrandsEn.map((n) => n.trim().toUpperCase()),
-          ...allowedBrandsAr.map((n) => n.trim()),
-        ]);
-        // تصفية: نطابق أي شكل من الاسم (en أو ar أو string)
-        const filteredBrands = brands.filter((brand) => {
-          if (!brand.name) return false;
-          const names = [
-            typeof brand.name === "string" ? brand.name : null,
-            brand.name?.en,
-            brand.name?.ar,
-          ].filter(Boolean);
-          const match = names.some((n) => {
-            const normalized = String(n).trim();
-            const upper = normalized.toUpperCase();
-            return allowedSet.has(upper) || allowedSet.has(normalized);
-          });
-          return match;
-        });
-        setAllBrands(filteredBrands.length > 0 ? filteredBrands : brands);
+        setAllBrands(filterAllowedBrands(brands));
       },
       setError,
       setLoading,
+      { skipLoadingIndicator: initialBrands.length > 0 },
     );
   };
 
@@ -75,7 +54,7 @@ const Brands = () => {
         <div className="brands_header">
           <div className="brands_header_title">
             <span>{translations.brands}</span>
-            <h1>{translations.browsebybrand}</h1>
+            <h2>{translations.browsebybrand}</h2>
           </div>
 
           {/* أزرار التنقل */}
