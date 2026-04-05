@@ -1,5 +1,8 @@
 import { SITE_URL } from "@/constants/site";
 
+/** Required for `output: "export"` (static HTML export on Vercel, etc.). */
+export const dynamic = "force-static";
+
 /** @returns {import('next').MetadataRoute.Robots} */
 export default function robots() {
   return {

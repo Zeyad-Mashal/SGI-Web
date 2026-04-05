@@ -1,5 +1,8 @@
 import { SITE_URL } from "@/constants/site";
 
+/** Required for `output: "export"` (static HTML export on Vercel, etc.). */
+export const dynamic = "force-static";
+
 const API_PRODUCTS = "https://sgi-dy1p.onrender.com/api/v1/product/get";
 
 async function fetchAllProductIds() {
@@ -13,7 +16,7 @@ async function fetchAllProductIds() {
         "Content-Type": "application/json",
         "accept-language": "en",
       },
-      next: { revalidate: 3600 },
+      cache: "force-cache",
     });
 
     if (!res.ok) break;
