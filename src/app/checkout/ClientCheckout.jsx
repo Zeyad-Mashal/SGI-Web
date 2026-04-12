@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./checkout.css";
 import { FiPlus } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -28,6 +28,8 @@ const UAE_CITIES = [
 ];
 
 const PENDING_ORDER_KEY = "pendingOrderAfterPayment";
+/** Same-tab metadata; optional for support / debugging */
+const PENDING_GATEWAY_CHECKOUT_KEY = "pendingGatewayCheckoutId";
 
 const isCardGatewayPayment = (way) =>
   way === "Cash by Visa/Mastercard" || way === "Cash by credit";
@@ -56,7 +58,8 @@ const ClientCheckout = () => {
   const [paymentSessionLoading, setPaymentSessionLoading] = useState(false);
   const [paymentSessionError, setPaymentSessionError] = useState("");
   const [paymentReturnUrl, setPaymentReturnUrl] = useState("");
-  const [cardOrderBanner, setCardOrderBanner] = useState("");
+  /** Form valid + pending order written to sessionStorage for /payment/result */
+  const [gatewayOrderReady, setGatewayOrderReady] = useState(false);
 
   // Address Management
   const [newAddress, setNewAddress] = useState("");
@@ -162,12 +165,18 @@ const ClientCheckout = () => {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    setPaymentReturnUrl(`${window.location.origin}/payment/result`);
+    const origin =
+      process.env.NEXT_PUBLIC_PAYMENT_RETURN_ORIGIN?.trim()?.replace(/\/$/, "") ||
+      window.location.origin;
+    setPaymentReturnUrl(`${origin}/payment/result`);
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (!isCardGatewayPayment(paymentWay)) {
-      setCardOrderBanner("");
+      sessionStorage.removeItem(PENDING_ORDER_KEY);
+      sessionStorage.removeItem(PENDING_GATEWAY_CHECKOUT_KEY);
+      setGatewayOrderReady(false);
     }
   }, [paymentWay]);
 
@@ -236,7 +245,7 @@ const ClientCheckout = () => {
   }, [paymentWay, totalAmount, cartItems.length, paymentReturnUrl, lang]);
 
   useEffect(() => {
-    if (!checkoutSessionId || !paymentReturnUrl) return undefined;
+    if (!checkoutSessionId || !paymentReturnUrl || !gatewayOrderReady) return undefined;
 
     const scriptId = "oppwa-payment-widgets-script";
     const existing = document.getElementById(scriptId);
@@ -268,7 +277,86 @@ const ClientCheckout = () => {
         /* ignore */
       }
     };
-  }, [checkoutSessionId, paymentReturnUrl, lang]);
+  }, [checkoutSessionId, paymentReturnUrl, lang, gatewayOrderReady]);
+
+  const persistGatewayPendingOrder = useCallback(() => {
+    if (typeof window === "undefined") return false;
+    if (!isCardGatewayPayment(paymentWay) || !checkoutSessionId) return false;
+
+    if (!firstName.trim() || !lastName.trim()) return false;
+    if (!userPhone.trim()) return false;
+    if (!city.trim()) return false;
+
+    let deliveryAddress = "";
+    if (id) {
+      if (selectedAddressIndex === null || !addresses[selectedAddressIndex]) {
+        return false;
+      }
+      deliveryAddress = addresses[selectedAddressIndex];
+    } else {
+      if (!writtenAddress.trim()) return false;
+      deliveryAddress = writtenAddress.trim();
+    }
+
+    if (cartItems.length === 0) return false;
+
+    const formattedCartItems = cartItems.map((item) => ({
+      productId: item._id,
+      quantity: item.quantity,
+      sku: item.sku || item._id,
+      name: item.name,
+      price: item.price,
+    }));
+
+    const orderData = {
+      paymentWay,
+      userName: `${firstName.trim()} ${lastName.trim()}`,
+      userPhone: userPhone.trim(),
+      email: email.trim() || undefined,
+      totalAmount,
+      city: city.trim(),
+      address: deliveryAddress,
+      cartItems: formattedCartItems,
+    };
+
+    try {
+      sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify(orderData));
+      sessionStorage.setItem(PENDING_GATEWAY_CHECKOUT_KEY, checkoutSessionId);
+      return true;
+    } catch {
+      return false;
+    }
+  }, [
+    paymentWay,
+    checkoutSessionId,
+    firstName,
+    lastName,
+    userPhone,
+    email,
+    city,
+    id,
+    selectedAddressIndex,
+    addresses,
+    writtenAddress,
+    cartItems,
+    totalAmount,
+  ]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isCardGatewayPayment(paymentWay) || !checkoutSessionId) {
+      if (isCardGatewayPayment(paymentWay) && !checkoutSessionId) {
+        setGatewayOrderReady(false);
+      }
+      return;
+    }
+    const ok = persistGatewayPendingOrder();
+    setGatewayOrderReady(ok);
+    if (!ok) {
+      sessionStorage.removeItem(PENDING_ORDER_KEY);
+      sessionStorage.removeItem(PENDING_GATEWAY_CHECKOUT_KEY);
+    }
+  }, [paymentWay, checkoutSessionId, persistGatewayPendingOrder]);
 
   const HandleAddAddress = () => {
     if (newAddress.trim() === "") return;
@@ -298,6 +386,8 @@ const ClientCheckout = () => {
   };
 
   const handleSubmitOrder = async () => {
+    if (isCardGatewayPayment(paymentWay)) return;
+
     // Validation
     if (!firstName.trim() || !lastName.trim()) {
       setError(translations.pleaseEnterFullName);
@@ -360,14 +450,6 @@ const ClientCheckout = () => {
       address: deliveryAddress,
       cartItems: formattedCartItems,
     };
-
-    // Card gateway: save order for /payment/result after HyperPay redirect (widget on page)
-    if (isCardGatewayPayment(paymentWay)) {
-      sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify(orderData));
-      setCardOrderBanner(translations.orderSavedPayBelow);
-      setError("");
-      return;
-    }
 
     // Cash on Delivery & bank transfer: create order مباشرة
     const result = await CreateOrder(orderData, setError, setLoading, () => {});
@@ -454,81 +536,6 @@ const ClientCheckout = () => {
             />
           </div>
         </div>
-
-        <hr />
-
-        {/* ------------------ Payment Method ------------------ */}
-        <h2>{translations.paymentMethod}</h2>
-        <div className="checkout_personal_info">
-          <div className="checkout_personal_info_item">
-            <h3>{translations.selectPaymentMethod}</h3>
-            <select
-              value={paymentWay}
-              onChange={(e) => setPaymentWay(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "0.5rem 1rem",
-                border: "1px solid rgba(0, 0, 0, 0.2)",
-                borderRadius: "8px",
-              }}
-            >
-              <option value="Cash on Delivery">
-                {translations.cashOnDelivery}
-              </option>
-              <option value="Cash by Visa/Mastercard">{translations.cashByVisaMastercard}</option>
-              <option value="Cash by transfer">{translations.cashByTransfer}</option>
-              <option value="Cash by credit">{translations.cashByCredit}</option>
-            </select>
-          </div>
-        </div>
-
-        {isCardGatewayPayment(paymentWay) && (
-          <div
-            style={{
-              marginTop: "1rem",
-              padding: "1rem",
-              borderRadius: "12px",
-              border: "1px solid rgba(0, 0, 0, 0.12)",
-              background: "#fafafa",
-            }}
-          >
-            <p style={{ margin: "0 0 0.75rem", fontSize: "0.95rem", color: "#444" }}>
-              {translations.cardPaymentHint}
-            </p>
-            {cardOrderBanner && (
-              <div
-                style={{
-                  marginBottom: "0.75rem",
-                  padding: "0.65rem 0.85rem",
-                  borderRadius: "8px",
-                  background: "#e8f5e9",
-                  color: "#1b5e20",
-                  fontSize: "0.9rem",
-                }}
-              >
-                {cardOrderBanner}
-              </div>
-            )}
-            {paymentSessionLoading && (
-              <p style={{ margin: "0.5rem 0", color: "#666" }}>
-                {translations.preparingPaymentForm}
-              </p>
-            )}
-            {paymentSessionError && (
-              <p style={{ margin: "0.5rem 0", color: "#c62828" }}>
-                {paymentSessionError}
-              </p>
-            )}
-            {checkoutSessionId && paymentReturnUrl && !paymentSessionLoading && (
-              <form
-                key={checkoutSessionId}
-                action={paymentReturnUrl}
-                className="paymentWidgets"
-                data-brands="VISA MASTER AMEX"
-              />
-            )}
-          </div>
-        )}
 
         <hr />
 
@@ -671,6 +678,107 @@ const ClientCheckout = () => {
 
         <hr />
 
+        {/* ------------------ Payment Method (above order summary) ------------------ */}
+        <h2>{translations.paymentMethod}</h2>
+        <div className="checkout_personal_info">
+          <div className="checkout_personal_info_item">
+            <h3>{translations.selectPaymentMethod}</h3>
+            <select
+              value={paymentWay}
+              onChange={(e) => setPaymentWay(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.5rem 1rem",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "8px",
+              }}
+            >
+              <option value="Cash on Delivery">
+                {translations.cashOnDelivery}
+              </option>
+              <option value="Cash by Visa/Mastercard">{translations.cashByVisaMastercard}</option>
+              <option value="Cash by transfer">{translations.cashByTransfer}</option>
+              <option value="Cash by credit">{translations.cashByCredit}</option>
+            </select>
+          </div>
+        </div>
+
+        {isCardGatewayPayment(paymentWay) && (
+          <div style={{ marginTop: "0.75rem" }}>
+            <p style={{ margin: 0, fontSize: "0.95rem", color: "#444" }}>
+              {translations.cardPaymentHint}
+            </p>
+            {paymentSessionLoading && (
+              <p style={{ margin: "0.5rem 0 0", color: "#666" }}>
+                {translations.preparingPaymentForm}
+              </p>
+            )}
+            {paymentSessionError && (
+              <p style={{ margin: "0.5rem 0 0", color: "#c62828" }}>
+                {paymentSessionError}
+              </p>
+            )}
+          </div>
+        )}
+
+        {isCardGatewayPayment(paymentWay) && (
+          <div
+            className="checkout_gateway_card_box"
+            style={{
+              marginTop: "1.25rem",
+              marginBottom: "1rem",
+              padding: "1rem",
+              borderRadius: "12px",
+              border: "1px solid rgba(0, 0, 0, 0.12)",
+              background: "#fafafa",
+            }}
+          >
+            {checkoutSessionId &&
+              !paymentSessionLoading &&
+              !gatewayOrderReady && (
+                <p
+                  style={{
+                    margin: "0 0 0.75rem",
+                    fontSize: "0.95rem",
+                    color: "#b45309",
+                    background: "#fffbeb",
+                    padding: "0.65rem 0.85rem",
+                    borderRadius: "8px",
+                  }}
+                >
+                  {translations.completeFormForGatewayPayment}
+                </p>
+              )}
+            {gatewayOrderReady && (
+              <div
+                style={{
+                  marginBottom: "0.75rem",
+                  padding: "0.65rem 0.85rem",
+                  borderRadius: "8px",
+                  background: "#e8f5e9",
+                  color: "#1b5e20",
+                  fontSize: "0.9rem",
+                }}
+              >
+                {translations.gatewayOrderReadyPay}
+              </div>
+            )}
+            {checkoutSessionId &&
+              paymentReturnUrl &&
+              !paymentSessionLoading &&
+              gatewayOrderReady && (
+                <form
+                  key={checkoutSessionId}
+                  action={paymentReturnUrl}
+                  className="paymentWidgets"
+                  data-brands="VISA MASTER AMEX"
+                />
+              )}
+          </div>
+        )}
+
+        <hr />
+
         {/* ------------------ Order Summary ------------------ */}
         <h2>{translations.orderSummary}</h2>
         <div style={{ width: "100%", marginBottom: "2rem" }}>
@@ -792,25 +900,28 @@ const ClientCheckout = () => {
           </div>
         </div>
 
-        {/* ------------------ Submit Button ------------------ */}
-        <button
-          onClick={handleSubmitOrder}
-          disabled={loading}
-          style={{
-            width: "200px",
-            padding: "0.6rem 1rem",
-            background: loading ? "#ccc" : "rgba(215, 223, 43, 1)",
-            color: "black",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "18px",
-            fontWeight: "bold",
-            cursor: loading ? "not-allowed" : "pointer",
-            marginBottom: "2rem",
-          }}
-        >
-          {loading ? translations.placingOrder : translations.placeOrder}
-        </button>
+        {/* ------------------ Submit Button (hidden for card gateway — Pay on widget only) ------------------ */}
+        {!isCardGatewayPayment(paymentWay) && (
+          <button
+            onClick={handleSubmitOrder}
+            disabled={loading}
+            style={{
+              width: "200px",
+              padding: "0.6rem 1rem",
+              background: loading ? "#ccc" : "rgba(215, 223, 43, 1)",
+              color: "black",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "18px",
+              fontWeight: "bold",
+              cursor: loading ? "not-allowed" : "pointer",
+              marginTop: "1rem",
+              marginBottom: "2rem",
+            }}
+          >
+            {loading ? translations.placingOrder : translations.placeOrder}
+          </button>
+        )}
       </div>
     </div>
   );
