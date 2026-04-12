@@ -197,6 +197,12 @@
   opacity: 0.6;
   font-style: italic;
 }
+.wpwl-form-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 @media screen and (max-width: 789px) {
   .checkout_delivery_info_item,
   .checkout_personal_info_item {

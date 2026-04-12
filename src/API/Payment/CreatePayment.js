@@ -1,13 +1,18 @@
 const URL = "https://sgi-dy1p.onrender.com/api/v1/payment/create";
 const CreatePayment = async (data, setError, setLoading) => {
     setLoading(true)
+    const amount =
+        typeof data?.amount === "number"
+            ? data.amount
+            : parseFloat(data?.amount, 10);
+    const body = { amount: Number.isFinite(amount) ? amount : data?.amount };
     try {
         const response = await fetch(URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(body)
         });
 
         const result = await response.json();

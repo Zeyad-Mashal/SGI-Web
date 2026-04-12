@@ -1,7 +1,10 @@
 const BASE_URL = "https://sgi-dy1p.onrender.com/api/v1/payment/result";
-const PaymentResult = async ({ id, checkoutId }, setError, setLoading) => {
+/** Query mirrors gateway redirect: ?id=...&resourcePath=... */
+const PaymentResult = async ({ id, resourcePath }, setError, setLoading) => {
     setLoading(true)
-    const params = new URLSearchParams({ id, checkoutId });
+    const params = new URLSearchParams();
+    params.set("id", id);
+    params.set("resourcePath", resourcePath);
     const URL = `${BASE_URL}?${params.toString()}`;
     try {
         const response = await fetch(URL, {

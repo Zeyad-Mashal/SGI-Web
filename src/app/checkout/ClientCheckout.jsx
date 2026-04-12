@@ -7,6 +7,7 @@ import GetAddress from "@/API/Address/GetAddress";
 import AddAddress from "@/API/Address/AddAddress";
 import CreateOrder from "@/API/Orders/CreateOrder";
 import CreatePayment from "@/API/Payment/CreatePayment";
+import { resolveOppwaWidgetHost } from "@/constants/payment";
 import { getCart, getCartTotal, clearCart } from "@/utils/cartUtils";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa6";
@@ -25,6 +26,11 @@ const UAE_CITIES = [
   { value: "umm-al-quwain", en: "Umm Al Quwain", ar: "أم القيوين" },
   { value: "al-ain", en: "Al Ain", ar: "العين" },
 ];
+
+const PENDING_ORDER_KEY = "pendingOrderAfterPayment";
+
+const isCardGatewayPayment = (way) =>
+  way === "Cash by Visa/Mastercard" || way === "Cash by credit";
 
 const ClientCheckout = () => {
   const router = useRouter();
@@ -46,6 +52,11 @@ const ClientCheckout = () => {
 
   // Payment
   const [paymentWay, setPaymentWay] = useState("Cash on Delivery");
+  const [checkoutSessionId, setCheckoutSessionId] = useState(null);
+  const [paymentSessionLoading, setPaymentSessionLoading] = useState(false);
+  const [paymentSessionError, setPaymentSessionError] = useState("");
+  const [paymentReturnUrl, setPaymentReturnUrl] = useState("");
+  const [cardOrderBanner, setCardOrderBanner] = useState("");
 
   // Address Management
   const [newAddress, setNewAddress] = useState("");
@@ -149,6 +160,116 @@ const ClientCheckout = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setPaymentReturnUrl(`${window.location.origin}/payment/result`);
+  }, []);
+
+  useEffect(() => {
+    if (!isCardGatewayPayment(paymentWay)) {
+      setCardOrderBanner("");
+    }
+  }, [paymentWay]);
+
+  useEffect(() => {
+    if (!paymentReturnUrl) return;
+    if (!isCardGatewayPayment(paymentWay)) {
+      setCheckoutSessionId(null);
+      setPaymentSessionError("");
+      setPaymentSessionLoading(false);
+      return;
+    }
+    if (cartItems.length === 0 || totalAmount <= 0) {
+      setCheckoutSessionId(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const startSession = async () => {
+      setPaymentSessionLoading(true);
+      setPaymentSessionError("");
+      setCheckoutSessionId(null);
+
+      const result = await CreatePayment(
+        { amount: Number(totalAmount.toFixed(2)) },
+        (msg) => {
+          if (!cancelled) {
+            setPaymentSessionError(
+              msg || (lang === "ar" ? "تعذر بدء الدفع" : "Payment setup failed")
+            );
+          }
+        },
+        () => {}
+      );
+
+      if (cancelled) return;
+
+      setPaymentSessionLoading(false);
+
+      if (!result) {
+        setCheckoutSessionId(null);
+        return;
+      }
+
+      const cid =
+        result.checkoutId ?? result.id ?? result.data?.id ?? result.data?.checkoutId;
+      if (cid) {
+        setCheckoutSessionId(String(cid));
+      } else {
+        setCheckoutSessionId(null);
+        if (!cancelled) {
+          setPaymentSessionError(
+            lang === "ar"
+              ? "لم يُرجع الخادم رقم الجلسة"
+              : "No checkout session from server"
+          );
+        }
+      }
+    };
+
+    startSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [paymentWay, totalAmount, cartItems.length, paymentReturnUrl, lang]);
+
+  useEffect(() => {
+    if (!checkoutSessionId || !paymentReturnUrl) return undefined;
+
+    const scriptId = "oppwa-payment-widgets-script";
+    const existing = document.getElementById(scriptId);
+    if (existing) existing.remove();
+    try {
+      delete window.wpwl;
+    } catch {
+      /* ignore */
+    }
+
+    window.wpwlOptions = {
+      locale: lang === "ar" ? "ar" : "en",
+    };
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    const widgetHost = resolveOppwaWidgetHost(checkoutSessionId);
+    script.src = `${widgetHost}/v1/paymentWidgets.js?checkoutId=${encodeURIComponent(
+      checkoutSessionId
+    )}`;
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      script.remove();
+      try {
+        delete window.wpwl;
+      } catch {
+        /* ignore */
+      }
+    };
+  }, [checkoutSessionId, paymentReturnUrl, lang]);
+
   const HandleAddAddress = () => {
     if (newAddress.trim() === "") return;
 
@@ -240,29 +361,15 @@ const ClientCheckout = () => {
       cartItems: formattedCartItems,
     };
 
-    // Payment by Card: 1) CreatePayment أولاً، 2) لو ok احفظ الطلب واتجه للينك، 3) الطلب يتنفذ على /payment/result
-    if (paymentWay === "Cash by Visa/Mastercard" || paymentWay === "Cash by credit") {
-      const paymentData = {
-        userName,
-        userPhone: userPhoneVal,
-        totalAmount: String(totalAmount.toFixed(2)),
-      };
-      const paymentResult = await CreatePayment(
-        paymentData,
-        setError,
-        setLoading
-      );
-      if (paymentResult?.paymentLink) {
-        sessionStorage.setItem(
-          "pendingOrderAfterPayment",
-          JSON.stringify(orderData)
-        );
-        window.location.href = paymentResult.paymentLink;
-      }
+    // Card gateway: save order for /payment/result after HyperPay redirect (widget on page)
+    if (isCardGatewayPayment(paymentWay)) {
+      sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify(orderData));
+      setCardOrderBanner(translations.orderSavedPayBelow);
+      setError("");
       return;
     }
 
-    // Cash on Delivery: create order مباشرة
+    // Cash on Delivery & bank transfer: create order مباشرة
     const result = await CreateOrder(orderData, setError, setLoading, () => {});
 
     if (result) {
@@ -374,6 +481,54 @@ const ClientCheckout = () => {
             </select>
           </div>
         </div>
+
+        {isCardGatewayPayment(paymentWay) && (
+          <div
+            style={{
+              marginTop: "1rem",
+              padding: "1rem",
+              borderRadius: "12px",
+              border: "1px solid rgba(0, 0, 0, 0.12)",
+              background: "#fafafa",
+            }}
+          >
+            <p style={{ margin: "0 0 0.75rem", fontSize: "0.95rem", color: "#444" }}>
+              {translations.cardPaymentHint}
+            </p>
+            {cardOrderBanner && (
+              <div
+                style={{
+                  marginBottom: "0.75rem",
+                  padding: "0.65rem 0.85rem",
+                  borderRadius: "8px",
+                  background: "#e8f5e9",
+                  color: "#1b5e20",
+                  fontSize: "0.9rem",
+                }}
+              >
+                {cardOrderBanner}
+              </div>
+            )}
+            {paymentSessionLoading && (
+              <p style={{ margin: "0.5rem 0", color: "#666" }}>
+                {translations.preparingPaymentForm}
+              </p>
+            )}
+            {paymentSessionError && (
+              <p style={{ margin: "0.5rem 0", color: "#c62828" }}>
+                {paymentSessionError}
+              </p>
+            )}
+            {checkoutSessionId && paymentReturnUrl && !paymentSessionLoading && (
+              <form
+                key={checkoutSessionId}
+                action={paymentReturnUrl}
+                className="paymentWidgets"
+                data-brands="VISA MASTER AMEX"
+              />
+            )}
+          </div>
+        )}
 
         <hr />
 

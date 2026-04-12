@@ -12,7 +12,8 @@ const PaymentResultContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const checkoutId = searchParams.get("checkoutId");
+  const resourcePath =
+    searchParams.get("resourcePath") || searchParams.get("checkoutId");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -20,7 +21,7 @@ const PaymentResultContent = () => {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (!id || !checkoutId) {
+    if (!id || !resourcePath) {
       setError("Missing payment parameters");
       setLoading(false);
       return;
@@ -28,7 +29,7 @@ const PaymentResultContent = () => {
 
     const checkPaymentAndOrder = async () => {
       const paymentResult = await PaymentResultAPI(
-        { id, checkoutId },
+        { id, resourcePath },
         setError,
         setLoading
       );
@@ -78,7 +79,7 @@ const PaymentResultContent = () => {
     };
 
     checkPaymentAndOrder();
-  }, [id, checkoutId, router]);
+  }, [id, resourcePath, router]);
 
   if (loading) {
     return (
