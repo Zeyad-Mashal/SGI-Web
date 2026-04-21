@@ -60,6 +60,7 @@ const ClientCheckout = () => {
   const [paymentReturnUrl, setPaymentReturnUrl] = useState("");
   /** Form valid + pending order written to sessionStorage for /payment/result */
   const [gatewayOrderReady, setGatewayOrderReady] = useState(false);
+  const [gatewayMissingFieldsMsg, setGatewayMissingFieldsMsg] = useState("");
 
   // Address Management
   const [newAddress, setNewAddress] = useState("");
@@ -348,6 +349,7 @@ const ClientCheckout = () => {
       if (isCardGatewayPayment(paymentWay) && !checkoutSessionId) {
         setGatewayOrderReady(false);
       }
+      setGatewayMissingFieldsMsg("");
       return;
     }
     const ok = persistGatewayPendingOrder();
@@ -355,8 +357,16 @@ const ClientCheckout = () => {
     if (!ok) {
       sessionStorage.removeItem(PENDING_ORDER_KEY);
       sessionStorage.removeItem(PENDING_GATEWAY_CHECKOUT_KEY);
+      setGatewayMissingFieldsMsg(translations.completeFormForGatewayPayment);
+    } else {
+      setGatewayMissingFieldsMsg("");
     }
-  }, [paymentWay, checkoutSessionId, persistGatewayPendingOrder]);
+  }, [
+    paymentWay,
+    checkoutSessionId,
+    persistGatewayPendingOrder,
+    translations.completeFormForGatewayPayment,
+  ]);
 
   const HandleAddAddress = () => {
     if (newAddress.trim() === "") return;
@@ -384,6 +394,14 @@ const ClientCheckout = () => {
   const selectAddress = (index) => {
     setSelectedAddressIndex(index);
   };
+
+  useEffect(() => {
+    if (!id) return;
+    if (selectedAddressIndex !== null) return;
+    if (!addresses?.length) return;
+    // Auto-select first saved address to avoid blocking gateway payment readiness.
+    setSelectedAddressIndex(0);
+  }, [id, addresses, selectedAddressIndex]);
 
   const handleSubmitOrder = async () => {
     if (isCardGatewayPayment(paymentWay)) return;
@@ -746,7 +764,7 @@ const ClientCheckout = () => {
                     borderRadius: "8px",
                   }}
                 >
-                  {translations.completeFormForGatewayPayment}
+                  {gatewayMissingFieldsMsg || translations.completeFormForGatewayPayment}
                 </p>
               )}
             {gatewayOrderReady && (

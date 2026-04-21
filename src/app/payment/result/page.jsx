@@ -8,6 +8,90 @@ import { clearCart } from "@/utils/cartUtils";
 
 const PENDING_ORDER_KEY = "pendingOrderAfterPayment";
 
+const normalize = (value) =>
+  typeof value === "string" ? value.trim().toLowerCase() : "";
+
+const isApprovedPayment = (paymentResult) => {
+  if (!paymentResult || typeof paymentResult !== "object") return false;
+
+  // Primary contract from backend: result is either "Approved" or "Rejected".
+  const primaryResult = normalize(paymentResult?.result || paymentResult?.data?.result);
+  if (primaryResult === "approved") return true;
+  if (primaryResult === "rejected") return false;
+
+  const flatValues = [
+    paymentResult?.result,
+    paymentResult?.status,
+    paymentResult?.message,
+    paymentResult?.state,
+    paymentResult?.paymentStatus,
+    paymentResult?.data?.result,
+    paymentResult?.data?.status,
+    paymentResult?.data?.message,
+    paymentResult?.data?.state,
+    paymentResult?.data?.paymentStatus,
+  ]
+    .map(normalize)
+    .filter(Boolean);
+
+  const failureWords = [
+    "fail",
+    "failed",
+    "failure",
+    "declined",
+    "reject",
+    "rejected",
+    "denied",
+    "cancel",
+    "canceled",
+    "cancelled",
+    "error",
+    "invalid",
+    "not approved",
+    "not_authorized",
+  ];
+  const hasExplicitFailure = flatValues.some((v) =>
+    failureWords.some((w) => v.includes(w))
+  );
+  if (hasExplicitFailure) return false;
+
+  const successWords = ["approved", "success", "succeeded", "paid", "captured"];
+  if (flatValues.some((v) => successWords.some((w) => v.includes(w)))) return true;
+
+  if (
+    paymentResult?.approved === true ||
+    paymentResult?.success === true ||
+    paymentResult?.data?.approved === true ||
+    paymentResult?.data?.success === true
+  ) {
+    return true;
+  }
+
+  const resultCode =
+    paymentResult?.resultCode ||
+    paymentResult?.result?.code ||
+    paymentResult?.data?.resultCode ||
+    paymentResult?.data?.result?.code;
+
+  const code = normalize(resultCode);
+  if (!code) return false;
+
+  // HyperPay success families (sync + async pending that usually resolves as accepted).
+  if (
+    code.startsWith("000.000.") ||
+    code.startsWith("000.100.1") ||
+    code.startsWith("000.[") ||
+    code.startsWith("000.3")
+  ) {
+    return true;
+  }
+
+  // If backend returned OK result object and no explicit failure markers, treat as approved.
+  if (!hasExplicitFailure) return true;
+
+  return false;
+};
+
 const PaymentResultContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,6 +117,11 @@ const PaymentResultContent = () => {
         setError,
         setLoading
       );
+      console.log("[PaymentResult] API response", {
+        id,
+        resourcePath,
+        paymentResult,
+      });
 
       if (!paymentResult) {
         setPaymentFailed(true);
@@ -40,11 +129,19 @@ const PaymentResultContent = () => {
         return;
       }
 
-      const isApproved =
-        paymentResult?.result === "Approved" ||
-        paymentResult?.status === "Approved";
+      const isApproved = isApprovedPayment(paymentResult);
 
       if (!isApproved) {
+        if (!error) {
+          const details =
+            paymentResult?.message ||
+            paymentResult?.result?.description ||
+            paymentResult?.resultDescription ||
+            paymentResult?.data?.message ||
+            paymentResult?.data?.result?.description ||
+            "";
+          if (details) setError(details);
+        }
         setPaymentFailed(true);
         setLoading(false);
         return;
