@@ -39,6 +39,24 @@
   width: 150px;
   height: 150px;
 }
+.profile_avatar {
+  width: 150px;
+  height: 150px;
+  min-width: 150px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #eef4cf 0%, #dbe8a8 100%);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+.profile_avatar_initial {
+  color: #3f4b1f;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
 .profile_info_content {
   width: 100%;
   display: flex;

@@ -30,9 +30,18 @@ const UAE_CITIES = [
 const PENDING_ORDER_KEY = "pendingOrderAfterPayment";
 /** Same-tab metadata; optional for support / debugging */
 const PENDING_GATEWAY_CHECKOUT_KEY = "pendingGatewayCheckoutId";
+const CHECKOUT_SAVED_ENTRIES_KEY = "checkoutSavedEntries";
 
 const isCardGatewayPayment = (way) =>
   way === "Cash by Visa/Mastercard" || way === "Cash by credit";
+
+const getAvailableStock = (item) => {
+  const rawStock = item?.stock ?? item?.quantityAvailable ?? item?.quantityInStock ?? null;
+  if (rawStock === null || rawStock === undefined || rawStock === "") return null;
+  const parsed = Number(rawStock);
+  if (Number.isNaN(parsed) || parsed < 0) return null;
+  return parsed;
+};
 
 const ClientCheckout = () => {
   const router = useRouter();
@@ -79,6 +88,8 @@ const ClientCheckout = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [savedEntries, setSavedEntries] = useState([]);
+  const [selectedSavedEntryIndex, setSelectedSavedEntryIndex] = useState(null);
 
   // Helper function to decode JWT token and get userId
   const getUserIdFromToken = () => {
@@ -118,6 +129,16 @@ const ClientCheckout = () => {
   };
 
   useEffect(() => {
+    const navigationEntries = performance.getEntriesByType("navigation");
+    const isReload = navigationEntries[0]?.type === "reload";
+    if (isReload) {
+      localStorage.removeItem("savedCoupon");
+    }
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("savedCoupon");
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     // Check for token (logged in status)
     const token = localStorage.getItem("sgitoken");
     const userId = token ? getUserIdFromToken() : null;
@@ -128,6 +149,18 @@ const ClientCheckout = () => {
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
     setTranslations(savedLang === "ar" ? ar : en);
+
+    const savedEntriesRaw = localStorage.getItem(CHECKOUT_SAVED_ENTRIES_KEY);
+    if (savedEntriesRaw) {
+      try {
+        const parsed = JSON.parse(savedEntriesRaw);
+        if (Array.isArray(parsed)) {
+          setSavedEntries(parsed);
+        }
+      } catch {
+        localStorage.removeItem(CHECKOUT_SAVED_ENTRIES_KEY);
+      }
+    }
 
     // Load cart items
     const cart = getCart();
@@ -162,7 +195,63 @@ const ClientCheckout = () => {
     if (userId) {
       getAddresses();
     }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
+
+  useEffect(() => {
+    if (savedEntries.length === 0) {
+      localStorage.removeItem(CHECKOUT_SAVED_ENTRIES_KEY);
+      return;
+    }
+    localStorage.setItem(CHECKOUT_SAVED_ENTRIES_KEY, JSON.stringify(savedEntries));
+  }, [savedEntries]);
+
+  const saveCheckoutEntry = (addressValue) => {
+    const normalizedAddress = addressValue?.trim();
+    const normalizedFirstName = firstName.trim();
+    const normalizedLastName = lastName.trim();
+    const normalizedPhone = userPhone.trim();
+    const normalizedCity = city.trim();
+
+    if (
+      !normalizedFirstName ||
+      !normalizedLastName ||
+      !normalizedPhone ||
+      !normalizedCity ||
+      !normalizedAddress
+    ) {
+      return;
+    }
+
+    const option = {
+      firstName: normalizedFirstName,
+      lastName: normalizedLastName,
+      email: email.trim(),
+      userPhone: normalizedPhone,
+      city: normalizedCity,
+      address: normalizedAddress,
+      label: `${normalizedFirstName} ${normalizedLastName} - ${normalizedCity}`,
+    };
+
+    const deduped = savedEntries.filter(
+      (item) =>
+        !(
+          item?.firstName?.toLowerCase() === option.firstName.toLowerCase() &&
+          item?.lastName?.toLowerCase() === option.lastName.toLowerCase() &&
+          item?.userPhone === option.userPhone &&
+          item?.city?.toLowerCase() === option.city.toLowerCase() &&
+          item?.address?.toLowerCase() === option.address.toLowerCase()
+        )
+    );
+
+    const next = [option, ...deduped].slice(0, 10);
+    setSavedEntries(next);
+    setSelectedSavedEntryIndex(0);
+    localStorage.setItem(CHECKOUT_SAVED_ENTRIES_KEY, JSON.stringify(next));
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -300,6 +389,11 @@ const ClientCheckout = () => {
     }
 
     if (cartItems.length === 0) return false;
+    const hasStockIssue = cartItems.some((item) => {
+      const availableStock = getAvailableStock(item);
+      return availableStock != null && item.quantity > availableStock;
+    });
+    if (hasStockIssue) return false;
 
     const formattedCartItems = cartItems.map((item) => ({
       productId: item._id,
@@ -357,7 +451,20 @@ const ClientCheckout = () => {
     if (!ok) {
       sessionStorage.removeItem(PENDING_ORDER_KEY);
       sessionStorage.removeItem(PENDING_GATEWAY_CHECKOUT_KEY);
-      setGatewayMissingFieldsMsg(translations.completeFormForGatewayPayment);
+      const stockIssueItem = cartItems.find((item) => {
+        const availableStock = getAvailableStock(item);
+        return availableStock != null && item.quantity > availableStock;
+      });
+      if (stockIssueItem) {
+        const availableStock = getAvailableStock(stockIssueItem);
+        setGatewayMissingFieldsMsg(
+          lang === "ar"
+            ? `الكمية المتاحة من ${stockIssueItem.name} هي ${availableStock} فقط`
+            : `Only ${availableStock} item(s) available for ${stockIssueItem.name}`
+        );
+      } else {
+        setGatewayMissingFieldsMsg(translations.completeFormForGatewayPayment);
+      }
     } else {
       setGatewayMissingFieldsMsg("");
     }
@@ -366,6 +473,8 @@ const ClientCheckout = () => {
     checkoutSessionId,
     persistGatewayPendingOrder,
     translations.completeFormForGatewayPayment,
+    cartItems,
+    lang,
   ]);
 
   const HandleAddAddress = () => {
@@ -443,6 +552,21 @@ const ClientCheckout = () => {
       return;
     }
 
+    const itemsOverStock = cartItems.filter((item) => {
+      const availableStock = getAvailableStock(item);
+      return availableStock != null && item.quantity > availableStock;
+    });
+    if (itemsOverStock.length > 0) {
+      const firstItem = itemsOverStock[0];
+      const availableStock = getAvailableStock(firstItem);
+      const overStockMessage =
+        lang === "ar"
+          ? `الكمية المتاحة من ${firstItem.name} هي ${availableStock} فقط`
+          : `Only ${availableStock} item(s) available for ${firstItem.name}`;
+      setError(overStockMessage);
+      return;
+    }
+
     setError("");
     setSuccess("");
 
@@ -473,6 +597,7 @@ const ClientCheckout = () => {
     const result = await CreateOrder(orderData, setError, setLoading, () => {});
 
     if (result) {
+      saveCheckoutEntry(deliveryAddress);
       setSuccess(translations.orderPlacedSuccessfully);
       clearCart();
       localStorage.removeItem("savedCoupon");
@@ -507,6 +632,64 @@ const ClientCheckout = () => {
       />
 
       <div className="checkout_container">
+        {savedEntries.length > 0 && (
+          <div style={{ marginBottom: "1rem" }}>
+            <h2>{lang === "ar" ? "البيانات السابقة" : "Previous details"}</h2>
+            <div className="addresses_list">
+              {savedEntries.map((item, index) => (
+                <div
+                  key={`${item.firstName}-${item.lastName}-${item.userPhone}-${item.city}-${index}`}
+                  className="address_card"
+                  style={{
+                    border:
+                      selectedSavedEntryIndex === index
+                        ? "2px solid #4caf50"
+                        : "1px solid #ddd",
+                    background: selectedSavedEntryIndex === index ? "#f3fff5" : "#f8f9fb",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setSelectedSavedEntryIndex(index);
+                    setFirstName(item.firstName || "");
+                    setLastName(item.lastName || "");
+                    setEmail(item.email || "");
+                    setUserPhone(item.userPhone || "");
+                    setCity(item.city || "");
+                    if (!id) {
+                      setWrittenAddress(item.address || "");
+                    } else {
+                      const matchedIndex = addresses.findIndex(
+                        (address) =>
+                          String(address).trim().toLowerCase() ===
+                          String(item.address || "").trim().toLowerCase()
+                      );
+                      if (matchedIndex !== -1) {
+                        setSelectedAddressIndex(matchedIndex);
+                      }
+                    }
+                  }}
+                >
+                  <div className="address_left">
+                    <div className="address_icon"></div>
+                    <p className="address_text">
+                      {item.firstName} {item.lastName} - {item.userPhone}
+                      <br />
+                      {item.city} - {item.address}
+                    </p>
+                  </div>
+                  <div className="address_actions">
+                    {selectedSavedEntryIndex === index && (
+                      <span style={{ color: "#4caf50", fontWeight: "bold" }}>
+                        <FaCheck />
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ------------------ Personal Info ------------------ */}
         <h2>{translations.personalInformation}</h2>
 

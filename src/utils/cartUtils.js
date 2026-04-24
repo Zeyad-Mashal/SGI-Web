@@ -1,5 +1,13 @@
 // Cart utility functions for managing cart in localStorage
 
+const getAvailableStock = (item) => {
+    const rawStock = item?.stock ?? item?.quantity ?? null;
+    if (rawStock === null || rawStock === undefined || rawStock === '') return null;
+    const parsed = Number(rawStock);
+    if (Number.isNaN(parsed) || parsed < 0) return null;
+    return parsed;
+};
+
 // Get cart from localStorage
 export const getCart = () => {
     if (typeof window === 'undefined') return [];
@@ -26,6 +34,11 @@ export const saveCart = (cart) => {
 export const addToCart = (product, quantity = 1) => {
     const cart = getCart();
     const existingItemIndex = cart.findIndex(item => item._id === product._id);
+    const availableStock = getAvailableStock(product);
+    const normalizedQty = Math.max(1, Number(quantity) || 1);
+    const qtyToAdd = availableStock == null
+        ? normalizedQty
+        : Math.min(normalizedQty, Math.max(0, availableStock));
 
     if (existingItemIndex > -1) {
         // If product already exists with same pricing mode, update quantity
@@ -35,7 +48,12 @@ export const addToCart = (product, quantity = 1) => {
             (existingItem.isBoxPricing ?? false) === (product.isBoxPricing ?? false) &&
             (existingItem.piecesPerBox ?? null) === (product.piecesPerBox ?? null);
         if (samePricingMode) {
-            cart[existingItemIndex].quantity += quantity;
+            const nextQty = cart[existingItemIndex].quantity + qtyToAdd;
+            cart[existingItemIndex].stock = product.stock ?? cart[existingItemIndex].stock;
+            cart[existingItemIndex].quantity =
+                availableStock == null
+                    ? nextQty
+                    : Math.min(nextQty, Math.max(0, availableStock));
         } else {
             // Different pricing mode, add as separate item
             cart.push({
@@ -43,12 +61,13 @@ export const addToCart = (product, quantity = 1) => {
                 name: product.name,
                 price: product.price,
                 picUrls: product.picUrls || [],
-                quantity: quantity,
+                quantity: qtyToAdd,
                 description: product.description || '',
                 categories: product.categories || [],
                 sku: product.sku || product.SKU || product._id,
                 isBoxPricing: product.isBoxPricing || false,
-                piecesPerBox: product.piecesPerBox || undefined
+                piecesPerBox: product.piecesPerBox || undefined,
+                stock: product.stock ?? product.quantity ?? undefined
             });
         }
     } else {
@@ -58,12 +77,13 @@ export const addToCart = (product, quantity = 1) => {
             name: product.name,
             price: product.price,
             picUrls: product.picUrls || [],
-            quantity: quantity,
+            quantity: qtyToAdd,
             description: product.description || '',
             categories: product.categories || [],
             sku: product.sku || product.SKU || product._id,
             isBoxPricing: product.isBoxPricing || false,
-            piecesPerBox: product.piecesPerBox || undefined
+            piecesPerBox: product.piecesPerBox || undefined,
+            stock: product.stock ?? product.quantity ?? undefined
         });
     }
 
@@ -89,7 +109,11 @@ export const updateCartItemQuantity = (productId, quantity) => {
             // Remove item if quantity is 0 or less
             return removeFromCart(productId);
         }
-        cart[itemIndex].quantity = quantity;
+        const availableStock = getAvailableStock(cart[itemIndex]);
+        cart[itemIndex].quantity =
+            availableStock == null
+                ? quantity
+                : Math.min(quantity, Math.max(0, availableStock));
         saveCart(cart);
     }
 
@@ -124,7 +148,11 @@ export const updateCartItemQuantityByMode = (productId, isBoxPricing, quantity) 
         saveCart(cart);
         return cart;
     }
-    cart[itemIndex].quantity = quantity;
+    const availableStock = getAvailableStock(cart[itemIndex]);
+    cart[itemIndex].quantity =
+        availableStock == null
+            ? quantity
+            : Math.min(quantity, Math.max(0, availableStock));
     saveCart(cart);
     return cart;
 };

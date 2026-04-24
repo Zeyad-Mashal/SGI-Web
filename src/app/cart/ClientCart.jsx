@@ -49,9 +49,18 @@ const ClientCart = () => {
   const [lang, setLang] = useState("en");
   const [translations, setTranslations] = useState(en);
   const [categoriesTree, setCategoriesTree] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // ---------------------- 1) On Mount ----------------------
   useEffect(() => {
+    const navigationEntries = performance.getEntriesByType("navigation");
+    const isReload = navigationEntries[0]?.type === "reload";
+    if (isReload) {
+      localStorage.removeItem("savedCoupon");
+    }
+
+    setIsLoggedIn(Boolean(localStorage.getItem("sgitoken")));
+
     // Get language from localStorage
     const savedLang = localStorage.getItem("lang") || "en";
     setLang(savedLang);
@@ -66,9 +75,14 @@ const ClientCart = () => {
       const newLang = localStorage.getItem("lang") || "en";
       setLang(newLang);
       setTranslations(newLang === "ar" ? ar : en);
+      setIsLoggedIn(Boolean(localStorage.getItem("sgitoken")));
+    };
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("savedCoupon");
     };
 
     window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     // Also check periodically for language changes
     const interval = setInterval(() => {
@@ -81,6 +95,7 @@ const ClientCart = () => {
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       clearInterval(interval);
     };
   }, [lang]);
@@ -499,48 +514,50 @@ const ClientCart = () => {
 
                   {/* RIGHT SIDE (SUMMARY) */}
                   <div className="cart_right">
-                    <div className="cart_right_promo">
-                      <h3>
-                        <GoGift /> {translations.promoCode}
-                      </h3>
+                    {isLoggedIn && (
+                      <div className="cart_right_promo">
+                        <h3>
+                          <GoGift /> {translations.promoCode}
+                        </h3>
 
-                      <div className="promo_input">
-                        <input
-                          type="text"
-                          value={coupon}
-                          onChange={(e) => setCoupon(e.target.value)}
-                        />
+                        <div className="promo_input">
+                          <input
+                            type="text"
+                            value={coupon}
+                            onChange={(e) => setCoupon(e.target.value)}
+                          />
 
-                        <button onClick={handleApplyCoupon}>
-                          {loading ? translations.applying : translations.apply}
-                        </button>
-                      </div>
-
-                      {couponFeedback && (
-                        <div
-                          className={`cart_coupon_feedback cart_coupon_feedback--${couponFeedback.type}`}
-                          role="alert"
-                        >
-                          {couponFeedback.message}
-                        </div>
-                      )}
-                      {discount && (
-                        <div className="cart_discount_applied">
-                          <span className="cart_discount_label">
-                            {translations.discount} <strong>{discount}%</strong>
-                          </span>
-                          <button
-                            type="button"
-                            onClick={removeCoupon}
-                            className="remove_coupon_btn"
-                            title={translations.removeCoupon}
-                            aria-label={translations.removeCoupon}
-                          >
-                            <RiDeleteBin6Line />
+                          <button onClick={handleApplyCoupon}>
+                            {loading ? translations.applying : translations.apply}
                           </button>
                         </div>
-                      )}
-                    </div>
+
+                        {couponFeedback && (
+                          <div
+                            className={`cart_coupon_feedback cart_coupon_feedback--${couponFeedback.type}`}
+                            role="alert"
+                          >
+                            {couponFeedback.message}
+                          </div>
+                        )}
+                        {discount && (
+                          <div className="cart_discount_applied">
+                            <span className="cart_discount_label">
+                              {translations.discount} <strong>{discount}%</strong>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={removeCoupon}
+                              className="remove_coupon_btn"
+                              title={translations.removeCoupon}
+                              aria-label={translations.removeCoupon}
+                            >
+                              <RiDeleteBin6Line />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="cart_right_summry">
                       <h3>{translations.orderSummary}</h3>

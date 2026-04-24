@@ -116,7 +116,7 @@
   background: #43a047;
 }
 .addresses_list {
-  width: 56%;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;

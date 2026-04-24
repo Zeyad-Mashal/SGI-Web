@@ -536,18 +536,24 @@ const ClientProfile = () => {
     }
   };
 
+  const profileInitials = (() => {
+    const name = traderDetails?.name?.trim() || "";
+    if (!name) return "U";
+    const words = name.split(/\s+/).filter(Boolean);
+    if (words.length === 1) return words[0].charAt(0).toUpperCase();
+    return `${words[0].charAt(0)}${words[1].charAt(0)}`.toUpperCase();
+  })();
+
   return (
     <div className="profile">
       <div className="profile_container">
         <div className="profile_info">
           <div className="profile_info_top">
-            <Image
-              src={"/images/avatar.jpg"}
-              alt="profile pic"
-              loading="lazy"
-              width={120}
-              height={120}
-            />
+            <div className="profile_avatar" aria-hidden="true">
+              <span className="profile_avatar_initial">
+                {profileInitials}
+              </span>
+            </div>
             <div className="profile_info_content">
               <div className="profile_title">
                 <h1>{traderDetails?.name}</h1>
