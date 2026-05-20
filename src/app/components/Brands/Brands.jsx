@@ -53,8 +53,7 @@ const Brands = ({ initialBrands = [] }) => {
       <div className="barnds_container">
         <div className="brands_header">
           <div className="brands_header_title">
-            <span>{translations.brands}</span>
-            <h2>{translations.browsebybrand}</h2>
+            <span>{translations.browsebybrand}</span>
           </div>
 
           {/* أزرار التنقل */}

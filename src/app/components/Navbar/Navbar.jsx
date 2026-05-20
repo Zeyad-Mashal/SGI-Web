@@ -222,8 +222,28 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="top_navbar">
-        <p>
-          {translations.navbartop} <a href="/shop">{translations.shopnow}</a>
+        <p className="top_navbar_content">
+          <span>{translations.navbartopLead}</span>
+          <span className="top_navbar_sep" aria-hidden>
+            |
+          </span>
+          <span className="top_navbar_item">
+            <FiPhone size={14} aria-hidden />
+            <a href="tel:+97148801091">{translations.navbartopPhone}</a>
+          </span>
+          <span className="top_navbar_sep" aria-hidden>
+            |
+          </span>
+          <span className="top_navbar_item">
+            <Image
+              src="/images/united-arab-emirates.png"
+              alt=""
+              width={20}
+              height={14}
+              aria-hidden
+            />
+            {translations.navbartopCountry}
+          </span>
         </p>
         {/* <p onClick={toggleLang} className="lang_switch">
           {lang === "en" ? (
@@ -296,7 +316,7 @@ const Navbar = () => {
         <div className="search">
           <input
             type="text"
-            placeholder="search"
+            placeholder="Search"
             value={searchValue}
             onChange={handleSearch}
             onFocus={() => {
@@ -424,6 +444,14 @@ const Navbar = () => {
           </li>
           <li>
             <a
+              href="/customer-success"
+              className={pathname === "/customer-success" ? "active" : ""}
+            >
+              Customer Success
+            </a>
+          </li>
+          {/* <li>
+            <a
               href="/returns"
               className={pathname === "/returns" ? "active" : ""}
             >
@@ -437,7 +465,7 @@ const Navbar = () => {
             >
               {translations.privacyTitle || "Privacy Policy"}
             </a>
-          </li>
+          </li> */}
         </ul>
         <div className="login_links">
           {token ? (

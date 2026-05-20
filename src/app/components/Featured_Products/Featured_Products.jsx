@@ -124,8 +124,7 @@ const Featured_Products = ({ initialProducts = [] }) => {
       <div className="Featured_Products_container">
         <div className="Featured_Products_header">
           <div className="Featured_Products_header_title">
-            <span>{translations.todays}</span>
-            <h2>{translations.featuredproducts}</h2>
+            <span>{translations.featuredproducts}</span>
           </div>
 
           {/* أزرار التنقل */}
@@ -231,7 +230,11 @@ const Featured_Products = ({ initialProducts = [] }) => {
                           onClick={(e) =>
                             getCartQty(item._id) === 1
                               ? handleRemoveFromCart(e, item._id)
-                              : handleUpdateQty(e, item._id, getCartQty(item._id) - 1)
+                              : handleUpdateQty(
+                                  e,
+                                  item._id,
+                                  getCartQty(item._id) - 1,
+                                )
                           }
                           aria-label={
                             getCartQty(item._id) === 1 ? "Remove" : "Decrease"
@@ -250,7 +253,11 @@ const Featured_Products = ({ initialProducts = [] }) => {
                           type="button"
                           className="Featured_counter_btn"
                           onClick={(e) =>
-                            handleUpdateQty(e, item._id, getCartQty(item._id) + 1)
+                            handleUpdateQty(
+                              e,
+                              item._id,
+                              getCartQty(item._id) + 1,
+                            )
                           }
                           aria-label="Increase"
                         >

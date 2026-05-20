@@ -106,22 +106,16 @@ const Our_Products = ({ initialProducts = [] }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const getAllProducts = () => {
-    GetProducts(
-      setAllProducts,
-      setError,
-      setLoading,
-      1,
-      undefined,
-      { skipLoadingIndicator: initialProducts.length > 0 },
-    );
+    GetProducts(setAllProducts, setError, setLoading, 1, undefined, {
+      skipLoadingIndicator: initialProducts.length > 0,
+    });
   };
   return (
     <div className="Our_Products">
       <div className="our_products_container">
         <div className="Our_Products_header">
           <div className="Our_Products_header_title">
-            <span>{translations.ourproducts}</span>
-            <h2>{translations.exploreourproducts}</h2>
+            <span>{translations.exploreourproducts}</span>
           </div>
           <a href="/shop">
             {translations.viewall} <MdKeyboardArrowRight />
@@ -206,13 +200,11 @@ const Our_Products = ({ initialProducts = [] }) => {
                                 : handleUpdateQty(
                                     e,
                                     item._id,
-                                    getCartQty(item._id) - 1
+                                    getCartQty(item._id) - 1,
                                   )
                             }
                             aria-label={
-                              getCartQty(item._id) === 1
-                                ? "Remove"
-                                : "Decrease"
+                              getCartQty(item._id) === 1 ? "Remove" : "Decrease"
                             }
                           >
                             <FontAwesomeIcon
@@ -233,7 +225,7 @@ const Our_Products = ({ initialProducts = [] }) => {
                               handleUpdateQty(
                                 e,
                                 item._id,
-                                getCartQty(item._id) + 1
+                                getCartQty(item._id) + 1,
                               )
                             }
                             aria-label="Increase"

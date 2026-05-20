@@ -30,15 +30,6 @@ const Hero = () => {
           quality={82}
         />
         {/* <div className="hero_overlay"></div> */}
-        <div className="hero_content">
-          <span>{translations.b2bsolution}</span>
-          {/* <h1>{translations.premiumwholesalecleaninghygieneproducts}</h1>
-          <p className="direct_supply_text">{translations.directsupplyfrommanufacturer}</p>
-          <p>
-            {translations.professionalgradecleaningsuppliestrustedbythousands}
-          </p> */}
-          <a href="/shop">{translations.shopnow}</a>
-        </div>
       </div>
       <div className="hero_right">
         <div className="hero_right_img1"></div>

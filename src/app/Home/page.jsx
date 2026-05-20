@@ -4,18 +4,18 @@ import { fetchHomePageData } from "@/lib/server/storefrontPrefetch";
 
 const Featrues = dynamic(() => import("../components/Featrues/Featrues"));
 const Brands = dynamic(() => import("../components/Brands/Brands"));
-const Featured_Products = dynamic(() =>
-  import("../components/Featured_Products/Featured_Products"),
+const Featured_Products = dynamic(
+  () => import("../components/Featured_Products/Featured_Products"),
 );
 const Banner2 = dynamic(() => import("../components/Banner2/Banner2"));
 const Banner = dynamic(() => import("../components/Banner/Banner"));
 const Categories = dynamic(() => import("../components/Categories/Categories"));
-const Our_Products = dynamic(() =>
-  import("../components/Our_Products/Our_Products"),
+const Our_Products = dynamic(
+  () => import("../components/Our_Products/Our_Products"),
 );
 const ContactUs = dynamic(() => import("../components/ContactUs/ContactUs"));
-const ScrollReveal = dynamic(() =>
-  import("../components/ScrollReveal/ScrollReveal"),
+const ScrollReveal = dynamic(
+  () => import("../components/ScrollReveal/ScrollReveal"),
 );
 
 export default async function Home() {
@@ -43,9 +43,9 @@ export default async function Home() {
         <Banner2 />
       </div>
 
-      <div className="home-reveal" data-reveal="true">
+      {/* <div className="home-reveal" data-reveal="true">
         <Banner />
-      </div>
+      </div> */}
 
       <div className="home-reveal" data-reveal="true">
         <Categories initialCategories={categories} />

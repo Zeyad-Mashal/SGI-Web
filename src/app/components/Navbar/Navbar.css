@@ -11,7 +11,7 @@
   height: 40px;
   background-color: rgba(215, 223, 43, 1);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 1rem 2rem;
   font-family: inherit;
@@ -19,6 +19,30 @@
 .top_navbar > p {
   font-size: 0.7rem;
   color: rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+.top_navbar_content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin: 0;
+}
+.top_navbar_item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.top_navbar_item a {
+  color: inherit;
+  text-decoration: none;
+}
+.top_navbar_item a:hover {
+  text-decoration: underline;
+}
+.top_navbar_sep {
+  opacity: 0.65;
 }
 .top_navbar > p > a {
   text-decoration: underline;

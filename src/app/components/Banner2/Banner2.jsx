@@ -7,8 +7,8 @@ import ar from "../../../translation/ar.json";
 
 const BANNER_SLIDES = [
   { src: "/images/Banner-3A.png", alt: "Banner 3A" },
-  { src: "/images/Banner-3B.png", alt: "Banner 3B" },
-  { src: "/images/Banner-3D.png", alt: "Banner 3D" },
+  // { src: "/images/Banner-3B.png", alt: "Banner 3B" },
+  // { src: "/images/Banner-3D.png", alt: "Banner 3D" },
 ];
 
 const AUTO_PLAY_MS = 5000;
@@ -30,8 +30,14 @@ const Banner2 = () => {
     });
   }, []);
 
-  const goNext = useCallback(() => goTo(currentIndex + 1), [currentIndex, goTo]);
-  const goPrev = useCallback(() => goTo(currentIndex - 1), [currentIndex, goTo]);
+  const goNext = useCallback(
+    () => goTo(currentIndex + 1),
+    [currentIndex, goTo],
+  );
+  const goPrev = useCallback(
+    () => goTo(currentIndex - 1),
+    [currentIndex, goTo],
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -95,11 +101,11 @@ const Banner2 = () => {
         </div>
       </div>
 
-      <div className="banner2_content">
+      {/* <div className="banner2_content">
         <button>
           <a href="/shop">{translations.shopnow}</a>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

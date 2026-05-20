@@ -8,7 +8,11 @@ import {
   faSquareFacebook,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
-import { SOCIAL_LINKEDIN, SOCIAL_FACEBOOK, SOCIAL_INSTAGRAM } from "@/constants/contact";
+import {
+  SOCIAL_LINKEDIN,
+  SOCIAL_FACEBOOK,
+  SOCIAL_INSTAGRAM,
+} from "@/constants/contact";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 const Footer = () => {
@@ -37,24 +41,38 @@ const Footer = () => {
         <div className="footer_company">
           <h3>{translations.company}</h3>
           <ul>
-            <li><a href="/">{translations.home}</a></li>
-            <li><a href="/shop">{translations.shop}</a></li>
-            {/* <li><a href="/">{translations.aboutus}</a></li> */}
+            <li>
+              <a href="/">About Us</a>
+            </li>
+            <li>
+              <a href="/">B2B Solution Design</a>
+            </li>
+            <li>
+              <a href="/returns">{translations.termsofservice}</a>
+            </li>
+            <li>
+              <a href="/Privacy">{translations.privacypolicy}</a>
+            </li>
           </ul>
         </div>
-        <div className="footer_company">
-          <h3>{translations.support}</h3>
-          <ul>
-            <li><a href="tel:+971565088475" target="_blank">{translations.contactus}</a></li>
-          </ul>
-        </div>
+
         <div className="footer_company">
           <h3>{translations.resources}</h3>
           <ul>
             {/* <li>{translations.helpcenter}</li>
             <li>{translations.faqs}</li> */}
-            <li><a href="/returns">{translations.termsofservice}</a></li>
-            <li><a href="/Privacy">{translations.privacypolicy}</a></li>
+            <li>
+              <a href="/">Help Center</a>
+            </li>
+            <li>
+              <a href="/returns">Delivery Information</a>
+            </li>
+            <li>
+              <a href="/returns">Feedback</a>
+            </li>
+            <li>
+              <a href="/returns">Lodge a complaint</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -62,13 +80,28 @@ const Footer = () => {
       <div className="footer_copyright">
         <p>{translations.allrightsreserved}</p>
         <div className="footer_social">
-          <a href={SOCIAL_LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <a
+            href={SOCIAL_LINKEDIN}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
             <FontAwesomeIcon icon={faLinkedin} />
           </a>
-          <a href={SOCIAL_FACEBOOK} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <a
+            href={SOCIAL_FACEBOOK}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+          >
             <FontAwesomeIcon icon={faSquareFacebook} />
           </a>
-          <a href={SOCIAL_INSTAGRAM} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <a
+            href={SOCIAL_INSTAGRAM}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
             <FontAwesomeIcon icon={faInstagram} />
           </a>
         </div>
