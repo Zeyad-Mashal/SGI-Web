@@ -169,6 +169,64 @@ const Navbar = () => {
     setToken(null);
     window.location.reload();
   };
+
+  const formatNavItemCount = (count) =>
+    `${count} ${translations.navItemLabel || "Item"}`;
+
+  const renderNavbarActions = () => (
+    <div className="navbar_actions">
+      <div className="nav_action_item">
+        <a
+          href={token ? "/profile" : "/login"}
+          className="nav_action_icon"
+          aria-label={translations.hiThere}
+        >
+          <FaRegUser />
+        </a>
+        <div className="nav_action_text">
+          <p className="nav_action_title">{translations.hiThere}</p>
+          {token ? (
+            <button
+              type="button"
+              className="nav_action_sub nav_action_link_btn"
+              onClick={() => setShowLogoutModal(true)}
+            >
+              {translations.logout}
+            </button>
+          ) : (
+            <p className="nav_action_sub">
+              <a href="/login">{translations.login}</a>
+              <span className="nav_action_sep"> | </span>
+              <a href="/register">{translations.signup}</a>
+            </p>
+          )}
+        </div>
+      </div>
+
+      <a href="/fav" className="nav_action_item nav_action_link">
+        <span className="nav_action_icon" aria-hidden>
+          <FaRegHeart />
+        </span>
+        <span className="nav_action_text">
+          <p className="nav_action_title">{translations.wishlist}</p>
+          <p className="nav_action_sub">
+            {formatNavItemCount(favoriteItemCount)}
+          </p>
+        </span>
+      </a>
+
+      <a href="/cart" className="nav_action_item nav_action_link">
+        <span className="nav_action_icon" aria-hidden>
+          <BsCart />
+        </span>
+        <span className="nav_action_text">
+          <p className="nav_action_title">{translations.navbarCart}</p>
+          <p className="nav_action_sub">{formatNavItemCount(cartItemCount)}</p>
+        </span>
+      </a>
+    </div>
+  );
+
   // تغيير اللغه
   const toggleLang = () => {
     const newLang = lang === "en" ? "ar" : "en";
@@ -283,21 +341,19 @@ const Navbar = () => {
           >
             <CiSearch />
           </span>
-          <a href="/fav" className="fav_link">
+          <a href="/fav" className="fav_link" aria-label={translations.wishlist}>
             <FaRegHeart />
             {favoriteItemCount > 0 && (
               <span className="fav_badge">{favoriteItemCount}</span>
             )}
           </a>
           {token && (
-            <a href="/profile">
+            <a href="/profile" aria-label={translations.hiThere}>
               <FaRegUser />
             </a>
           )}
-
-          <a href="/cart" className="cart_link">
+          <a href="/cart" className="cart_link" aria-label={translations.navbarCart}>
             <BsCart />
-
             {cartItemCount > 0 && (
               <span className="cart_badge">{cartItemCount}</span>
             )}
@@ -376,39 +432,21 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="phone_number">
-          <FiPhone />
-
-          <div>
-            <p>{translations.callus}</p>
-            <span>
-              <a href={`https://wa.me/${CONTACT_PHONE_TEL}`} target="_blanck">
-                {CONTACT_PHONE}
-              </a>
-            </span>
+        <div className="middle_navbar_right">
+          <div className="phone_number">
+            <FiPhone />
+            <div>
+              <p>{translations.callus}</p>
+              <span>
+                <a href={`https://wa.me/${CONTACT_PHONE_TEL}`} target="_blanck">
+                  {CONTACT_PHONE}
+                </a>
+              </span>
+            </div>
           </div>
-        </div>
-        <div className="navbar_links">
-          <a href="/fav" className="fav_link">
-            <FaRegHeart />
-            {favoriteItemCount > 0 && (
-              <span className="fav_badge">{favoriteItemCount}</span>
-            )}
-          </a>
-
-          {token && (
-            <a href="/profile">
-              <FaRegUser />
-            </a>
-          )}
-
-          <a href="/cart" className="cart_link">
-            <BsCart />
-
-            {cartItemCount > 0 && (
-              <span className="cart_badge">{cartItemCount}</span>
-            )}
-          </a>
+          <div className="navbar_links navbar_links--desktop">
+            {renderNavbarActions()}
+          </div>
         </div>
       </div>
 
@@ -467,23 +505,7 @@ const Navbar = () => {
             </a>
           </li> */}
         </ul>
-        <div className="login_links">
-          {token ? (
-            <button
-              className="logout-btn"
-              onClick={() => setShowLogoutModal(true)}
-            >
-              {translations.logout || "Logout"}
-            </button>
-          ) : (
-            <>
-              <a href="/login">{translations.login}</a>
-              <span>
-                <a href="/register">{translations.signup}</a>
-              </span>
-            </>
-          )}
-        </div>
+        <div className="login_links login_links--hidden" aria-hidden="true" />
         <div className="our_shop">
           <a href="/shop">
             {translations.exploreallproducts}{" "}
@@ -725,20 +747,20 @@ const Navbar = () => {
           </div>
 
           <div className="mobile_actions">
+            <p className="mobile_actions_greeting">{translations.hiThere}</p>
             {token ? (
               <button
                 className="logout-btn mobile-logout-btn"
                 onClick={() => setShowLogoutModal(true)}
               >
-                {translations.logout || "Logout"}
+                {translations.logout}
               </button>
             ) : (
-              <>
+              <p className="mobile_actions_auth">
                 <a href="/login">{translations.login}</a>
-                <a href="/register" className="signup_btn">
-                  {translations.signup}
-                </a>
-              </>
+                <span> | </span>
+                <a href="/register">{translations.signup}</a>
+              </p>
             )}
           </div>
         </div>

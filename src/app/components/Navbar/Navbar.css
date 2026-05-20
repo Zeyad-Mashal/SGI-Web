@@ -51,10 +51,18 @@
 .middle_navbar {
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   margin: 25px 0;
+  padding: 0 1.5rem;
   font-family: inherit;
+}
+.middle_navbar_right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-shrink: 0;
 }
 .logo > a > img {
   width: 130px;
@@ -64,7 +72,9 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 740px;
+  flex: 1;
+  max-width: 740px;
+  min-width: 180px;
   font-family: inherit;
 }
 .search > input {
@@ -128,25 +138,108 @@
   font-family: inherit;
 }
 .navbar_links {
-  width: 10%;
+  width: auto;
+  flex: 0 0 auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  font-family: inherit;
-}
-.navbar_links > a {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   font-family: inherit;
 }
-.navbar_links > a > svg {
-  width: 100%;
-  height: 100%;
+.navbar_links--desktop {
+  display: flex;
+}
+.navbar_actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.nav_action_item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+.nav_action_link {
+  text-decoration: none;
+  color: inherit;
+}
+.nav_action_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #111;
+}
+.nav_action_icon svg {
+  width: 26px;
+  height: 26px;
   cursor: pointer;
+}
+.nav_action_text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  line-height: 1.15;
+  min-width: 0;
+}
+.nav_action_title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.nav_action_sub {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.nav_action_sub a {
+  color: inherit;
+  text-decoration: none;
+}
+.nav_action_sub a:hover {
+  text-decoration: underline;
+  color: #111;
+}
+.nav_action_sep {
+  color: rgba(0, 0, 0, 0.45);
+}
+.nav_action_link_btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+.nav_action_link_btn:hover {
+  text-decoration: underline;
+  color: #111;
+}
+.login_links--hidden {
+  display: none !important;
+}
+.mobile_actions_greeting {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.mobile_actions_auth {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.mobile_actions_auth a {
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+}
+.mobile_actions_auth a:hover {
+  text-decoration: underline;
 }
 
 /* Cart Badge Styles */
@@ -732,16 +825,18 @@
   .phone_number > div > span {
     font-size: 0.6rem;
   }
-  .navbar_links {
-    gap: 12px;
+  .navbar_actions {
+    gap: 0.85rem;
   }
-  .navbar_links > a {
-    width: 18px;
-    height: 18px;
+  .nav_action_icon svg {
+    width: 22px;
+    height: 22px;
   }
-  .navbar_links > a > svg {
-    width: 18px;
-    height: 18px;
+  .nav_action_title {
+    font-size: 0.82rem;
+  }
+  .nav_action_sub {
+    font-size: 0.7rem;
   }
   .cart_badge,
   .fav_badge {
@@ -853,16 +948,18 @@
   .phone_number > div > span {
     font-size: 1rem;
   }
-  .navbar_links {
+  .navbar_actions {
     gap: 2rem;
-    width: 200px;
   }
-  .navbar_links > a {
-    width: 100%;
+  .nav_action_icon svg {
+    width: 32px;
+    height: 32px;
   }
-  .navbar_links > a > svg {
-    width: 35px;
-    height: 35px;
+  .nav_action_title {
+    font-size: 1.1rem;
+  }
+  .nav_action_sub {
+    font-size: 0.95rem;
   }
   .mega_menu_btn > svg {
     width: 30px;
@@ -953,8 +1050,7 @@
   }
   /* إخفاء العناصر الغير ضرورية */
   .search,
-  .phone_number,
-  .navbar_links,
+  .middle_navbar_right,
   .menu {
     display: none;
   }
