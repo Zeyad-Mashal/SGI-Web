@@ -309,10 +309,16 @@
 .menu {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
   font-family: inherit;
+  padding: 0 1.5rem;
+}
+.menu_left_group {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 .mega_menu_btn {
   display: flex;
@@ -333,7 +339,7 @@
   height: 20px;
 }
 .desktop_menu .main_links {
-  width: 40%;
+  width: auto;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -415,7 +421,7 @@
   box-shadow: 0 4px 8px rgba(255, 68, 68, 0.3);
 }
 .our_shop {
-  width: 15%;
+  width: auto;
   font-family: inherit;
 }
 .our_shop > a {
@@ -862,9 +868,12 @@
   .mega_menu_btn::after {
     height: 22px;
   }
+  .menu_left_group {
+    gap: 1.2rem;
+  }
   .desktop_menu .main_links {
     gap: 1rem;
-    width: 38%;
+    width: auto;
   }
   .desktop_menu .main_links li {
     font-size: 12px;
@@ -971,6 +980,9 @@
   .desktop_menu {
     max-width: 1800px;
     gap: 0;
+  }
+  .menu_left_group {
+    gap: 3rem;
   }
   .desktop_menu .main_links {
     display: flex;

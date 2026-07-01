@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./login.css";
 import Image from "next/image";
+import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLinkedin,
@@ -70,13 +71,15 @@ const ClientLogin = () => {
           />
           <div className="register-img-content">
             <div className="imgs">
-              <Image
-                src={"/images/contact-us-reg.png"}
-                alt="contact us link"
-                loading="lazy"
-                width={250}
-                height={250}
-              />
+              <a href="mailto:support@multicart.ae" className="contact-us-link">
+                <Image
+                  src={"/images/contact-us-reg.png"}
+                  alt="contact us link"
+                  loading="lazy"
+                  width={250}
+                  height={250}
+                />
+              </a>
               <a
                 href={SOCIAL_LINKEDIN}
                 target="_blank"

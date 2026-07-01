@@ -240,3 +240,166 @@
     font-size: 12px;
   }
 }
+
+/* Custom Payment Method Radio Design */
+.payment_options_wrapper {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.payment_option_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 1.5rem;
+  background-color: #ebdcc7; /* Beige background */
+  cursor: pointer;
+  border-bottom: 1.5px solid #ffffff;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.payment_option_row:last-child {
+  border-bottom: none;
+}
+
+.payment_option_row:hover {
+  background-color: #e4d3bc;
+}
+
+.payment_option_text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.payment_option_radio_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom_radio_circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.custom_radio_circle.checked {
+  border-color: #b58c56; /* Golden border */
+  background-color: transparent;
+}
+
+.custom_radio_circle.checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #b58c56; /* Golden center dot */
+}
+
+/* RTL Support */
+.payment_options_wrapper.ar-rtl .payment_option_row {
+  flex-direction: row-reverse;
+}
+
+.checkout.ar-rtl {
+  direction: rtl;
+}
+
+/* OPPWA Payment Widget Custom Styling */
+.paymentWidgets {
+  font-family: inherit !important;
+}
+
+.wpwl-form-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.wpwl-label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+  text-align: inherit !important;
+}
+
+.wpwl-control {
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  width: 100% !important;
+  height: 40px !important;
+  outline: none !important;
+  transition: border-color 0.2s ease !important;
+  background-color: #ffffff !important;
+  box-sizing: border-box !important;
+}
+
+input.wpwl-control,
+select.wpwl-control {
+  padding: 0.5rem 1rem !important;
+}
+
+iframe.wpwl-control,
+.wpwl-iframe-cardNumber,
+.wpwl-iframe-cvv {
+  padding: 0 !important;
+}
+
+.wpwl-control:focus {
+  border-color: #b58c56 !important;
+}
+
+.wpwl-group {
+  margin-bottom: 1.25rem !important;
+}
+
+.wpwl-button-pay,
+.wpwl-button-submit {
+  background-color: #ff4b5a !important; /* Red background matching screenshot */
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.85rem 2rem !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  box-shadow: 0 4px 6px rgba(255, 75, 90, 0.2) !important;
+  margin-top: 1rem !important;
+}
+
+.wpwl-button-pay:hover,
+.wpwl-button-submit:hover {
+  background-color: #e03f4d !important;
+}
+
+/* Align labels and inputs for RTL */
+.payment_options_wrapper.ar-rtl + .checkout_gateway_card_box .wpwl-label,
+.checkout.ar-rtl .wpwl-label {
+  text-align: right !important;
+}
+.payment_options_wrapper.ar-rtl + .checkout_gateway_card_box .wpwl-group,
+.checkout.ar-rtl .wpwl-group {
+  text-align: right !important;
+}

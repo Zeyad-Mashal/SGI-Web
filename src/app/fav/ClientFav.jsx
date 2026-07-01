@@ -18,6 +18,7 @@ import { addToCart } from "@/utils/cartUtils";
 import { useToast } from "@/context/ToastContext";
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
+import { slugify } from "@/utils/slugify";
 
 const ClientFav = () => {
   const router = useRouter();
@@ -202,7 +203,7 @@ const ClientFav = () => {
                     />
                     <div className="fav_right_btns">
                       <button
-                        onClick={() => router.push(`/product/${item._id}`)}
+                        onClick={() => router.push(`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`)}
                       >
                         <IoEyeOutline />
                         View

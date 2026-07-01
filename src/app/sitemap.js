@@ -1,12 +1,13 @@
 import { SITE_URL } from "@/constants/site";
+import { slugify } from "@/utils/slugify";
 
 /** Required for `output: "export"` (static HTML export on Vercel, etc.). */
 export const dynamic = "force-static";
 
 const API_PRODUCTS = "https://sgi-dy1p.onrender.com/api/v1/product/get";
 
-async function fetchAllProductIds() {
-  const ids = [];
+async function fetchAllProducts() {
+  const items = [];
   let page = 1;
   const maxPages = 100;
 
@@ -27,12 +28,13 @@ async function fetchAllProductIds() {
 
     for (const product of products) {
       const id = product._id?.toString() || product.id?.toString();
-      if (id) ids.push(id);
+      const name = product.name || "product";
+      if (id) items.push({ id, name });
     }
     page += 1;
   }
 
-  return ids;
+  return items;
 }
 
 /** @returns {Promise<import('next').MetadataRoute.Sitemap>} */
@@ -67,15 +69,15 @@ export default async function sitemap() {
     },
   ];
 
-  let productIds = [];
+  let products = [];
   try {
-    productIds = await fetchAllProductIds();
+    products = await fetchAllProducts();
   } catch {
     // If the API is unreachable, still serve static URLs.
   }
 
-  const productRoutes = productIds.map((id) => ({
-    url: `${SITE_URL}/product/${id}`,
+  const productRoutes = products.map(({ id, name }) => ({
+    url: `${SITE_URL}/product/${encodeURIComponent(slugify(name))}/${id}`,
     lastModified,
     changeFrequency: "weekly",
     priority: 0.8,

@@ -17,7 +17,7 @@ const ContactUs = () => {
     }
   }, []);
   return (
-    <div className="ContactUs">
+    <div className="ContactUs" id="contact">
       <div className="contactUS_container">
         <h2>{translations.contactus}</h2>
         <p>{translations.contactustostartyourjourneytoday}</p>
@@ -30,7 +30,7 @@ const ContactUs = () => {
             <div className="ContactUs_item_btn">
               <button>
                 <a href="mailto:support@multicart.ae" target="_blanck">
-                  {translations.contactus}
+                  {translations.writetous}
                 </a>
               </button>
               <p>*{translations.available24hrs}</p>
@@ -43,7 +43,7 @@ const ContactUs = () => {
             <div className="ContactUs_item_btn">
               <button>
                 <a href="tel:+971565088475" target="_blanck">
-                  {translations.contactus}
+                  {translations.talktous}
                 </a>
               </button>
               <p>*{translations.available24hrs}</p>
@@ -60,7 +60,7 @@ const ContactUs = () => {
                   href="https://maps.app.goo.gl/putZRzLaNBiSHEP38"
                   target="_blanck"
                 >
-                  {translations.contactus}
+                  {translations.findus}
                 </a>
               </button>
               <p>*{translations.available24hrs}</p>

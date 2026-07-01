@@ -28,7 +28,10 @@ import ar from "@/translation/ar.json";
 const ClientProduct = ({ initialProduct = null }) => {
   const { showToast } = useToast();
   const [favorites, setFavorites] = useState([]);
-  const { id } = useParams();
+  const params = useParams();
+  const slug = params.slug;
+  const id = Array.isArray(slug) ? slug[slug.length - 1] : slug;
+
   const firstDetailsFetchRef = useRef(true);
   const [qty, setQty] = useState(1);
   const [useBoxPrice, setUseBoxPrice] = useState(false);
@@ -419,10 +422,10 @@ const ClientProduct = ({ initialProduct = null }) => {
                 <h2>
                   {translations.total}
                   <span>
+                    {translations.aed}{" "}
                     {((isInCart ? cartQty : qty) * getCurrentPrice()).toFixed(
                       2,
-                    )}{" "}
-                    {translations.aed}
+                    )}
                   </span>{" "}
                 </h2>
                 {useBoxPrice && productDetails?.piecesNumber && (

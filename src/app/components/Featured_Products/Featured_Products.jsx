@@ -32,6 +32,7 @@ import {
 } from "@/utils/favoriteUtils";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
+import { slugify } from "@/utils/slugify";
 const Featured_Products = ({ initialProducts = [] }) => {
   const [translations, setTranslations] = useState(en);
   useEffect(() => {
@@ -167,7 +168,7 @@ const Featured_Products = ({ initialProducts = [] }) => {
             {allProducts.map((item) => (
               <SwiperSlide key={item._id}>
                 <div className="Featured_card">
-                  <a href={`/product/${item._id}`}>
+                  <a href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}>
                     <div className="Featured_img">
                       <Image
                         src={item.picUrls?.[0] || "/images/empty_product.png"}

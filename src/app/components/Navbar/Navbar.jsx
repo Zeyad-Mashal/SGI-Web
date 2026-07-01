@@ -23,6 +23,7 @@ import { RiShoppingBag3Line } from "react-icons/ri";
 import { BsCart } from "react-icons/bs";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
+import { slugify } from "@/utils/slugify";
 import { CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/constants/contact";
 import Search from "@/API/Search/Search";
 import GetCategories from "@/API/Categories/GetCategories";
@@ -412,7 +413,7 @@ const Navbar = () => {
               {searchedProducts.length > 0 &&
                 searchedProducts.map((item) => (
                   <div className="search_item" key={item._id}>
-                    <a href={`/product/${item._id}`}>
+                    <a href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}>
                       <Image
                         src={item?.picUrls?.[0] || "/images/empty_product.png"}
                         alt={item.name || "product image"}
@@ -452,59 +453,61 @@ const Navbar = () => {
 
       {/* 🔸 Bottom Navbar (Desktop Only) */}
       <div className="menu desktop_menu">
-        <div
-          className="mega_menu_btn"
-          onClick={() =>
-            setMegaMenuOpen((prev) => {
-              const next = !prev;
-              if (!next) {
-                setSubPanelVisible(false);
-                setActiveMainCategory(null);
-              }
-              return next;
-            })
-          }
-        >
-          <FontAwesomeIcon icon={faBarsStaggered} />
-          <span>{translations.browseallcategories}</span>
-        </div>
+        <div className="menu_left_group">
+          <div
+            className="mega_menu_btn"
+            onClick={() =>
+              setMegaMenuOpen((prev) => {
+                const next = !prev;
+                if (!next) {
+                  setSubPanelVisible(false);
+                  setActiveMainCategory(null);
+                }
+                return next;
+              })
+            }
+          >
+            <FontAwesomeIcon icon={faBarsStaggered} />
+            <span>{translations.browseallcategories}</span>
+          </div>
 
-        <ul className="main_links">
-          <li>
-            <a href="/" className={pathname === "/" ? "active" : ""}>
-              {translations.home}
-            </a>
-          </li>
-          <li>
-            <a href="/shop" className={pathname === "/shop" ? "active" : ""}>
-              {translations.shop}
-            </a>
-          </li>
-          <li>
-            <a
-              href="/customer-success"
-              className={pathname === "/customer-success" ? "active" : ""}
-            >
-              Customer Success
-            </a>
-          </li>
-          {/* <li>
-            <a
-              href="/returns"
-              className={pathname === "/returns" ? "active" : ""}
-            >
-              {translations.returnsTitle || "Returns Policy"}
-            </a>
-          </li>
-          <li>
-            <a
-              href="/Privacy"
-              className={pathname === "/Privacy" ? "active" : ""}
-            >
-              {translations.privacyTitle || "Privacy Policy"}
-            </a>
-          </li> */}
-        </ul>
+          <ul className="main_links">
+            <li>
+              <a href="/" className={pathname === "/" ? "active" : ""}>
+                {translations.home}
+              </a>
+            </li>
+            <li>
+              <a href="/shop" className={pathname === "/shop" ? "active" : ""}>
+                {translations.shop}
+              </a>
+            </li>
+            <li>
+              <a
+                href="/customer-success"
+                className={pathname === "/customer-success" ? "active" : ""}
+              >
+                Customer Success
+              </a>
+            </li>
+            {/* <li>
+              <a
+                href="/returns"
+                className={pathname === "/returns" ? "active" : ""}
+              >
+                {translations.returnsTitle || "Returns Policy"}
+              </a>
+            </li>
+            <li>
+              <a
+                href="/Privacy"
+                className={pathname === "/Privacy" ? "active" : ""}
+              >
+                {translations.privacyTitle || "Privacy Policy"}
+              </a>
+            </li> */}
+          </ul>
+        </div>
         <div className="login_links login_links--hidden" aria-hidden="true" />
         <div className="our_shop">
           <a href="/shop">
@@ -688,7 +691,7 @@ const Navbar = () => {
           <a href="/shop" className={pathname === "/shop" ? "active" : ""}>
             {translations.shop}
           </a>
-          <a
+          {/*<a
             href="/returns"
             className={pathname === "/returns" ? "active" : ""}
           >
@@ -699,7 +702,7 @@ const Navbar = () => {
             className={pathname === "/Privacy" ? "active" : ""}
           >
             {translations.privacyTitle || "Privacy Policy"}
-          </a>
+          </a>*/}
           <div className="mobile_categories">
             <h3>{translations.categories}</h3>
             {categories.map((cat, index) => (
@@ -790,7 +793,7 @@ const Navbar = () => {
             {searchedProducts.length > 0 ? (
               searchedProducts.map((item) => (
                 <div className="search_item" key={item._id}>
-                  <a href={`/product/${item._id}`}>
+                  <a href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}>
                     <Image
                       src={item?.picUrls?.[0] || "/images/empty_product.png"}
                       alt={item.name || "product image"}

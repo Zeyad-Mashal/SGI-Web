@@ -605,7 +605,7 @@ const ClientCheckout = () => {
   };
 
   return (
-    <div className="checkout">
+    <div className={`checkout ${lang === "ar" ? "ar-rtl" : ""}`}>
       <h1>{translations.checkout}</h1>
 
       {error && (
@@ -881,26 +881,29 @@ const ClientCheckout = () => {
 
         {/* ------------------ Payment Method (above order summary) ------------------ */}
         <h2>{translations.paymentMethod}</h2>
-        <div className="checkout_personal_info">
-          <div className="checkout_personal_info_item">
-            <h3>{translations.selectPaymentMethod}</h3>
-            <select
-              value={paymentWay}
-              onChange={(e) => setPaymentWay(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "0.5rem 1rem",
-                border: "1px solid rgba(0, 0, 0, 0.2)",
-                borderRadius: "8px",
-              }}
-            >
-              <option value="Cash on Delivery">
-                {translations.cashOnDelivery}
-              </option>
-              <option value="Cash by Visa/Mastercard">{translations.cashByVisaMastercard}</option>
-              <option value="Cash by transfer">{translations.cashByTransfer}</option>
-              <option value="Cash by credit">{translations.cashByCredit}</option>
-            </select>
+        <div className={`payment_options_wrapper ${lang === "ar" ? "ar-rtl" : ""}`}>
+          <div
+            className={`payment_option_row ${paymentWay === "Cash on Delivery" ? "selected" : ""}`}
+            onClick={() => setPaymentWay("Cash on Delivery")}
+          >
+            <span className="payment_option_text">
+              {lang === "ar" ? "الدفع نقدًا عند الاستلام" : "Cash on Delivery"}
+            </span>
+            <div className="payment_option_radio_container">
+              <span className={`custom_radio_circle ${paymentWay === "Cash on Delivery" ? "checked" : ""}`}></span>
+            </div>
+          </div>
+
+          <div
+            className={`payment_option_row ${paymentWay === "Cash by Visa/Mastercard" ? "selected" : ""}`}
+            onClick={() => setPaymentWay("Cash by Visa/Mastercard")}
+          >
+            <span className="payment_option_text">
+              {lang === "ar" ? "Payment options" : "Payment options"}
+            </span>
+            <div className="payment_option_radio_container">
+              <span className={`custom_radio_circle ${paymentWay === "Cash by Visa/Mastercard" ? "checked" : ""}`}></span>
+            </div>
           </div>
         </div>
 
@@ -1004,7 +1007,7 @@ const ClientCheckout = () => {
             </div>
             {cartItems.map((item) => (
               <div
-                key={item._id}
+                key={`${item._id}-${item.isBoxPricing ? "box" : "unit"}`}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -1013,7 +1016,7 @@ const ClientCheckout = () => {
                 }}
               >
                 <p>
-                  {item.name} x {item.quantity}
+                  {item.name} ({item.isBoxPricing ? translations.box : translations.unit}) x {item.quantity}
                 </p>
                 <p>
                   {translations.aed} {(item.price * item.quantity).toFixed(2)}

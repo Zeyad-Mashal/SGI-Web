@@ -33,6 +33,7 @@ import {
 } from "@/utils/favoriteUtils";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
+import { slugify } from "@/utils/slugify";
 const Our_Products = ({ initialProducts = [] }) => {
   const [translations, setTranslations] = useState(en);
   useEffect(() => {
@@ -136,7 +137,7 @@ const Our_Products = ({ initialProducts = [] }) => {
             allProducts.slice(0, 8).map((item) => {
               return (
                 <div className="Our_Products_item" key={item._id}>
-                  <a href={`/product/${item._id}`}>
+                  <a href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}>
                     <div className="ourProducts_img">
                       <Image
                         src={

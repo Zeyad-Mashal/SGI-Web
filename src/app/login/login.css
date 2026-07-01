@@ -43,10 +43,10 @@
   align-items: center;
   gap: 1rem;
 }
-.imgs > img {
+.imgs img {
   width: 120px;
 }
-.imgs > a {
+.imgs > a:not(.contact-us-link) {
   background-color: white;
   width: 40px;
   height: 40px;
@@ -179,7 +179,7 @@
   .register-img > img {
     width: 180px;
   }
-  .imgs > img {
+  .imgs img {
     width: 150px;
   }
   .imgs > a {

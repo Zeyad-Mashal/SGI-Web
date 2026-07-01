@@ -47,6 +47,7 @@ import { FaPlus } from "react-icons/fa6";
 import en from "@/translation/en.json";
 import ar from "@/translation/ar.json";
 import { filterAllowedBrands } from "@/utils/filterAllowedBrands";
+import { slugify } from "@/utils/slugify";
 
 export default function Shop({
   initialProducts = [],
@@ -732,7 +733,7 @@ export default function Shop({
                     {viewMode === "list" ? (
                       <>
                         <a
-                          href={`/product/${item._id}`}
+                          href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}
                           className="list_view_link"
                         >
                           <div className="Featured_img">
@@ -842,7 +843,7 @@ export default function Shop({
                       </>
                     ) : (
                       <>
-                        <a href={`/product/${item._id}`}>
+                        <a href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}>
                           <div className="Featured_img">
                             <Image
                               src={
