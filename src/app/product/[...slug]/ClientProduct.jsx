@@ -288,7 +288,7 @@ const ClientProduct = ({ initialProduct = null }) => {
             <span>(4.5 {translations.rating}) 150+ {translations.reviews}</span>
           </p> */}
           <h3>
-            {translations.aed} {getCurrentPrice()}{" "}
+             {getCurrentPrice()}{" "}{translations.aed}
             <span>
               {useBoxPrice ? translations.perBox : translations.perUnit}
             </span>
@@ -421,8 +421,9 @@ const ClientProduct = ({ initialProduct = null }) => {
               <div className="total">
                 <h2>
                   {translations.total}
+                  {" "}
                   <span>
-                    {translations.aed}{" "}
+                    {translations.aed}
                     {((isInCart ? cartQty : qty) * getCurrentPrice()).toFixed(
                       2,
                     )}

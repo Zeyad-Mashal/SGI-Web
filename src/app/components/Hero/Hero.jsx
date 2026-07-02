@@ -29,6 +29,15 @@ const Hero = () => {
           sizes="(max-width: 768px) 100vw, 100vw"
           quality={82}
         />
+        <Image
+          className="hero_mob_image"
+          src="/images/hero-banner.jpeg"
+          alt=""
+          fill
+          priority
+          fetchPriority="high"
+          quality={82}
+        />
         {/* <div className="hero_overlay"></div> */}
       </div>
       <div className="hero_right">

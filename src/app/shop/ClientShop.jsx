@@ -189,6 +189,8 @@ export default function Shop({
       setSelectedCategoryId(null);
       setSelectedSubCategoryId(null);
       setExpandedCategory(null);
+      setBrandsSectionOpen(true);
+      setCategoriesSectionOpen(false);
     } else if (categoryId) {
       getProductsByCategory(categoryId, currentPage);
       // Find which category/subcategory is selected
@@ -213,11 +215,15 @@ export default function Shop({
           });
         }
       });
+      setCategoriesSectionOpen(true);
+      setBrandsSectionOpen(false);
     } else {
       getAllProducts(currentPage);
       setSelectedCategoryId(null);
       setSelectedSubCategoryId(null);
       setExpandedCategory(null);
+      setCategoriesSectionOpen(false);
+      setBrandsSectionOpen(false);
     }
   }, [categoryId, brandId, currentPage, categories]);
 
