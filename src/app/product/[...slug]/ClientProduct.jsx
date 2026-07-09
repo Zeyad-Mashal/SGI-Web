@@ -211,6 +211,122 @@ const ClientProduct = ({ initialProduct = null }) => {
     }
   }, [productDetails]);
 
+  // Local reviews state
+  const [showModal, setShowModal] = useState(false);
+  const [newReviewRating, setNewReviewRating] = useState(0);
+  const [newReviewHoverRating, setNewReviewHoverRating] = useState(0);
+  const [newReviewComment, setNewReviewComment] = useState("");
+  const [visibleReviewsCount, setVisibleReviewsCount] = useState(3);
+
+  // Get combined reviews from productDetails.ratings
+  const getCombinedReviews = () => {
+    const ratings = productDetails?.ratings || [];
+    return ratings
+      .map(r => {
+        if (!r) return null;
+        const reviewerName = r.postedBy || r.user?.name || r.userName || r.user?.username || r.name || (lang === "ar" ? "عميل مؤكد" : "Verified Customer");
+        return {
+          id: r._id || r.id || `rating-${Date.now()}-${Math.random()}`,
+          name: reviewerName,
+          rating: r.numberOfStar || r.stars || r.rating || 5,
+          comment: r.review || r.comment || "",
+          date: r.createdAt ? r.createdAt.split("T")[0] : (r.date || new Date().toISOString().split("T")[0])
+        };
+      })
+      .filter(Boolean);
+  };
+
+  const combinedReviews = getCombinedReviews();
+  const totalReviewsCount = combinedReviews.length;
+  const averageRating = totalReviewsCount > 0
+    ? (combinedReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviewsCount).toFixed(1)
+    : "0.0";
+
+  // Star counts breakdown for progress bars
+  const starCounts = [0, 0, 0, 0, 0]; // index 0 = 1 star, ..., index 4 = 5 stars
+  combinedReviews.forEach(r => {
+    const ratingIndex = Math.min(5, Math.max(1, Math.round(r.rating))) - 1;
+    starCounts[ratingIndex]++;
+  });
+
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const handleAddReviewSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Check if sgitoken exists
+    const token = localStorage.getItem("sgitoken") || localStorage.getItem("sgiToken");
+    if (!token) {
+      showToast(translations.loginToReview || "Please log in first to submit a review.", "error");
+      return;
+    }
+
+    if (!newReviewComment.trim() || newReviewRating === 0) {
+      showToast(translations.reviewValidation || "Please fill out all fields and select a rating.", "error");
+      return;
+    }
+
+    setSubmittingReview(true);
+
+    try {
+      const authHeader = token.startsWith("sgiQ") ? token : `sgiQ${token}`;
+      const productId = productDetails?._id || id;
+      const response = await fetch(`https://sgi-dy1p.onrender.com/api/v1/product/rate/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": authHeader
+        },
+        body: JSON.stringify({
+          numberOfStar: newReviewRating,
+          review: newReviewComment
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Close the add review modal
+        setShowModal(false);
+        
+        // Reset form inputs
+        setNewReviewComment("");
+        setNewReviewRating(0);
+        setNewReviewHoverRating(0);
+
+        // Show success modal overlay for 2 seconds
+        setShowSuccessModal(true);
+        setTimeout(() => {
+          setShowSuccessModal(false);
+        }, 2000);
+
+        // Refresh product reviews and details
+        getProductDetails();
+      } else {
+        showToast(result.message || "Failed to submit review", "error");
+      }
+    } catch (err) {
+      console.error("Error submitting review:", err);
+      showToast("An error occurred while submitting your review.", "error");
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
+  const getAvatarColor = (name) => {
+    const colors = [
+      "#3b82f6", "#10b981", "#f59e0b", "#ef4444", 
+      "#8b5cf6", "#ec4899", "#06b6d4", "#84cc16"
+    ];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  };
+
   return (
     <div className="product">
       <div className="product_container">
@@ -279,14 +395,21 @@ const ClientProduct = ({ initialProduct = null }) => {
           {/* <span>{productDetails?.categories[0]}</span> */}
           <h1>{productDetails.name}</h1>
           <span>{productDetails.brand}</span>
-          {/* <p>
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <span>(4.5 {translations.rating}) 150+ {translations.reviews}</span>
-          </p> */}
+          <div className="product_rating_top">
+            <div className="product_rating_top_stars">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <FaStar
+                  key={idx}
+                  style={{
+                    color: idx < Math.round(Number(averageRating)) ? "rgba(255, 169, 13, 1)" : "#d1d5db",
+                  }}
+                />
+              ))}
+            </div>
+            <span>
+              ({averageRating} {translations.rating}) {totalReviewsCount} {translations.reviews}
+            </span>
+          </div>
           <h3>
              {getCurrentPrice()}{" "}{translations.aed}
             <span>
@@ -596,13 +719,201 @@ const ClientProduct = ({ initialProduct = null }) => {
           )} */}
 
           {activeTab === "reviews" && (
-            <div className="product_desc_description">
-              <h2>{translations.reviews}</h2>
-              <p>{translations.noReviewsYet}</p>
+            <div className="product_reviews_section">
+              <div className="reviews_layout_grid">
+                {/* Left side: Summary Card */}
+                <div className="reviews_summary_card">
+                  <h3>{translations.averageRating || "Average Rating"}</h3>
+                  <div className="giant_rating_score">
+                    <span className="score_num">{averageRating}</span>
+                    <span className="score_out_of">/ 5</span>
+                  </div>
+                  
+                  <div className="summary_stars">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <FaStar
+                        key={idx}
+                        style={{
+                          color: idx < Math.round(Number(averageRating)) ? "rgba(255, 169, 13, 1)" : "#d1d5db",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  <p className="total_reviews_label">
+                    {translations.basedOn || "Based on"} {totalReviewsCount} {translations.productReviews || "reviews"}
+                  </p>
+                  
+                  {/* Star breakdown */}
+                  <div className="star_breakdown_list">
+                    {[5, 4, 3, 2, 1].map((stars) => {
+                      const count = starCounts[stars - 1] || 0;
+                      const percentage = totalReviewsCount > 0 ? (count / totalReviewsCount) * 100 : 0;
+                      return (
+                        <div key={stars} className="breakdown_row">
+                          <span className="star_label">
+                            {stars} <FaStar style={{ color: "rgba(255, 169, 13, 1)", fontSize: "0.85rem", verticalAlign: "middle" }} />
+                          </span>
+                          <div className="progress_bar_wrapper">
+                            <div 
+                              className="progress_bar_fill" 
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                          <span className="count_label">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <button 
+                    className="add_review_trigger_btn"
+                    onClick={() => setShowModal(true)}
+                  >
+                    {translations.addReview || "Add a Review"}
+                  </button>
+                </div>
+
+                {/* Right side: Review Cards List */}
+                <div className="reviews_list_wrapper">
+                  <h3 className="reviews_list_title">{translations.reviewsTitle || "Customer Reviews"}</h3>
+                  
+                  {combinedReviews.length === 0 ? (
+                    <p className="no_reviews_placeholder">{translations.noReviewsYet || "No reviews yet."}</p>
+                  ) : (
+                    <>
+                      <div className="reviews_cards_scroll_area">
+                        {combinedReviews.slice(0, visibleReviewsCount).map((review) => {
+                          const initials = review.name ? review.name.trim().charAt(0).toUpperCase() : "?";
+                          const avatarBg = getAvatarColor(review.name || "");
+                          return (
+                            <div key={review.id} className="review_item_card">
+                              <div className="review_card_header">
+                                <div className="reviewer_avatar" style={{ backgroundColor: avatarBg }}>
+                                  {initials}
+                                </div>
+                                <div className="reviewer_details">
+                                  <div className="reviewer_meta">
+                                    <span className="reviewer_name">{review.name}</span>
+                                    <span className="review_date">{review.date}</span>
+                                  </div>
+                                  <div className="review_stars_row">
+                                    {Array.from({ length: 5 }).map((_, idx) => (
+                                      <FaStar
+                                        key={idx}
+                                        style={{
+                                          color: idx < review.rating ? "rgba(255, 169, 13, 1)" : "#d1d5db",
+                                        }}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              <p className="review_comment_text">{review.comment}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Expand controls */}
+                      {totalReviewsCount > 3 && (
+                        <div className="reviews_expand_controls">
+                          {visibleReviewsCount < totalReviewsCount ? (
+                            <button 
+                              className="expand_btn"
+                              onClick={() => setVisibleReviewsCount(prev => Math.min(totalReviewsCount, prev + 5))}
+                            >
+                              {translations.showMore || "Show More"}
+                            </button>
+                          ) : null}
+                          
+                          {visibleReviewsCount > 3 ? (
+                            <button 
+                              className="expand_btn outline"
+                              onClick={() => setVisibleReviewsCount(3)}
+                            >
+                              {translations.showLess || "Show Less"}
+                            </button>
+                          ) : null}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           )}
         </div>
       </div>
+
+      {/* Review Modal */}
+      {showModal && (
+        <div className="review_modal_overlay" onClick={() => setShowModal(false)}>
+          <div className="review_modal_box" onClick={(e) => e.stopPropagation()}>
+            <button className="modal_close_btn" onClick={() => setShowModal(false)}>&times;</button>
+            <h2>{translations.writeReview || "Write a Review"}</h2>
+            
+            <form onSubmit={handleAddReviewSubmit} className="review_form">
+              <div className="form_group">
+                <label>{translations.yourRating || "Your Rating"}</label>
+                <div className="interactive_stars_row">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      type="button"
+                      key={star}
+                      className="star_select_btn"
+                      onClick={() => setNewReviewRating(star)}
+                      onMouseEnter={() => setNewReviewHoverRating(star)}
+                      onMouseLeave={() => setNewReviewHoverRating(0)}
+                    >
+                      <FaStar
+                        style={{
+                          color: star <= (newReviewHoverRating || newReviewRating)
+                            ? "rgba(255, 169, 13, 1)"
+                            : "#d1d5db"
+                        }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+
+
+              <div className="form_group">
+                <label htmlFor="reviewer_comment">{translations.reviewComment || "Your Review"}</label>
+                <textarea
+                  id="reviewer_comment"
+                  value={newReviewComment}
+                  onChange={(e) => setNewReviewComment(e.target.value)}
+                  placeholder={translations.reviewComment || "Your Review"}
+                  rows={4}
+                  required
+                ></textarea>
+              </div>
+
+              <div className="modal_actions">
+                <button type="button" className="cancel_btn" onClick={() => setShowModal(false)} disabled={submittingReview}>
+                  {translations.cancel || "Cancel"}
+                </button>
+                <button type="submit" className="submit_btn" disabled={submittingReview}>
+                  {submittingReview ? (translations.submitting || "Submitting...") : (translations.submitReview || "Submit Review")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="review_success_overlay">
+          <div className="review_success_box">
+            <div className="success_checkmark">✓</div>
+            <h2>{translations.reviewSuccessMessage || "Your review has been submitted successfully. Thank you!"}</h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

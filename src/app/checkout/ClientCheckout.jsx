@@ -348,6 +348,9 @@ const ClientCheckout = () => {
 
     window.wpwlOptions = {
       locale: lang === "ar" ? "ar" : "en",
+      labels: {
+        submit: lang === "ar" ? "إضافة ومتابعة" : "Add and continue"
+      }
     };
 
     const script = document.createElement("script");
@@ -882,104 +885,101 @@ const ClientCheckout = () => {
         {/* ------------------ Payment Method (above order summary) ------------------ */}
         <h2>{translations.paymentMethod}</h2>
         <div className={`payment_options_wrapper ${lang === "ar" ? "ar-rtl" : ""}`}>
-          <div
-            className={`payment_option_row ${paymentWay === "Cash on Delivery" ? "selected" : ""}`}
-            onClick={() => setPaymentWay("Cash on Delivery")}
-          >
-            <span className="payment_option_text">
-              {lang === "ar" ? "الدفع نقدًا عند الاستلام" : "Cash on Delivery"}
-            </span>
-            <div className="payment_option_radio_container">
-              <span className={`custom_radio_circle ${paymentWay === "Cash on Delivery" ? "checked" : ""}`}></span>
+          
+          {/* Debit / Credit Card Option Card */}
+          <div className={`payment_option_container ${paymentWay === "Cash by Visa/Mastercard" ? "selected" : ""}`}>
+            <div
+              className={`payment_option_row ${paymentWay === "Cash by Visa/Mastercard" ? "active" : ""}`}
+              onClick={() => setPaymentWay("Cash by Visa/Mastercard")}
+            >
+              <div className="payment_option_left">
+                <span className={`custom_radio_circle ${paymentWay === "Cash by Visa/Mastercard" ? "checked" : ""}`}></span>
+                <span className="payment_option_text">
+                  {lang === "ar" ? "بطاقة خصم / ائتمان" : "Debit / Credit Card"}
+                </span>
+                <span className="card_logos_inline">
+                  {/* Visa SVG */}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 15" width="28" height="18" style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 4px' }}>
+                    <rect width="24" height="15" rx="2" fill="#1A1F71"/>
+                    <path fill="#FFF" d="M9.8 11.2h-1.1c-.2 0-.4-.1-.5-.3L6.4 6.1H7.7l.9 2.5.5-2.5H10l-1.1 5.1zm4.7 0c0-.8-.7-1.1-1.2-1.3-.4-.2-.5-.3-.5-.4 0-.2.2-.3.5-.3.4 0 .7.1.9.2l.2-1.1c-.3-.1-.6-.2-1-.2-.9 0-1.5.5-1.5 1.2 0 .8.7 1.1 1.2 1.3.4.2.5.3.5.5 0 .2-.2.3-.6.3-.4 0-.8-.1-1-.3l-.2 1.1c.3.1.7.2 1.1.2 1 0 1.6-.4 1.6-1.3zm3.1-5.1h-1c-.3 0-.5.2-.6.4l-1.9 4.7h1.3l.3-.7h1.6l.2.7h1.1l-.9-5.1zm-1.8 3.1l.6-1.5.3 1.5h-.9zM5 6.1L4.1 9.6l-.1-.5C3.8 8.8 3.4 8 2.8 7.6v3.6H4l2-5.1H5z"/>
+                    <path fill="#F7B600" d="M2.8 6.1h-.9l.1.5c.7.2 1.4.6 1.9 1.2L3.6 6.1z"/>
+                  </svg>
+                  {/* Mastercard SVG */}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 15" width="28" height="18" style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 4px' }}>
+                    <rect width="24" height="15" rx="2" fill="#0A0A0A"/>
+                    <circle cx="10" cy="7.5" r="4.5" fill="#EB001B"/>
+                    <circle cx="14" cy="7.5" r="4.5" fill="#F79E1B" fillOpacity="0.8"/>
+                    <path fill="#FF5F00" d="M12 4.4a4.5 4.5 0 0 0 0 6.2 4.5 4.5 0 0 0 0-6.2z"/>
+                  </svg>
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div
-            className={`payment_option_row ${paymentWay === "Cash by Visa/Mastercard" ? "selected" : ""}`}
-            onClick={() => setPaymentWay("Cash by Visa/Mastercard")}
-          >
-            <span className="payment_option_text">
-              {lang === "ar" ? "Payment options" : "Payment options"}
-            </span>
-            <div className="payment_option_radio_container">
-              <span className={`custom_radio_circle ${paymentWay === "Cash by Visa/Mastercard" ? "checked" : ""}`}></span>
-            </div>
-          </div>
-        </div>
+            {/* Nested CC Widget Form */}
+            {isCardGatewayPayment(paymentWay) && (
+              <div className="payment_option_expanded_content">
+                {paymentSessionLoading && (
+                  <p style={{ margin: "0.5rem 1.5rem", color: "#666", fontSize: "0.95rem" }}>
+                    {translations.preparingPaymentForm}
+                  </p>
+                )}
+                {paymentSessionError && (
+                  <p style={{ margin: "0.5rem 1.5rem", color: "#c62828", fontSize: "0.95rem" }}>
+                    {paymentSessionError}
+                  </p>
+                )}
 
-        {isCardGatewayPayment(paymentWay) && (
-          <div style={{ marginTop: "0.75rem" }}>
-            <p style={{ margin: 0, fontSize: "0.95rem", color: "#444" }}>
-              {translations.cardPaymentHint}
-            </p>
-            {paymentSessionLoading && (
-              <p style={{ margin: "0.5rem 0 0", color: "#666" }}>
-                {translations.preparingPaymentForm}
-              </p>
-            )}
-            {paymentSessionError && (
-              <p style={{ margin: "0.5rem 0 0", color: "#c62828" }}>
-                {paymentSessionError}
-              </p>
-            )}
-          </div>
-        )}
+                <div className="checkout_gateway_card_box">
+                  {/* Logo Visa on top right inside the white box */}
+                  {checkoutSessionId && !paymentSessionLoading && gatewayOrderReady && (
+                    <div className="form_brand_logo_top_right">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 15" width="54" height="34">
+                        <path fill="#1A1F71" d="M9.8 11.2h-1.1c-.2 0-.4-.1-.5-.3L6.4 6.1H7.7l.9 2.5.5-2.5H10l-1.1 5.1zm4.7 0c0-.8-.7-1.1-1.2-1.3-.4-.2-.5-.3-.5-.4 0-.2.2-.3.5-.3.4 0 .7.1.9.2l.2-1.1c-.3-.1-.6-.2-1-.2-.9 0-1.5.5-1.5 1.2 0 .8.7 1.1 1.2 1.3.4.2.5.3.5.5 0 .2-.2.3-.6.3-.4 0-.8-.1-1-.3l-.2 1.1c.3.1.7.2 1.1.2 1 0 1.6-.4 1.6-1.3zm3.1-5.1h-1c-.3 0-.5.2-.6.4l-1.9 4.7h1.3l.3-.7h1.6l.2.7h1.1l-.9-5.1zm-1.8 3.1l.6-1.5.3 1.5h-.9zM5 6.1L4.1 9.6l-.1-.5C3.8 8.8 3.4 8 2.8 7.6v3.6H4l2-5.1H5z"/>
+                        <path fill="#F7B600" d="M2.8 6.1h-.9l.1.5c.7.2 1.4.6 1.9 1.2L3.6 6.1z"/>
+                      </svg>
+                    </div>
+                  )}
 
-        {isCardGatewayPayment(paymentWay) && (
-          <div
-            className="checkout_gateway_card_box"
-            style={{
-              marginTop: "1.25rem",
-              marginBottom: "1rem",
-              padding: "1rem",
-              borderRadius: "12px",
-              border: "1px solid rgba(0, 0, 0, 0.12)",
-              background: "#fafafa",
-            }}
-          >
-            {checkoutSessionId &&
-              !paymentSessionLoading &&
-              !gatewayOrderReady && (
-                <p
-                  style={{
-                    margin: "0 0 0.75rem",
-                    fontSize: "0.95rem",
-                    color: "#b45309",
-                    background: "#fffbeb",
-                    padding: "0.65rem 0.85rem",
-                    borderRadius: "8px",
-                  }}
-                >
-                  {gatewayMissingFieldsMsg || translations.completeFormForGatewayPayment}
-                </p>
-              )}
-            {gatewayOrderReady && (
-              <div
-                style={{
-                  marginBottom: "0.75rem",
-                  padding: "0.65rem 0.85rem",
-                  borderRadius: "8px",
-                  background: "#e8f5e9",
-                  color: "#1b5e20",
-                  fontSize: "0.9rem",
-                }}
-              >
-                {translations.gatewayOrderReadyPay}
+                  {checkoutSessionId && !paymentSessionLoading && !gatewayOrderReady && (
+                    <div className="gateway_status_msg pending">
+                      {gatewayMissingFieldsMsg || translations.completeFormForGatewayPayment}
+                    </div>
+                  )}
+                  {gatewayOrderReady && (
+                    <div className="gateway_status_msg ready">
+                      {translations.gatewayOrderReadyPay || "Your order is saved. Complete payment with Place Order below."}
+                    </div>
+                  )}
+
+                  {checkoutSessionId && paymentReturnUrl && !paymentSessionLoading && gatewayOrderReady && (
+                    <form
+                      key={checkoutSessionId}
+                      action={paymentReturnUrl}
+                      className="paymentWidgets"
+                      data-brands="VISA MASTER AMEX"
+                    />
+                  )}
+                </div>
               </div>
             )}
-            {checkoutSessionId &&
-              paymentReturnUrl &&
-              !paymentSessionLoading &&
-              gatewayOrderReady && (
-                <form
-                  key={checkoutSessionId}
-                  action={paymentReturnUrl}
-                  className="paymentWidgets"
-                  data-brands="VISA MASTER AMEX"
-                />
-              )}
           </div>
-        )}
+
+          {/* Cash On Delivery Option Card */}
+          <div className={`payment_option_container ${paymentWay === "Cash on Delivery" ? "selected" : ""}`}>
+            <div
+              className={`payment_option_row ${paymentWay === "Cash on Delivery" ? "active" : ""}`}
+              onClick={() => setPaymentWay("Cash on Delivery")}
+            >
+              <div className="payment_option_left">
+                <span className={`custom_radio_circle ${paymentWay === "Cash on Delivery" ? "checked" : ""}`}></span>
+                <span className="payment_option_text">
+                  {lang === "ar" ? "الدفع عند الاستلام" : "Cash On Delivery"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
 
         <hr />
 
