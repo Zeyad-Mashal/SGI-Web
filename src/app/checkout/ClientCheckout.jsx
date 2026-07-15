@@ -611,20 +611,6 @@ const ClientCheckout = () => {
     <div className={`checkout ${lang === "ar" ? "ar-rtl" : ""}`}>
       <h1>{translations.checkout}</h1>
 
-      {error && (
-        <div
-          style={{
-            color: "red",
-            marginBottom: "1rem",
-            padding: "0.5rem",
-            background: "#ffe8e8",
-            borderRadius: "8px",
-          }}
-        >
-          {error}
-        </div>
-      )}
-
       <SuccessModal
         isOpen={!!success}
         onClose={() => setSuccess("")}
@@ -1104,28 +1090,24 @@ const ClientCheckout = () => {
           </div>
         </div>
 
-        {/* ------------------ Submit Button (hidden for card gateway — Pay on widget only) ------------------ */}
-        {!isCardGatewayPayment(paymentWay) && (
-          <button
-            onClick={handleSubmitOrder}
-            disabled={loading}
-            style={{
-              width: "200px",
-              padding: "0.6rem 1rem",
-              background: loading ? "#ccc" : "rgba(215, 223, 43, 1)",
-              color: "black",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "18px",
-              fontWeight: "bold",
-              cursor: loading ? "not-allowed" : "pointer",
-              marginTop: "1rem",
-              marginBottom: "2rem",
-            }}
-          >
-            {loading ? translations.placingOrder : translations.placeOrder}
-          </button>
-        )}
+        <div className="checkout_bottom_row">
+          {error && (
+            <div className="checkout_error" role="alert">
+              *{error}*
+            </div>
+          )}
+
+          {/* ------------------ Submit Button (hidden for card gateway — Pay on widget only) ------------------ */}
+          {!isCardGatewayPayment(paymentWay) && (
+            <button
+              className="checkout_place_order_btn"
+              onClick={handleSubmitOrder}
+              disabled={loading}
+            >
+              {loading ? translations.placingOrder : translations.placeOrder}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import ar from "../../../translation/ar.json";
 
 const BANNER_SLIDES = [
   { src: "/images/Banner-3A.png", alt: "Banner 3A" },
-  // { src: "/images/Banner-3B.png", alt: "Banner 3B" },
+  { src: "/images/Banner-3b.jpeg", alt: "Banner 3B" },
   // { src: "/images/Banner-3D.png", alt: "Banner 3D" },
 ];
 

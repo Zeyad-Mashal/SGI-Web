@@ -28,6 +28,40 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   margin: 1rem 0;
 }
+.checkout_bottom_row {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  direction: ltr;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+.checkout_place_order_btn {
+  width: 200px;
+  margin-left: auto;
+  padding: 0.6rem 1rem;
+  background: rgba(215, 223, 43, 1);
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.checkout_place_order_btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.checkout_error {
+  color: red;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  padding-top: 0.25rem;
+  text-align: left;
+}
 .checkout_personal_info,
 .checkout_delivery_info {
   width: 100%;

@@ -21,7 +21,7 @@ const Hero = () => {
       <div className="hero_left">
         <Image
           className="hero_lcp_image"
-          src="/images/home-banner.png"
+          src="/images/Banner2A.jpg.jpeg"
           alt=""
           fill
           priority
