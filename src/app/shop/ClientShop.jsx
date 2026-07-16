@@ -731,227 +731,122 @@ export default function Shop({
               </div>
             ) : (
               allProducts.map((item) => {
+                const isList = viewMode === "list";
+                const cartQty = getCartQty(item._id);
+                const favorited = isFavorited(item._id);
+                const productHref = `/product/${encodeURIComponent(slugify(item.name))}/${item._id}`;
+                const imageSrc =
+                  item.picUrls && item.picUrls[0]
+                    ? item.picUrls[0]
+                    : "/images/empty_product.png";
+
+                const favoriteIcon = (extraClass = "") => (
+                  <FontAwesomeIcon
+                    icon={favorited ? faHeartSolid : faHeart}
+                    className={`heart-icon ${favorited ? "favorited" : ""} ${extraClass}`.trim()}
+                    onClick={(e) => handleFavoriteClick(e, item)}
+                    style={{
+                      color: favorited ? "#ef4444" : "inherit",
+                      cursor: "pointer",
+                      transition: "color 0.3s ease, transform 0.3s ease",
+                      transform: favorited ? "scale(1.2)" : "scale(1)",
+                    }}
+                  />
+                );
+
+                const cartControls =
+                  cartQty === 0 ? (
+                    <button
+                      className={isList ? undefined : "shop_add_btn"}
+                      onClick={(e) => handleAddToCart(e, item)}
+                    >
+                      {translations.addtocart}
+                    </button>
+                  ) : (
+                    <div
+                      className="shop_cart_counter"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        className="shop_counter_btn"
+                        onClick={(e) =>
+                          cartQty === 1
+                            ? handleRemoveFromCart(e, item._id)
+                            : handleUpdateQty(e, item._id, cartQty - 1)
+                        }
+                        aria-label={cartQty === 1 ? "Remove" : "Decrease"}
+                      >
+                        <FontAwesomeIcon
+                          icon={cartQty === 1 ? faTrashAlt : faMinus}
+                        />
+                      </button>
+                      <span className="shop_counter_qty">{cartQty}</span>
+                      <button
+                        type="button"
+                        className="shop_counter_btn"
+                        onClick={(e) =>
+                          handleUpdateQty(e, item._id, cartQty + 1)
+                        }
+                        aria-label="Increase"
+                      >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </button>
+                    </div>
+                  );
+
                 return (
                   <div
-                    className={`Featured_card ${viewMode === "list" ? "list_view" : "grid_view"}`}
+                    className={`Featured_card ${isList ? "list_view" : "grid_view"}`}
                     key={item._id}
                   >
-                    {viewMode === "list" ? (
-                      <>
-                        <a
-                          href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}
-                          className="list_view_link"
-                        >
-                          <div className="Featured_img">
-                            <Image
-                              src={
-                                item.picUrls && item.picUrls[0]
-                                  ? item.picUrls[0]
-                                  : "/images/empty_product.png"
-                              }
-                              alt="product image"
-                              width={1000}
-                              height={1000}
-                              loading="lazy"
-                            />
-                            <FontAwesomeIcon
-                              icon={
-                                isFavorited(item._id) ? faHeartSolid : faHeart
-                              }
-                              className={`heart-icon ${
-                                isFavorited(item._id) ? "favorited" : ""
-                              }`}
-                              onClick={(e) => handleFavoriteClick(e, item)}
-                              style={{
-                                color: isFavorited(item._id)
-                                  ? "#ef4444"
-                                  : "inherit",
-                                cursor: "pointer",
-                                transition: "all 0.3s ease",
-                                transform: isFavorited(item._id)
-                                  ? "scale(1.2)"
-                                  : "scale(1)",
-                              }}
-                            />
+                    <a
+                      href={productHref}
+                      className={isList ? "list_view_link" : undefined}
+                    >
+                      <div className="Featured_img">
+                        <Image
+                          src={imageSrc}
+                          alt={item.name || "product image"}
+                          width={400}
+                          height={400}
+                          loading="lazy"
+                          style={{ objectFit: "contain" }}
+                          sizes="(max-width: 991px) 50vw, 260px"
+                        />
+                        {favoriteIcon("heart-icon--on-image")}
+                        <p className="shop_featured_badge">
+                          {translations.featured}
+                        </p>
+                      </div>
+                      {isList ? (
+                        <div className="list_view_content">
+                          <div className="list_view_info">
+                            <h2>{item.name}</h2>
                           </div>
-                          <div className="list_view_content">
-                            <div className="list_view_info">
-                              <h2>{item.name}</h2>
-                              {/* <div className="Featured_stars">
-                                <p>{translations.minimumOrder}</p>
-                              </div> */}
-                            </div>
-                            <div className="Featured_price">
-                              <h3>
-                                {translations.aed} {item.price}
-                              </h3>
-                            </div>
+                          <div className="Featured_price Featured_price--link">
+                            <h3>
+                              {translations.aed} {item.price}
+                            </h3>
                           </div>
-                        </a>
-                        <div className="list_view_actions">
-                          {getCartQty(item._id) === 0 ? (
-                            <button
-                              onClick={(e) => handleAddToCart(e, item)}
-                            >
-                              {translations.addtocart}
-                            </button>
-                          ) : (
-                            <div
-                              className="shop_cart_counter"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <button
-                                type="button"
-                                className="shop_counter_btn"
-                                onClick={(e) =>
-                                  getCartQty(item._id) === 1
-                                    ? handleRemoveFromCart(e, item._id)
-                                    : handleUpdateQty(
-                                        e,
-                                        item._id,
-                                        getCartQty(item._id) - 1,
-                                      )
-                                }
-                                aria-label={
-                                  getCartQty(item._id) === 1
-                                    ? "Remove"
-                                    : "Decrease"
-                                }
-                              >
-                                <FontAwesomeIcon
-                                  icon={
-                                    getCartQty(item._id) === 1
-                                      ? faTrashAlt
-                                      : faMinus
-                                  }
-                                />
-                              </button>
-                              <span className="shop_counter_qty">
-                                {getCartQty(item._id)}
-                              </span>
-                              <button
-                                type="button"
-                                className="shop_counter_btn"
-                                onClick={(e) =>
-                                  handleUpdateQty(
-                                    e,
-                                    item._id,
-                                    getCartQty(item._id) + 1,
-                                  )
-                                }
-                                aria-label="Increase"
-                              >
-                                <FontAwesomeIcon icon={faPlus} />
-                              </button>
-                            </div>
-                          )}
                         </div>
-                      </>
-                    ) : (
-                      <>
-                        <a href={`/product/${encodeURIComponent(slugify(item.name))}/${item._id}`}>
-                          <div className="Featured_img">
-                            <Image
-                              src={
-                                item.picUrls && item.picUrls[0]
-                                  ? item.picUrls[0]
-                                  : "/images/empty_product.png"
-                              }
-                              alt="product image"
-                              width={1000}
-                              height={1000}
-                              loading="lazy"
-                            />
-                            <FontAwesomeIcon
-                              icon={
-                                isFavorited(item._id) ? faHeartSolid : faHeart
-                              }
-                              className={`heart-icon ${
-                                isFavorited(item._id) ? "favorited" : ""
-                              }`}
-                              onClick={(e) => handleFavoriteClick(e, item)}
-                              style={{
-                                color: isFavorited(item._id)
-                                  ? "#ef4444"
-                                  : "inherit",
-                                cursor: "pointer",
-                                transition: "all 0.3s ease",
-                                transform: isFavorited(item._id)
-                                  ? "scale(1.2)"
-                                  : "scale(1)",
-                              }}
-                            />
-                            <p>{translations.featured}</p>
-                          </div>
-                          {/* <div className="Featured_stars">
-                            <p>{translations.minimumOrder}</p>
-                      </div> */}
-                          <h2>{item.name}</h2>
-                        </a>
+                      ) : (
+                        <h2>{item.name}</h2>
+                      )}
+                    </a>
 
-                        <div className="Featured_price">
-                          <h3>
-                            {translations.aed} {item.price}
-                          </h3>
-                          {getCartQty(item._id) === 0 ? (
-                            <button
-                              className="shop_add_btn"
-                              onClick={(e) => handleAddToCart(e, item)}
-                            >
-                              {translations.addtocart}
-                            </button>
-                          ) : (
-                            <div
-                              className="shop_cart_counter"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <button
-                                type="button"
-                                className="shop_counter_btn"
-                                onClick={(e) =>
-                                  getCartQty(item._id) === 1
-                                    ? handleRemoveFromCart(e, item._id)
-                                    : handleUpdateQty(
-                                        e,
-                                        item._id,
-                                        getCartQty(item._id) - 1,
-                                      )
-                                }
-                                aria-label={
-                                  getCartQty(item._id) === 1
-                                    ? "Remove"
-                                    : "Decrease"
-                                }
-                              >
-                                <FontAwesomeIcon
-                                  icon={
-                                    getCartQty(item._id) === 1
-                                      ? faTrashAlt
-                                      : faMinus
-                                  }
-                                />
-                              </button>
-                              <span className="shop_counter_qty">
-                                {getCartQty(item._id)}
-                              </span>
-                              <button
-                                type="button"
-                                className="shop_counter_btn"
-                                onClick={(e) =>
-                                  handleUpdateQty(
-                                    e,
-                                    item._id,
-                                    getCartQty(item._id) + 1,
-                                  )
-                                }
-                                aria-label="Increase"
-                              >
-                                <FontAwesomeIcon icon={faPlus} />
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </>
+                    {isList ? (
+                      <div className="list_view_actions">
+                        {favoriteIcon("heart-icon--in-actions")}
+                        {cartControls}
+                      </div>
+                    ) : (
+                      <div className="Featured_price">
+                        <h3>
+                          {translations.aed} {item.price}
+                        </h3>
+                        {cartControls}
+                      </div>
                     )}
                   </div>
                 );

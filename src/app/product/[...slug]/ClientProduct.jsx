@@ -41,9 +41,7 @@ const ClientProduct = ({ initialProduct = null }) => {
   const [activeImg, setActiveImg] = useState(null);
   const [imageLoading, setImageLoading] = useState(true);
   const [cart, setCart] = useState([]);
-  const [productDetails, setProductDetails] = useState(
-    initialProduct ?? null,
-  );
+  const [productDetails, setProductDetails] = useState(initialProduct ?? null);
 
   const cartQty =
     productDetails?._id && Array.isArray(cart)
@@ -194,8 +192,7 @@ const ClientProduct = ({ initialProduct = null }) => {
   const [loading, setLoading] = useState(() => !initialProduct);
   const [error, setError] = useState(null);
   const getProductDetails = () => {
-    const suppress =
-      firstDetailsFetchRef.current && !!initialProduct;
+    const suppress = firstDetailsFetchRef.current && !!initialProduct;
     firstDetailsFetchRef.current = false;
     ProductDetails(setProductDetails, setError, setLoading, id, {
       suppressInitialLoading: suppress,
@@ -222,15 +219,23 @@ const ClientProduct = ({ initialProduct = null }) => {
   const getCombinedReviews = () => {
     const ratings = productDetails?.ratings || [];
     return ratings
-      .map(r => {
+      .map((r) => {
         if (!r) return null;
-        const reviewerName = r.postedBy || r.user?.name || r.userName || r.user?.username || r.name || (lang === "ar" ? "عميل مؤكد" : "Verified Customer");
+        const reviewerName =
+          r.postedBy ||
+          r.user?.name ||
+          r.userName ||
+          r.user?.username ||
+          r.name ||
+          (lang === "ar" ? "عميل مؤكد" : "Verified Customer");
         return {
           id: r._id || r.id || `rating-${Date.now()}-${Math.random()}`,
           name: reviewerName,
           rating: r.numberOfStar || r.stars || r.rating || 5,
           comment: r.review || r.comment || "",
-          date: r.createdAt ? r.createdAt.split("T")[0] : (r.date || new Date().toISOString().split("T")[0])
+          date: r.createdAt
+            ? r.createdAt.split("T")[0]
+            : r.date || new Date().toISOString().split("T")[0],
         };
       })
       .filter(Boolean);
@@ -238,13 +243,17 @@ const ClientProduct = ({ initialProduct = null }) => {
 
   const combinedReviews = getCombinedReviews();
   const totalReviewsCount = combinedReviews.length;
-  const averageRating = totalReviewsCount > 0
-    ? (combinedReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviewsCount).toFixed(1)
-    : "0.0";
+  const averageRating =
+    totalReviewsCount > 0
+      ? (
+          combinedReviews.reduce((sum, r) => sum + r.rating, 0) /
+          totalReviewsCount
+        ).toFixed(1)
+      : "0.0";
 
   // Star counts breakdown for progress bars
   const starCounts = [0, 0, 0, 0, 0]; // index 0 = 1 star, ..., index 4 = 5 stars
-  combinedReviews.forEach(r => {
+  combinedReviews.forEach((r) => {
     const ratingIndex = Math.min(5, Math.max(1, Math.round(r.rating))) - 1;
     starCounts[ratingIndex]++;
   });
@@ -254,16 +263,24 @@ const ClientProduct = ({ initialProduct = null }) => {
 
   const handleAddReviewSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Check if sgitoken exists
-    const token = localStorage.getItem("sgitoken") || localStorage.getItem("sgiToken");
+    const token =
+      localStorage.getItem("sgitoken") || localStorage.getItem("sgiToken");
     if (!token) {
-      showToast(translations.loginToReview || "Please log in first to submit a review.", "error");
+      showToast(
+        translations.loginToReview || "Please log in first to submit a review.",
+        "error",
+      );
       return;
     }
 
     if (!newReviewComment.trim() || newReviewRating === 0) {
-      showToast(translations.reviewValidation || "Please fill out all fields and select a rating.", "error");
+      showToast(
+        translations.reviewValidation ||
+          "Please fill out all fields and select a rating.",
+        "error",
+      );
       return;
     }
 
@@ -272,24 +289,27 @@ const ClientProduct = ({ initialProduct = null }) => {
     try {
       const authHeader = token.startsWith("sgiQ") ? token : `sgiQ${token}`;
       const productId = productDetails?._id || id;
-      const response = await fetch(`https://sgi-dy1p.onrender.com/api/v1/product/rate/${productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "authorization": authHeader
+      const response = await fetch(
+        `https://sgi-dy1p.onrender.com/api/v1/product/rate/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: authHeader,
+          },
+          body: JSON.stringify({
+            numberOfStar: newReviewRating,
+            review: newReviewComment,
+          }),
         },
-        body: JSON.stringify({
-          numberOfStar: newReviewRating,
-          review: newReviewComment
-        })
-      });
+      );
 
       const result = await response.json();
 
       if (response.ok) {
         // Close the add review modal
         setShowModal(false);
-        
+
         // Reset form inputs
         setNewReviewComment("");
         setNewReviewRating(0);
@@ -316,8 +336,14 @@ const ClientProduct = ({ initialProduct = null }) => {
 
   const getAvatarColor = (name) => {
     const colors = [
-      "#3b82f6", "#10b981", "#f59e0b", "#ef4444", 
-      "#8b5cf6", "#ec4899", "#06b6d4", "#84cc16"
+      "#3b82f6",
+      "#10b981",
+      "#f59e0b",
+      "#ef4444",
+      "#8b5cf6",
+      "#ec4899",
+      "#06b6d4",
+      "#84cc16",
     ];
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -401,17 +427,21 @@ const ClientProduct = ({ initialProduct = null }) => {
                 <FaStar
                   key={idx}
                   style={{
-                    color: idx < Math.round(Number(averageRating)) ? "rgba(255, 169, 13, 1)" : "#d1d5db",
+                    color:
+                      idx < Math.round(Number(averageRating))
+                        ? "rgba(255, 169, 13, 1)"
+                        : "#d1d5db",
                   }}
                 />
               ))}
             </div>
             <span>
-              ({averageRating} {translations.rating}) {totalReviewsCount} {translations.reviews}
+              ({averageRating} {translations.rating}) {totalReviewsCount}{" "}
+              {translations.reviews}
             </span>
           </div>
           <h3>
-             {getCurrentPrice()}{" "}{translations.aed}
+            {translations.aed} {getCurrentPrice()}
             <span>
               {useBoxPrice ? translations.perBox : translations.perUnit}
             </span>
@@ -543,10 +573,9 @@ const ClientProduct = ({ initialProduct = null }) => {
 
               <div className="total">
                 <h2>
-                  {translations.total}
-                  {" "}
+                  {translations.total}{" "}
                   <span>
-                    {translations.aed}
+                    {translations.aed}{" "}
                     {((isInCart ? cartQty : qty) * getCurrentPrice()).toFixed(
                       2,
                     )}
@@ -728,35 +757,49 @@ const ClientProduct = ({ initialProduct = null }) => {
                     <span className="score_num">{averageRating}</span>
                     <span className="score_out_of">/ 5</span>
                   </div>
-                  
+
                   <div className="summary_stars">
                     {Array.from({ length: 5 }).map((_, idx) => (
                       <FaStar
                         key={idx}
                         style={{
-                          color: idx < Math.round(Number(averageRating)) ? "rgba(255, 169, 13, 1)" : "#d1d5db",
+                          color:
+                            idx < Math.round(Number(averageRating))
+                              ? "rgba(255, 169, 13, 1)"
+                              : "#d1d5db",
                         }}
                       />
                     ))}
                   </div>
-                  
+
                   <p className="total_reviews_label">
-                    {translations.basedOn || "Based on"} {totalReviewsCount} {translations.productReviews || "reviews"}
+                    {translations.basedOn || "Based on"} {totalReviewsCount}{" "}
+                    {translations.productReviews || "reviews"}
                   </p>
-                  
+
                   {/* Star breakdown */}
                   <div className="star_breakdown_list">
                     {[5, 4, 3, 2, 1].map((stars) => {
                       const count = starCounts[stars - 1] || 0;
-                      const percentage = totalReviewsCount > 0 ? (count / totalReviewsCount) * 100 : 0;
+                      const percentage =
+                        totalReviewsCount > 0
+                          ? (count / totalReviewsCount) * 100
+                          : 0;
                       return (
                         <div key={stars} className="breakdown_row">
                           <span className="star_label">
-                            {stars} <FaStar style={{ color: "rgba(255, 169, 13, 1)", fontSize: "0.85rem", verticalAlign: "middle" }} />
+                            {stars}{" "}
+                            <FaStar
+                              style={{
+                                color: "rgba(255, 169, 13, 1)",
+                                fontSize: "0.85rem",
+                                verticalAlign: "middle",
+                              }}
+                            />
                           </span>
                           <div className="progress_bar_wrapper">
-                            <div 
-                              className="progress_bar_fill" 
+                            <div
+                              className="progress_bar_fill"
                               style={{ width: `${percentage}%` }}
                             ></div>
                           </div>
@@ -765,8 +808,8 @@ const ClientProduct = ({ initialProduct = null }) => {
                       );
                     })}
                   </div>
-                  
-                  <button 
+
+                  <button
                     className="add_review_trigger_btn"
                     onClick={() => setShowModal(true)}
                   >
@@ -776,59 +819,85 @@ const ClientProduct = ({ initialProduct = null }) => {
 
                 {/* Right side: Review Cards List */}
                 <div className="reviews_list_wrapper">
-                  <h3 className="reviews_list_title">{translations.reviewsTitle || "Customer Reviews"}</h3>
-                  
+                  <h3 className="reviews_list_title">
+                    {translations.reviewsTitle || "Customer Reviews"}
+                  </h3>
+
                   {combinedReviews.length === 0 ? (
-                    <p className="no_reviews_placeholder">{translations.noReviewsYet || "No reviews yet."}</p>
+                    <p className="no_reviews_placeholder">
+                      {translations.noReviewsYet || "No reviews yet."}
+                    </p>
                   ) : (
                     <>
                       <div className="reviews_cards_scroll_area">
-                        {combinedReviews.slice(0, visibleReviewsCount).map((review) => {
-                          const initials = review.name ? review.name.trim().charAt(0).toUpperCase() : "?";
-                          const avatarBg = getAvatarColor(review.name || "");
-                          return (
-                            <div key={review.id} className="review_item_card">
-                              <div className="review_card_header">
-                                <div className="reviewer_avatar" style={{ backgroundColor: avatarBg }}>
-                                  {initials}
-                                </div>
-                                <div className="reviewer_details">
-                                  <div className="reviewer_meta">
-                                    <span className="reviewer_name">{review.name}</span>
-                                    <span className="review_date">{review.date}</span>
+                        {combinedReviews
+                          .slice(0, visibleReviewsCount)
+                          .map((review) => {
+                            const initials = review.name
+                              ? review.name.trim().charAt(0).toUpperCase()
+                              : "?";
+                            const avatarBg = getAvatarColor(review.name || "");
+                            return (
+                              <div key={review.id} className="review_item_card">
+                                <div className="review_card_header">
+                                  <div
+                                    className="reviewer_avatar"
+                                    style={{ backgroundColor: avatarBg }}
+                                  >
+                                    {initials}
                                   </div>
-                                  <div className="review_stars_row">
-                                    {Array.from({ length: 5 }).map((_, idx) => (
-                                      <FaStar
-                                        key={idx}
-                                        style={{
-                                          color: idx < review.rating ? "rgba(255, 169, 13, 1)" : "#d1d5db",
-                                        }}
-                                      />
-                                    ))}
+                                  <div className="reviewer_details">
+                                    <div className="reviewer_meta">
+                                      <span className="reviewer_name">
+                                        {review.name}
+                                      </span>
+                                      <span className="review_date">
+                                        {review.date}
+                                      </span>
+                                    </div>
+                                    <div className="review_stars_row">
+                                      {Array.from({ length: 5 }).map(
+                                        (_, idx) => (
+                                          <FaStar
+                                            key={idx}
+                                            style={{
+                                              color:
+                                                idx < review.rating
+                                                  ? "rgba(255, 169, 13, 1)"
+                                                  : "#d1d5db",
+                                            }}
+                                          />
+                                        ),
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
+                                <p className="review_comment_text">
+                                  {review.comment}
+                                </p>
                               </div>
-                              <p className="review_comment_text">{review.comment}</p>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
                       </div>
 
                       {/* Expand controls */}
                       {totalReviewsCount > 3 && (
                         <div className="reviews_expand_controls">
                           {visibleReviewsCount < totalReviewsCount ? (
-                            <button 
+                            <button
                               className="expand_btn"
-                              onClick={() => setVisibleReviewsCount(prev => Math.min(totalReviewsCount, prev + 5))}
+                              onClick={() =>
+                                setVisibleReviewsCount((prev) =>
+                                  Math.min(totalReviewsCount, prev + 5),
+                                )
+                              }
                             >
                               {translations.showMore || "Show More"}
                             </button>
                           ) : null}
-                          
+
                           {visibleReviewsCount > 3 ? (
-                            <button 
+                            <button
                               className="expand_btn outline"
                               onClick={() => setVisibleReviewsCount(3)}
                             >
@@ -848,11 +917,22 @@ const ClientProduct = ({ initialProduct = null }) => {
 
       {/* Review Modal */}
       {showModal && (
-        <div className="review_modal_overlay" onClick={() => setShowModal(false)}>
-          <div className="review_modal_box" onClick={(e) => e.stopPropagation()}>
-            <button className="modal_close_btn" onClick={() => setShowModal(false)}>&times;</button>
+        <div
+          className="review_modal_overlay"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="review_modal_box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="modal_close_btn"
+              onClick={() => setShowModal(false)}
+            >
+              &times;
+            </button>
             <h2>{translations.writeReview || "Write a Review"}</h2>
-            
+
             <form onSubmit={handleAddReviewSubmit} className="review_form">
               <div className="form_group">
                 <label>{translations.yourRating || "Your Rating"}</label>
@@ -868,9 +948,10 @@ const ClientProduct = ({ initialProduct = null }) => {
                     >
                       <FaStar
                         style={{
-                          color: star <= (newReviewHoverRating || newReviewRating)
-                            ? "rgba(255, 169, 13, 1)"
-                            : "#d1d5db"
+                          color:
+                            star <= (newReviewHoverRating || newReviewRating)
+                              ? "rgba(255, 169, 13, 1)"
+                              : "#d1d5db",
                         }}
                       />
                     </button>
@@ -878,10 +959,10 @@ const ClientProduct = ({ initialProduct = null }) => {
                 </div>
               </div>
 
-
-
               <div className="form_group">
-                <label htmlFor="reviewer_comment">{translations.reviewComment || "Your Review"}</label>
+                <label htmlFor="reviewer_comment">
+                  {translations.reviewComment || "Your Review"}
+                </label>
                 <textarea
                   id="reviewer_comment"
                   value={newReviewComment}
@@ -893,11 +974,22 @@ const ClientProduct = ({ initialProduct = null }) => {
               </div>
 
               <div className="modal_actions">
-                <button type="button" className="cancel_btn" onClick={() => setShowModal(false)} disabled={submittingReview}>
+                <button
+                  type="button"
+                  className="cancel_btn"
+                  onClick={() => setShowModal(false)}
+                  disabled={submittingReview}
+                >
                   {translations.cancel || "Cancel"}
                 </button>
-                <button type="submit" className="submit_btn" disabled={submittingReview}>
-                  {submittingReview ? (translations.submitting || "Submitting...") : (translations.submitReview || "Submit Review")}
+                <button
+                  type="submit"
+                  className="submit_btn"
+                  disabled={submittingReview}
+                >
+                  {submittingReview
+                    ? translations.submitting || "Submitting..."
+                    : translations.submitReview || "Submit Review"}
                 </button>
               </div>
             </form>
@@ -910,7 +1002,10 @@ const ClientProduct = ({ initialProduct = null }) => {
         <div className="review_success_overlay">
           <div className="review_success_box">
             <div className="success_checkmark">✓</div>
-            <h2>{translations.reviewSuccessMessage || "Your review has been submitted successfully. Thank you!"}</h2>
+            <h2>
+              {translations.reviewSuccessMessage ||
+                "Your review has been submitted successfully. Thank you!"}
+            </h2>
           </div>
         </div>
       )}

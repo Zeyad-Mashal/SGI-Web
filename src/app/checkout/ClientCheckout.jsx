@@ -687,7 +687,7 @@ const ClientCheckout = () => {
             <h3>{translations.firstName}</h3>
             <input
               type="text"
-              placeholder={translations.firstName}
+              placeholder={translations.firstNamePlaceholder}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
@@ -698,7 +698,7 @@ const ClientCheckout = () => {
             <h3>{translations.lastName}</h3>
             <input
               type="text"
-              placeholder={translations.lastName}
+              placeholder={translations.lastNamePlaceholder}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
@@ -709,7 +709,7 @@ const ClientCheckout = () => {
             <h3>{translations.email}</h3>
             <input
               type="email"
-              placeholder={translations.email}
+              placeholder={translations.emailPlaceholder}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -719,7 +719,7 @@ const ClientCheckout = () => {
             <h3>{translations.phone}</h3>
             <input
               type="text"
-              placeholder={translations.phone}
+              placeholder={translations.checkoutPhonePlaceholder}
               value={userPhone}
               onChange={(e) => setUserPhone(e.target.value)}
               required
@@ -942,7 +942,7 @@ const ClientCheckout = () => {
                       key={checkoutSessionId}
                       action={paymentReturnUrl}
                       className="paymentWidgets"
-                      data-brands="VISA MASTER AMEX"
+                      data-brands="VISA MASTER"
                     />
                   )}
                 </div>
