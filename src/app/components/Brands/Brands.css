@@ -201,6 +201,9 @@
   .Brands {
     padding: 20px;
   }
+  .barnds_container {
+    padding: 0;
+  }
   .brand_card {
     width: 130px;
     height: 100px;

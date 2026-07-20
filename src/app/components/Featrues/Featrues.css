@@ -48,23 +48,34 @@
   }
 }
 @media screen and (max-width: 991px) {
-  .featrues {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
+  .features_container {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 10px 8px;
   }
   .featrues_item {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    gap: 0.35rem;
   }
   .featrues_item > svg {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
   }
   .featrues_item .featrues_item_1 h2 {
-    font-size: 0.9rem;
+    font-size: 0.65rem;
+    line-height: 1.2;
   }
   .featrues_item .featrues_item_1 p {
-    font-size: 0.8rem;
+    font-size: 0.55rem;
+    line-height: 1.25;
   }
 }

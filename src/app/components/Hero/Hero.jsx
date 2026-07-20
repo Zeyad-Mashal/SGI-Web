@@ -31,7 +31,7 @@ const Hero = () => {
         />
         <Image
           className="hero_mob_image"
-          src="/images/hero-banner.jpeg"
+          src="/images/Banner2A.jpg.jpeg"
           alt=""
           fill
           priority

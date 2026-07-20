@@ -622,21 +622,15 @@ const ClientCheckout = () => {
 
       <div className="checkout_container">
         {savedEntries.length > 0 && (
-          <div style={{ marginBottom: "1rem" }}>
+          <div className="checkout_previous_details">
             <h2>{lang === "ar" ? "البيانات السابقة" : "Previous details"}</h2>
-            <div className="addresses_list">
+            <div className="addresses_list checkout_previous_details_list">
               {savedEntries.map((item, index) => (
                 <div
                   key={`${item.firstName}-${item.lastName}-${item.userPhone}-${item.city}-${index}`}
-                  className="address_card"
-                  style={{
-                    border:
-                      selectedSavedEntryIndex === index
-                        ? "2px solid #4caf50"
-                        : "1px solid #ddd",
-                    background: selectedSavedEntryIndex === index ? "#f3fff5" : "#f8f9fb",
-                    cursor: "pointer",
-                  }}
+                  className={`address_card checkout_previous_details_card ${
+                    selectedSavedEntryIndex === index ? "selected" : ""
+                  }`}
                   onClick={() => {
                     setSelectedSavedEntryIndex(index);
                     setFirstName(item.firstName || "");
@@ -660,10 +654,8 @@ const ClientCheckout = () => {
                 >
                   <div className="address_left">
                     <div className="address_icon"></div>
-                    <p className="address_text">
-                      {item.firstName} {item.lastName} - {item.userPhone}
-                      <br />
-                      {item.city} - {item.address}
+                    <p className="address_text checkout_previous_details_text">
+                      {item.firstName} {item.lastName} - {item.userPhone} - {item.city} - {item.address}
                     </p>
                   </div>
                   <div className="address_actions">
@@ -971,21 +963,9 @@ const ClientCheckout = () => {
 
         {/* ------------------ Order Summary ------------------ */}
         <h2>{translations.orderSummary}</h2>
-        <div style={{ width: "100%", marginBottom: "2rem" }}>
-          <div
-            style={{
-              background: "#f8f9fb",
-              padding: "1.5rem",
-              borderRadius: "12px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "0.5rem",
-              }}
-            >
+        <div className="checkout_order_summary">
+          <div className="checkout_summary_card">
+            <div className="checkout_summary_row">
               <h3>{translations.items}</h3>
               <p>
                 {cartItems.length} {translations.itemsPlural}
@@ -994,76 +974,42 @@ const ClientCheckout = () => {
             {cartItems.map((item) => (
               <div
                 key={`${item._id}-${item.isBoxPricing ? "box" : "unit"}`}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: "0.5rem",
-                  paddingLeft: "1rem",
-                }}
+                className="checkout_summary_item"
               >
-                <p>
+                <p className="checkout_summary_item_name">
                   {item.name} ({item.isBoxPricing ? translations.box : translations.unit}) x {item.quantity}
                 </p>
-                <p>
+                <p className="checkout_summary_item_price">
                   {translations.aed} {(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
             ))}
 
-            <hr style={{ margin: "1rem 0" }} />
+            <hr className="checkout_summary_divider" />
 
-            {/* Order Price (Subtotal) */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "0.5rem",
-              }}
-            >
+            <div className="checkout_summary_row">
               <p>{translations.orderPrice}</p>
               <p>
                 {translations.aed} {subtotal.toFixed(2)}
               </p>
             </div>
 
-            {/* Shipping */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "0.5rem",
-              }}
-            >
+            <div className="checkout_summary_row">
               <p>{translations.shipping || "Shipping"}</p>
               <p>
                 {translations.aed} {shipping.toFixed(2)}
               </p>
             </div>
 
-            {/* Tax - 5% of (Order Price + Shipping) */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "0.5rem",
-              }}
-            >
+            <div className="checkout_summary_row">
               <p>{translations.tax5}</p>
               <p>
                 {translations.aed} {tax.toFixed(2)}
               </p>
             </div>
 
-            {/* Discount (if applicable) */}
             {discount > 0 && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: "0.5rem",
-                  color: "#4caf50",
-                }}
-              >
+              <div className="checkout_summary_row checkout_summary_row_discount">
                 <p>{translations.discount}</p>
                 <p>
                   - {translations.aed} {discount.toFixed(2)}
@@ -1071,17 +1017,9 @@ const ClientCheckout = () => {
               </div>
             )}
 
-            <hr style={{ margin: "1rem 0" }} />
+            <hr className="checkout_summary_divider" />
 
-            {/* Total Amount */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: "18px",
-                fontWeight: "bold",
-              }}
-            >
+            <div className="checkout_summary_row checkout_summary_row_total">
               <h3>{translations.totalAmount}</h3>
               <p>
                 {translations.aed} {totalAmount.toFixed(2)}

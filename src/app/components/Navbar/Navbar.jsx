@@ -23,7 +23,7 @@ import { BsCart } from "react-icons/bs";
 import en from "../../../translation/en.json";
 import ar from "../../../translation/ar.json";
 import { slugify } from "@/utils/slugify";
-import { CONTACT_PHONE_TEL } from "@/constants/contact";
+import { CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/constants/contact";
 import Search from "@/API/Search/Search";
 import GetCategories from "@/API/Categories/GetCategories";
 import GetProductSByCategory from "@/API/Categories/GetProductSByCategory";
@@ -287,7 +287,7 @@ const Navbar = () => {
           </span>
           <span className="top_navbar_item">
             <FiPhone size={14} aria-hidden />
-            <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_TEL}</a>
+            <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE}</a>
           </span>
           <span className="top_navbar_sep" aria-hidden>
             |

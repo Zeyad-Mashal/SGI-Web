@@ -671,18 +671,29 @@ export default function Shop({
           <div
             className={`shop_filter_top_mobile ${!showDesktopFilter ? "shop_filter_top_desktop_visible" : ""}`}
           >
-            <h3
-              onClick={() => {
-                if (window.innerWidth <= 991) {
-                  setShowFilter(true);
-                } else {
-                  setShowDesktopFilter(true);
-                }
-              }}
-            >
-              <FiFilter />
-              {translations.filters}
-            </h3>
+            <div className="shop_filter_top_mobile_left">
+              <h3
+                onClick={() => {
+                  if (window.innerWidth <= 991) {
+                    setShowFilter(true);
+                  } else {
+                    setShowDesktopFilter(true);
+                  }
+                }}
+              >
+                <FiFilter />
+                {translations.filters}
+              </h3>
+              {(selectedCategoryId || selectedSubCategoryId || brandId) && (
+                <button
+                  className="clear_filter_btn clear_filter_btn_mobile"
+                  onClick={clearFilter}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                  {translations.clearFilter}
+                </button>
+              )}
+            </div>
             <div className="shop_display">
               <TbAlignBoxRightMiddle
                 className={`flex-display ${viewMode === "list" ? "active" : ""}`}
