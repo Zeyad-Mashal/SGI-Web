@@ -412,6 +412,8 @@ const ClientCheckout = () => {
       userPhone: userPhone.trim(),
       email: email.trim() || undefined,
       totalAmount,
+      tax,
+      shipping,
       city: city.trim(),
       address: deliveryAddress,
       cartItems: formattedCartItems,
@@ -438,6 +440,8 @@ const ClientCheckout = () => {
     writtenAddress,
     cartItems,
     totalAmount,
+    tax,
+    shipping,
   ]);
 
   useEffect(() => {
@@ -591,6 +595,8 @@ const ClientCheckout = () => {
       userPhone: userPhoneVal,
       email: email.trim() || undefined,
       totalAmount: totalAmount,
+      tax,
+      shipping,
       city: city.trim(),
       address: deliveryAddress,
       cartItems: formattedCartItems,
